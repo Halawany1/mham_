@@ -1,0 +1,27 @@
+{
+  "onboardingOneTitle":  "Your E-Commerce venture starts here!",
+  "onboardingOneBody": "Start your E-Commerce journey with our platform offering robust tools, personalized support, and a thriving community, empowering both seasoned entrepreneurs and beginners. Join us now to take the first step toward building your dream business!",
+  "onboardingTwoTitle": "Welcome to our “Spare Parts” category.",
+  "onboardingThreeTitle": "Start your auto parts journey with us.",
+  "onboardingTwoBody": "Discover our 'Spare Parts' category for top-notch automotive components ensuring smooth and efficient vehicle operation, from engines to accessories.",
+  "onboardingThreeBody": "Embark on your auto parts journey with us for high-quality products, expert guidance, and exceptional service in car maintenance, driving innovation together.",
+  "signIn": "Sign In",
+  "signUp": "Sign Up",
+  "welcomeBack": "Hello, Welcome Back",
+  "email": "Email",
+  "password": "Password",
+  "rememberMe": "Remember Me",
+  "forgotPassword": "Forgot Password?",
+  "noHaveAccount": "Don't have an account?",
+  "continueAs": "Continue as",
+  "guest": "Guest",
+  "orContinueWith": "Or Continue With",
+  "createAccount": "Create Account",
+  "userName": "User Name",
+  "phone": "Phone",
+  "confirmPassword": "Confirm Password",
+  "alreadyHaveAccount": "Already have an account?"
+
+
+
+}

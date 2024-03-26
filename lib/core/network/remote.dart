@@ -1,31 +1,81 @@
-import 'package:shared_preferences/shared_preferences.dart';
 
-class CacheHelper {
-  static SharedPreferences? sharedPreferences;
-  static init() async {
-    sharedPreferences = await SharedPreferences.getInstance();
+import 'package:dio/dio.dart';
+
+class DioHelper {
+  static Dio? dio;
+  static init() {
+    dio = Dio(BaseOptions(
+      baseUrl: '',
+      receiveDataWhenStatusError: true,
+    ));
   }
 
-  static dynamic getData({required String key}) {
-    return sharedPreferences!.get(key);
-  }
-
-  static Future<bool?> saveData({
-    required String key,
-    required dynamic value,
+  static Future<Response> getData({
+    required url,
+    Map<String, dynamic>? query,
+    required String lang,
+    String? token,
   }) async {
-    if (value is bool) return await sharedPreferences!.setBool(key, value);
-    if (value is String) return await sharedPreferences!.setString(key, value);
-    if (value is double) return await sharedPreferences!.setDouble(key, value);
-    if (value is int) return await sharedPreferences!.setInt(key, value);
-    return null;
+    dio!.options.headers = {
+      'Content-Type': 'application/json',
+      'lang': lang,
+      if (token != null) 'token': token,
+    };
+    return await dio!.get(url, queryParameters: query);
   }
 
-  static Future<bool?> deleteAllData() async {
-    return await sharedPreferences!.clear();
+  static Future<Response> postData(
+      {required url,
+        Map<String, dynamic>? data,
+        required String lang ,
+        String? token}) async {
+    dio!.options.headers = {
+      'Content-Type': 'application/json',
+      'lang': lang,
+      if (token != null) 'token': token,
+    };
+    return await dio!.post(url, data: data);
   }
 
-  static Future<bool?> removeData({required String key}) async {
-    return await sharedPreferences!.remove(key);
+  static Future<Response> putData(
+      {required url,
+        required Map<String, dynamic> data,
+        required String lang,
+        String? token}) async {
+    dio!.options.headers = {
+      'Content-Type': 'application/json',
+      'lang': lang,
+      if (token != null) 'token': token,
+    };
+    return await dio!.put(url, data: data);
   }
+
+  static Future<Response> patchData({
+    required url,
+    Map<String, dynamic>? data,
+    required String lang,
+    String? token,
+  }) async {
+    dio!.options.headers = {
+      'Content-Type': 'application/json',
+      'lang': lang,
+      if (token != null) 'token': token,
+    };
+    return await dio!.patch(url,data: data);
+  }
+
+
+  static Future<Response> deleteData({
+    required url,
+    required String lang,
+    String? token,
+  }) async {
+    dio!.options.headers = {
+      'Content-Type': 'application/json',
+      'lang': lang,
+      if (token != null) 'token': token,
+    };
+    return await dio!.delete(url);
+  }
+
 }
