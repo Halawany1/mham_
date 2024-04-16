@@ -1,54 +1,68 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
+
 class Validation{
-  static String? validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your Email';
-    }
-    if (RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value.trim())) {
-      return null;
-    }
 
-
-    return 'Please enter a valid Email';
-  }
-  static String? validatePassword(String? value) {
+  static String? validatePassword(String? value,context) {
+    final locale = AppLocalizations.of(context);
     if (value == null || value.isEmpty) {
-      return 'Please enter your Password';
+      return locale.pleaseEnterYourPassword;
     }
     if (value.length < 8) {
-      return 'Password must be at least 8 characters long';
+      return locale.pleaseEnterYourValidPassword;
     }
     // Add additional password validation rules as needed
     return null;
   }
 
-  static String? validateUsername(String? value) {
+
+  static String? validateFirstName(String? value,context) {
+    final locale = AppLocalizations.of(context);
     if (value == null || value.isEmpty) {
-      return 'Please enter your Username';
+      return locale.firstName;
+    }
+    // Add additional username validation rules as needed
+    return null;
+  }
+  static String? validateLastName(String? value,context) {
+    final locale = AppLocalizations.of(context);
+    if (value == null || value.isEmpty) {
+      return locale.lastName;
     }
     // Add additional username validation rules as needed
     return null;
   }
 
-  static String? validatePhoneNumber(String? value) {
+  static String? validatePhoneNumber(String? value,context) {
+    final locale = AppLocalizations.of(context);
     if (value == null || value.isEmpty) {
-      return 'Please enter your Phone Number';
-    }
-    // Check if the value contains only numeric characters
-    if (!value.contains(RegExp(r'^[0-9]+$'))) {
-      return 'Phone Number should contain only digits';
+      return locale.pleaseEnterYourPhone;
     }
     return null;
   }
 
-  static String? validateConfirmPassword(String? password, String? confirmPassword) {
+  static String? validateConfirmPassword(String? password,
+      String? confirmPassword,context) {
+    final locale = AppLocalizations.of(context);
     if (confirmPassword == null || confirmPassword.isEmpty) {
-      return 'Please confirm your Password';
+      return locale.pleaseEnterYourPassword;
     }
     if (password != confirmPassword) {
-      return 'Passwords do not match';
+      return locale.passwordNoMatch;
     }
     return null;
   }
+  static String? validateField(String? fieldValue, String fieldName,context) {
+    final locale = AppLocalizations.of(context);
+    if (fieldValue == null || fieldValue.isEmpty) {
+      return '${locale.pleaseEnter} $fieldName';
+    }
+    return null;
+  }
+
+
+
 
 
 }

@@ -5,12 +5,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
 import 'package:mham/core/components/3rd_party_services_component.dart';
+import 'package:mham/core/components/drop_down_menu.dart';
 import 'package:mham/core/components/material_button_component.dart';
+import 'package:mham/core/components/snak_bar_component.dart';
 import 'package:mham/core/components/text_and_link_row_component.dart';
 import 'package:mham/core/components/text_form_field_component.dart';
+import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/error/validation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mham/core/network/local.dart';
+import 'package:mham/layout/layout_screen.dart';
+
 var _formKey = GlobalKey<FormState>();
+var userNameController = TextEditingController();
+var phoneController = TextEditingController();
+var passwordController = TextEditingController();
+var confirmPasswordController = TextEditingController();
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -21,31 +31,49 @@ class SignUpScreen extends StatelessWidget {
         .of(context)
         .textTheme;
     var color = Theme.of(context);
-    var userNameController = TextEditingController();
-    var phoneController = TextEditingController();
-    var addressController = TextEditingController();
-    var emailController = TextEditingController();
-    var passwordController = TextEditingController();
-    var confirmPasswordController = TextEditingController();
+void clearAllData() {
+  userNameController.clear();
+  passwordController.clear();
+  confirmPasswordController.clear();
+  phoneController.clear();
+}
     final locale = AppLocalizations.of(context);
-    return BlocBuilder<AuthenticationCubit, AuthenticationState>(
-      builder: (context, state) {
+    return BlocConsumer<AuthenticationCubit, AuthenticationState>(
+      listener: (context, state) {
         var cubit=context.read<AuthenticationCubit>();
+        if (state is SuccessRegisterUserState) {
+          CacheHelper.saveData(
+              key: AppConstant.token, value: cubit.userModel!.token);
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => LayoutScreen(),));
+        }
+
+        if (state is ErrorRegisterUserState) {
+          showMessageResponse(message: state.error,
+              context: context, success: false);
+        }
+      },
+      builder: (context, state) {
+        var cubit = context.read<AuthenticationCubit>();
         return WillPopScope(
-          onWillPop: () async{
+          onWillPop: () async {
+            clearAllData();
             Navigator.pop(context);
             cubit.resetVisible();
             return true;
           },
           child: Scaffold(
+            backgroundColor: color.backgroundColor,
             appBar: AppBar(
+              backgroundColor: color.backgroundColor,
               leading: InkWell(
                 onTap: () {
+                  clearAllData();
                   cubit.resetVisible();
                   Navigator.pop(context);
                 },
-                child: Icon(Icons.arrow_back,
-
+                child: Icon(
+                  Icons.arrow_back,
                 ),
               ),
             ),
@@ -74,38 +102,63 @@ class SignUpScreen extends StatelessWidget {
                         ),
                         BuildTextFormField(
                             maxLength: 45,
-                          keyboardType: TextInputType.name,
-                          cubit: cubit,
+                            keyboardType: TextInputType.name,
+                            cubit: cubit,
                             validator: (value) {
-                              return Validation.validateUsername(value);
+                              return Validation.validateField(
+                                  value, locale.userName, context);
                             },
-                            title:locale.userName,
-                            hint:locale.userName,
+                            title: locale.userName,
+                            hint: locale.userName,
                             controller: userNameController),
                         SizedBox(
                           height: 20.h,
                         ),
                         BuildTextFormField(
                             maxLength: 15,
-                            keyboardType:
-                            TextInputType.phone,
+                            prefixIcon: true,
+                            keyboardType: TextInputType.phone,
                             cubit: cubit,
                             validator: (value) {
-                              return Validation.validatePhoneNumber(value);
+                              return Validation.validatePhoneNumber(
+                                  value, context);
                             },
                             title: locale.phone,
                             hint: locale.phone,
                             controller: phoneController),
-
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              locale.selectCountry,
+                              style: font.labelMedium,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5.h,
+                        ),
+                        BuildDropDownMenu(
+                          value: cubit.countryId,
+                          onChange: (String? value) {
+                            cubit.selectCountryId(value!);
+                          },
+                          list: cubit.countriesList,
+                          valueName: locale.selectCountry,
+                        ),
                         SizedBox(
                           height: 20.h,
                         ),
                         BuildTextFormField(
                             maxLength: 120,
-                           keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.text,
                             cubit: cubit,
                             validator: (value) {
-                              return Validation.validatePassword(value);
+                              return Validation.validatePassword(
+                                  value, context);
                             },
                             withSuffixIcon: true,
                             title: locale.password,
@@ -116,11 +169,11 @@ class SignUpScreen extends StatelessWidget {
                         ),
                         BuildTextFormField(
                             maxLength: 120,
-                          keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.text,
                             cubit: cubit,
                             validator: (value) {
                               return Validation.validateConfirmPassword(
-                                  value, passwordController.text);
+                                  value, passwordController.text, context);
                             },
                             visibleTwo: true,
                             withSuffixIcon: true,
@@ -130,12 +183,26 @@ class SignUpScreen extends StatelessWidget {
                         SizedBox(
                           height: 35.h,
                         ),
-                        BuildDefaultButton(
+                        state is LoadingRegisterUserState
+                            ? Center(child: CircularProgressIndicator())
+                            : BuildDefaultButton(
+                          colorText: color.cardColor,
+                          backgorundColor: color.primaryColor,
                           text: locale.signUp,
                           onPressed: () {
-
                             if (_formKey.currentState!.validate()) {
-
+                              String countryCode =
+                              cubit.selectedCountry == null
+                                  ? '+985'
+                                  : cubit.selectedCountry!.dialCode;
+                              cubit.userSignUp(
+                                  phone: countryCode + phoneController.text,
+                                  userName: userNameController.text,
+                                  password: passwordController.text,
+                                  countryId: cubit.countriesId[cubit.countryId]!,
+                                  confirmPassword: confirmPasswordController
+                                      .text,
+                                  lang: 'en');
                             }
                           },
                         ),
@@ -148,7 +215,7 @@ class SignUpScreen extends StatelessWidget {
                             Navigator.pop(context);
                           },
                           text: locale.alreadyHaveAccount,
-                          textLink: 'Sign In',
+                          textLink: locale.signIn,
                         ),
                         SizedBox(
                           height: 30.h,

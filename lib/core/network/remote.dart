@@ -1,11 +1,12 @@
 
 import 'package:dio/dio.dart';
+import 'package:mham/core/constent/api_constant.dart';
 
 class DioHelper {
   static Dio? dio;
   static init() {
     dio = Dio(BaseOptions(
-      baseUrl: '',
+      baseUrl: ApiConstant.baseUrl,
       receiveDataWhenStatusError: true,
     ));
   }

@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,70 +6,112 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
-import 'package:mham/core/constent/color/color_constant.dart';
-import 'package:mham/core/constent/images/image_constant.dart';
+import 'package:mham/controller/cart_cubit/cart_cubit.dart';
+import 'package:mham/controller/home_cubit/home_cubit.dart';
+import 'package:mham/controller/layout_cubit/layout_cubit.dart';
+import 'package:mham/core/constent/app_constant.dart';
+import 'package:mham/core/constent/color_constant.dart';
+import 'package:mham/core/constent/image_constant.dart';
+import 'package:mham/core/network/bloc_observer.dart';
+import 'package:mham/core/network/local.dart';
+import 'package:mham/core/network/remote.dart';
 import 'package:mham/core/style/theme.dart';
 import 'package:mham/l10n/l10n.dart';
+import 'package:mham/layout/layout_screen.dart';
+import 'package:mham/views/login_screen/login_screen.dart';
 import 'package:mham/views/on_boarding_screen/on_boarding_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-void main()  {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await CacheHelper.init();
-  // await DioHelper.init();
+  await CacheHelper.init();
+  await DioHelper.init();
+  await CacheHelper.deleteAllData();
+  Bloc.observer = MyBlocObserver();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  Widget widget;
+
+  if (CacheHelper.getData(key: AppConstant.theme) == null) {
+    CacheHelper.saveData(key: AppConstant.theme, value: true);
+  }
+  if (CacheHelper.getData(key: AppConstant.onBoarding) == null) {
+    widget = const OnBoardingScreen();
+  } else {
+    if (CacheHelper.getData(key: AppConstant.token) != null) {
+      widget = const LayoutScreen();
+    } else {
+      widget = const LoginScreen();
+    }
+  }
+  //print(CacheHelper.getData(key: AppConstant.token));
   runApp(
-     const MyApp(),
+    MyApp(
+      widget: widget,
+    ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.widget});
+
+  final Widget widget;
 
   @override
   Widget build(BuildContext context) {
-
     return MultiBlocProvider(
       providers: [
+
+        BlocProvider(
+          create: (context) => LayoutCubit(),
+        ),
+        BlocProvider(
+          create: (context) => HomeCubit()..
+          getAllProduct(lang: 'en')..getCarModels(),
+        ),
         BlocProvider(
           create: (context) => AuthenticationCubit(),
-        )
+        ),
+        BlocProvider(
+          create: (context) => CartCubit()..getCart(),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 690),
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
-          return MaterialApp(
-
-            theme: lightTheme(),
-            locale: Locale('ar'),
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-            ],
-            supportedLocales: L10n.all,
-            debugShowCheckedModeBanner: false,
-            home: AnimatedSplashScreen(
-              nextScreen:  const OnBoardingScreen(),
-              duration: 1000,
-              splashIconSize: 100.w,
-              backgroundColor: ColorConstant.white,
-              splash:ImageConstant.splash ,
-              curve: Curves.easeOutSine,
-              pageTransitionType:
-              PageTransitionType.rightToLeftWithFade,
-              splashTransition: SplashTransition.sizeTransition,
-            ),
+          return BlocBuilder<LayoutCubit, LayoutState>(
+            builder: (context, state) {
+              var cubit = context.read<LayoutCubit>();
+              return MaterialApp(
+                theme: lightTheme(),
+                locale: Locale('en'),
+                localizationsDelegates: const [
+                  AppLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                ],
+                supportedLocales: L10n.all,
+                debugShowCheckedModeBanner: false,
+                home: AnimatedSplashScreen(
+                  nextScreen: widget,
+                  duration: 1000,
+                  splashIconSize: 100.w,
+                  backgroundColor: ColorConstant.white,
+                  splash: ImageConstant.splash,
+                  curve: Curves.easeOutSine,
+                  pageTransitionType: PageTransitionType.rightToLeftWithFade,
+                  splashTransition: SplashTransition.sizeTransition,
+                ),
+              );
+            },
           );
         },
-
       ),
     );
   }

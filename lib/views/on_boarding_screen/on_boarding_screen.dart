@@ -6,8 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
 import 'package:mham/core/components/material_button_component.dart';
-import 'package:mham/core/constent/color/color_constant.dart';
-import 'package:mham/core/constent/images/image_constant.dart';
+import 'package:mham/core/constent/app_constant.dart';
+import 'package:mham/core/constent/color_constant.dart';
+import 'package:mham/core/constent/image_constant.dart';
+import 'package:mham/core/network/local.dart';
 import 'package:mham/views/login_screen/login_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -119,13 +121,15 @@ class OnBoardingScreen extends StatelessWidget {
                           if(index!=2)
                             InkWell(
                               onTap: () {
+                                CacheHelper.saveData(key: AppConstant.onBoarding,
+                                    value: true);
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => LoginScreen()));
                               },
                               child: Text(
-                                'Skip',
+                                locale.skip,
                                 style: font.bodyMedium!
                                     .copyWith(fontWeight: FontWeight.bold),
                               ),
@@ -144,6 +148,8 @@ class OnBoardingScreen extends StatelessWidget {
                             color: Color(0xFFEEBF40).withOpacity(0.7),
                             onPressed: () {
                               if (index == 2) {
+                                CacheHelper.saveData(key: AppConstant.onBoarding,
+                                    value: true);
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
@@ -156,14 +162,14 @@ class OnBoardingScreen extends StatelessWidget {
                             },
                             child:index==2?
                             Text(
-                              'Get Started',
+                              locale.getStarted,
                               style: font.titleMedium!
                                   .copyWith(color: color.primaryColor),
                             ):
                             Row(
                               children: [
                                 Text(
-                                  'Next',
+                                  locale.next,
                                   style: font.titleMedium!
                                       .copyWith(color: color.primaryColor),
                                 ),
