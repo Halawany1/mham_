@@ -66,53 +66,50 @@ class LayoutScreen extends StatelessWidget {
     return BlocBuilder<LayoutCubit, LayoutState>(
       builder: (context, state) {
         var cubit = context.read<LayoutCubit>();
-        return Scaffold(
+        return PersistentTabView(
 
-          body: PersistentTabView(
+          context,
+          controller: _controller,
+          screens: [
+            HomeScreen(),
+            AccountScreen(),
+            OrderScreen(),
+            WalletScreen(),
+          ],
+          hideNavigationBar: cubit.hideNav,
+          items: _navBarsItems(),
+          confineInSafeArea: true,
+          backgroundColor: color.cardColor,
+          // Default is Colors.white.
 
-               context,
-              controller: _controller,
-              screens: [
-                HomeScreen(),
-                AccountScreen(),
-                OrderScreen(),
-                WalletScreen(),
-              ],
-              hideNavigationBar: cubit.hideNav,
-              items: _navBarsItems(),
-              confineInSafeArea: true,
-              backgroundColor: color.cardColor,
-              // Default is Colors.white.
-
-              handleAndroidBackButtonPress: true,
-              // Default is true.
-              resizeToAvoidBottomInset: true,
-              // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
-              stateManagement: false,
-              // Default is true.
-              hideNavigationBarWhenKeyboardShows: true,
-              // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-              decoration: NavBarDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                colorBehindNavBar: color.cardColor,
-              ),
-              popAllScreensOnTapOfSelectedTab: true,
-              popActionScreens: PopActionScreensType.all,
-              itemAnimationProperties: ItemAnimationProperties(
-                duration: Duration(milliseconds: 150), // Adjust duration as needed
-                curve: Curves.easeInOut, // Choose a suitable curve
-              ),
-              screenTransitionAnimation: ScreenTransitionAnimation(
-                animateTabTransition: true,
-                curve: Curves.easeInOut,
-                // Use the same curve as itemAnimationProperties
-                duration: Duration(
-                    milliseconds:
-                    300), // Use the same duration as itemAnimationProperties
-              ),
-              navBarStyle: NavBarStyle
-                  .style1, // Choose the nav bar style with this property.
-            ),
+          handleAndroidBackButtonPress: true,
+          // Default is true.
+          resizeToAvoidBottomInset: true,
+          // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
+          stateManagement: false,
+          // Default is true.
+          hideNavigationBarWhenKeyboardShows: true,
+          // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
+          decoration: NavBarDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            colorBehindNavBar: color.cardColor,
+          ),
+          popAllScreensOnTapOfSelectedTab: true,
+          popActionScreens: PopActionScreensType.all,
+          itemAnimationProperties: ItemAnimationProperties(
+            duration: Duration(milliseconds: 150), // Adjust duration as needed
+            curve: Curves.easeInOut, // Choose a suitable curve
+          ),
+          screenTransitionAnimation: ScreenTransitionAnimation(
+            animateTabTransition: true,
+            curve: Curves.easeInOut,
+            // Use the same curve as itemAnimationProperties
+            duration: Duration(
+                milliseconds:
+                300), // Use the same duration as itemAnimationProperties
+          ),
+          navBarStyle: NavBarStyle
+              .style1, // Choose the nav bar style with this property.
         );
 
 

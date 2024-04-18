@@ -1,12 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:mham/core/constent/api_constant.dart';
 import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/core/network/remote.dart';
 import 'package:mham/models/car_model.dart';
+import 'package:mham/models/one_product_model.dart';
 import 'package:mham/models/product_model.dart';
+import 'package:mham/models/request_scrap_model.dart';
 
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 
@@ -15,41 +18,55 @@ part 'home_state.dart';
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
 
+  static HomeCubit get(context) => BlocProvider.of(context);
+
   ProductModel? productModel;
   List<Products> homeProducts = [];
   List<Products> allProducts = [];
-  void getAllProduct({int page = 1, int pageSize = 5,
-    String ?type,
-    double ?price,
-    int ?carId,
-    int ?carModelId,
-    int ?availableYearId,
-    String ?search
-    ,required String lang,
+
+  void getAllProduct({
+    int page = 1,
+    int pageSize = 5,
+    String? type,
+    double? price,
+    int? carId,
+    int? carModelId,
+    int? availableYearId,
+    int? busniessId,
+    String? search,
+    required String lang,
   }) {
-    if(page==1){
+    if (page == 1) {
       homeProducts.clear();
       allProducts.clear();
     }
-    if(search!=null||search==''){
+    if (search != null || search == '') {
       allProducts.clear();
     }
-    emit(LoadingGetAllProduct());
+    if (page == 1) {
+      emit(LoadingGetAllProduct());
+    }
     DioHelper.getData(
       url: ApiConstant.product,
       lang: lang,
       query: {
         'page': page,
-        if(carId!=null) 'car_id':carId,
-        if(carModelId!=null)'carModel_id':carModelId,
-        if(availableYearId!=null)'availableYears_id':availableYearId,
-        if(price!=null&&price!=0.0) 'price': price,
-        if(type!=null)'type':type,
-        if(search!=null) 'search':search,
-        'pageSize': pageSize,},
+        if (busniessId != null) 'busCat_id': busniessId,
+        if (carId != null) 'car_id': carId,
+        if (carModelId != null) 'carModel_id': carModelId,
+        if (availableYearId != null) 'availableYears_id': availableYearId,
+        if (price != null && price != 0.0) 'price': price,
+        if (type != null) 'type': type,
+        if (search != null) 'search': search,
+        'pageSize': pageSize,
+      },
       token: CacheHelper.getData(key: AppConstant.token),
     ).then((value) {
-      if(search!=null||search==''){
+      if (search != null || search == '') {
+        allProducts.clear();
+      }
+      if (page == 1) {
+        homeProducts.clear();
         allProducts.clear();
       }
       productModel = ProductModel.fromJson(value.data);
@@ -68,9 +85,6 @@ class HomeCubit extends Cubit<HomeState> {
     });
   }
 
-
-
-
   List<ValueItem> carType = [];
   List<ValueItem> selectedCarType = [];
   List<ValueItem> carModels = [];
@@ -78,6 +92,7 @@ class HomeCubit extends Cubit<HomeState> {
   List<ValueItem> selectedCarYears = [];
   List<ValueItem> selectedCarModels = [];
   CarCategoryModel? carModel;
+
   void getCarModels() {
     carType.clear();
     selectedCarType.clear();
@@ -120,7 +135,7 @@ class HomeCubit extends Cubit<HomeState> {
         if (!carModels.any((item) => item.value == element.carModelId)) {
           if (e.value == element.carModel!.carId) {
             carModels.add(ValueItem(
-                label:  element.carModel!.modelName!,
+                label: element.carModel!.modelName!,
                 value: element.carModelId));
           }
         }
@@ -137,11 +152,10 @@ class HomeCubit extends Cubit<HomeState> {
     selectedCarModels.forEach((e) {
       carModel!.models!.forEach((element) {
         if (!carYears.any((item) =>
-        item.label.toString() == element.availableYear.toString())) {
+            item.label.toString() == element.availableYear.toString())) {
           if (e.value == element.carModelId) {
             carYears.add(ValueItem(
-                label: element.availableYear.toString(),
-                value: element.id));
+                label: element.availableYear.toString(), value: element.id));
           }
         }
       });
@@ -150,7 +164,6 @@ class HomeCubit extends Cubit<HomeState> {
 
     emit(SucccessSelectCarTypeState());
   }
-
 
   void removeSelectionCarModels() {
     List<ValueItem> selectedModels = [];
@@ -176,40 +189,108 @@ class HomeCubit extends Cubit<HomeState> {
     emit(RemoveSelectionCarModels());
   }
 
-
   bool productDetailsContainer = false;
+
   void openAndCloseDetailsContainer() {
     productDetailsContainer = !productDetailsContainer;
     emit(ChangeProductDetailsContainerState());
   }
 
+  int quantity = 1;
 
-  int quantity=1;
-  void changeQuantity({required bool increase}){
-    if(increase){
+  void changeQuantity({required bool increase}) {
+    if (increase) {
       quantity++;
-    }else{
-      if(quantity>1){
+    } else {
+      if (quantity > 1) {
         quantity--;
       }
     }
     emit(ChangeQuantityState());
   }
 
-  void resetQuantity(){
-    quantity=1;
+  void resetQuantity() {
+    quantity = 1;
     emit(ChangeQuantityState());
   }
 
-  void increaseReview(int id){
-  DioHelper.getData(url: ApiConstant.increaseReview+id.toString(),
-      lang: 'en').then((value) {
-        emit(IncreaseReviewState());
-  }).catchError((error){
-    emit(ErrorIncreaseReviewState(error));
-  });
-
+  void increaseReview(int id) {
+    DioHelper.getData(
+            url: ApiConstant.increaseReview + id.toString(), lang: 'en')
+        .then((value) {
+      emit(IncreaseReviewState());
+    }).catchError((error) {
+      if (error is DioError) {
+        print(error.response!.data);
+      }
+      emit(ErrorIncreaseReviewState(error));
+    });
   }
 
+  int index = 0;
 
+  void changeTypeCarIndex({required int value}) {
+    index = value;
+    emit(ChangeTypeCarIndexState());
+  }
+
+  OneProductModel? oneProductModel;
+
+  void getProductByID({required int id}) {
+    emit(LoadingGetProductByIDState());
+    DioHelper.getData(
+            url: ApiConstant.getProductByID + id.toString(), lang: 'en')
+        .then((value) {
+      oneProductModel = OneProductModel.fromJson(value.data);
+      emit(SuccessGetProductByIDState());
+    }).catchError((error) {
+      if (error is DioError) {
+        String data = error.response!.data['message'][0];
+        emit(ErrorGetProductByIDState(data));
+      } else {
+        emit(ErrorGetProductByIDState(error));
+      }
+    });
+  }
+
+  RequestScrapModel? requestScrapModel;
+
+  void addScrap({required String description}) {
+    emit(LoadingAddScrapState());
+    DioHelper.postData(
+            url: ApiConstant.addScrap,
+            data: {'description': description},
+            token: CacheHelper.getData(key: AppConstant.token),
+            lang: 'en')
+        .then((value) {
+          requestScrapModel = RequestScrapModel.fromJson(value.data);
+      emit(SuccessAddScrapState(requestScrapModel!));
+    }).catchError((error) {
+      if (error is DioError) {
+        print(error.response!.data);
+        String data = error.response!.data['message'][0];
+        emit(ErrorAddScrapState(data));
+      } else {
+        emit(ErrorAddScrapState(error));
+      }
+    });
+  }
+
+  void addAndRemoveFavorite({required int id}) {
+    emit(LoadingAddAndRemoveFavoriteState());
+    DioHelper.postData(
+            url: ApiConstant.addAndRemoveFavorite + id.toString(),
+            token: CacheHelper.getData(key: AppConstant.token),
+            lang: 'en')
+        .then((value) {
+      emit(SuccessAddAndRemoveFavoriteState());
+      getAllProduct(lang: 'en');
+    }).catchError((error) {
+      if (error is DioError) {
+        print(error.response!.data);
+      } else {
+        emit(ErrorAddAndRemoveFavoriteState(error));
+      }
+    });
+  }
 }

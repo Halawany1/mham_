@@ -4,25 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mham/views/home_screen/home_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BuildSearchFormField extends StatelessWidget {
   const BuildSearchFormField({super.key,
    this.readOnly=false,
      this.onSave,
      this.onTap,
+     this.width=245,
   });
   final bool readOnly;
   final void Function(String?) ?onSave;
   final VoidCallback ?onTap;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
     var font = Theme.of(context).textTheme;
     var color = Theme.of(context);
+    final locale = AppLocalizations.of(context);
 
     return  SizedBox(
       height: 32.h,
-      width: 245.w,
+      width: width.w,
       child: TextFormField(
         readOnly: readOnly,
         style: TextStyle(
@@ -40,7 +44,7 @@ class BuildSearchFormField extends StatelessWidget {
               color: color.cardColor.withOpacity(0.75),
               size: 15.sp,
             ),
-            hintText: 'Search',
+            hintText: locale.search,
             contentPadding: EdgeInsets.symmetric(
                 horizontal: 10.w),
             hintStyle: font.bodyMedium!.copyWith(

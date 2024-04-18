@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
-import 'package:mham/controller/layout_cubit/layout_cubit.dart';
+import 'package:mham/core/components/laoding_animation_component.dart';
 import 'package:mham/core/components/product_card_component.dart';
 import 'package:mham/core/components/search_form_filed_component.dart';
+import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/views/home_screen/widget/products_not_found.dart';
 
@@ -18,7 +19,6 @@ class SearchScreen extends StatelessWidget {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         var cubit = context.read<HomeCubit>();
-
         return WillPopScope(
           onWillPop: () async{
             Helper.pop(context);
@@ -28,11 +28,13 @@ class SearchScreen extends StatelessWidget {
             appBar: AppBar(
               leading: InkWell(
                   onTap: () {
+                    cubit.getAllProduct(lang: 'en');
                     Helper.pop(context);
                   },
                   child: Icon(Icons.arrow_back, color: color.primaryColor)),
               backgroundColor: color.scaffoldBackgroundColor,
               title: BuildSearchFormField(
+                width: 250.w,
                 onSave: (value) {
                   cubit.allProducts.clear();
                   cubit.getAllProduct(lang: 'en',
@@ -44,7 +46,10 @@ class SearchScreen extends StatelessWidget {
             ),
             body: Padding(
               padding:  EdgeInsets.all(20.h),
-              child:cubit.allProducts.isEmpty?
+              child:
+              state is LoadingGetAllProduct?
+              Center(child: BuildImageLoader(assetName: ImageConstant.logo)):
+              cubit.allProducts.isEmpty?
               Center(child: BuildNotFoundProduct())
               :GridView.builder(
                 shrinkWrap: true,
@@ -57,6 +62,9 @@ class SearchScreen extends StatelessWidget {
                     mainAxisExtent: 230.h),
                 itemBuilder: (context, index) =>
                     BuildProductCard(
+                      id: cubit.allProducts[index].productsId!,
+                      inFavorite: cubit.allProducts[index].inFavourite!,
+                      inCart: cubit.allProducts[index].inCart!,
                       isOffer: cubit.allProducts[index].isOffer!,
                       offerPrice: cubit.allProducts[index].offerPrice,
                       description: cubit

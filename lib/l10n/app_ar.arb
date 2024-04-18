@@ -82,6 +82,25 @@
   "enterYourData":"أدخل بياناتك",
   "selectType":"اختر صنف",
   "selectModel":"اختر موديل",
-  "selectYear":"اختر السنة"
+  "selectYear":"اختر السنة",
+  "checkOut":"Check Out",
+  "cart": "عربة التسوق",
+  "items": "العناصر",
+  "subTotal": "المجموع الفرعي",
+  "shippingFee": "رسوم الشحن",
+  "total": "الإجمالي",
+  "remove": "إزالة",
+  "moreDetails": "المزيد من التفاصيل",
+  "addToCart": "أضف إلى السلة",
+  "carModels": "نماذج السيارات",
+  "noProductFound": "لم يتم العثور على منتجات",
+  "cancel": "إلغاء",
+  "ok": "موافق",
+  "seeAll": "عرض الكل",
+  "search": "بحث",
+  "close": "إغلاق",
+  "reviews":"المراجعات",
+  "addedToCart":"تمت الإضافة إلى السلة",
+  "addedSuccess": "تمت الإضافة بنجاح"
 
 }

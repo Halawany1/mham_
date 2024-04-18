@@ -28,6 +28,8 @@ void main() async {
   await CacheHelper.init();
   await DioHelper.init();
   await CacheHelper.deleteAllData();
+  // CacheHelper.saveData(key: AppConstant.token,
+  //     value: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsInVzZXJfbmFtZSI6IkFkZCB5b29keSIsIm1vYmlsZSI6IisyMDExMjU1NzMyNTAiLCJyb2xlIjoidXNlciIsImNvdW50cnkiOnsiY291bnRyeV9pZCI6NCwiY291bnRyeV9uYW1lX2VuIjoiVW5pdGVkIEFyYWIgRW1pcmF0ZXMiLCJjb3VudHJ5X25hbWVfYXIiOiLYp9mE2KXZhdin2LHYp9iqINin2YTYudix2KjZitipINin2YTZhdiq2K3Yr9ipIn0sImlhdCI6MTcxMzMzODU1NiwiZXhwIjoxNzQ0NDQyNTU2fQ.1lVRXD-Z6-emZRYC6DPlXUM9mU7zX70vNItMEtnjyRQ');
   Bloc.observer = MyBlocObserver();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -69,14 +71,18 @@ class MyApp extends StatelessWidget {
           create: (context) => LayoutCubit(),
         ),
         BlocProvider(
-          create: (context) => HomeCubit()..
-          getAllProduct(lang: 'en')..getCarModels(),
+          create: (context) =>
+          HomeCubit()
+            ..
+            getAllProduct(lang: 'en')
+            ..getCarModels(),
         ),
         BlocProvider(
           create: (context) => AuthenticationCubit(),
         ),
         BlocProvider(
-          create: (context) => CartCubit()..getCart(),
+          create: (context) =>
+          CartCubit()
         ),
       ],
       child: ScreenUtilInit(

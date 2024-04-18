@@ -159,7 +159,21 @@ class LoginScreen extends StatelessWidget {
                         textLink: locale.signUp,
                       ),
                       SizedBox(
-                        height: 30.h,
+                        height: 10.h,
+                      ),
+                      BuildTextAndLinkRow(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LayoutScreen()));
+                          AuthenticationCubit.get(context).resetVisible();
+                        },
+                        text: locale.continueAs,
+                        textLink: locale.guest,
+                      ),
+                      SizedBox(
+                        height: 20.h,
                       ),
                       Text(
                         locale.orContinueWith,

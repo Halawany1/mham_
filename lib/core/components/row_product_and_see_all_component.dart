@@ -48,7 +48,7 @@ class BuildRowTextAndSeeAll extends StatelessWidget {
                     border: Border.all(color: color.primaryColor),
                     borderRadius: BorderRadius.circular(14.r),
                   ),
-                  child: Text('See All',
+                  child: Text(locale.seeAll,
                       style: font.bodyMedium!.copyWith(
                         fontSize: 12.sp,
                         color: color.primaryColor,

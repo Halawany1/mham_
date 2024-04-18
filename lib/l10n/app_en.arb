@@ -82,7 +82,25 @@
   "enterYourData":"Enter Your Car Data",
   "selectType":"select type",
   "selectModel":"select model",
-  "selectYear":"select year"
-
+  "selectYear":"select year",
+  "checkOut":"Check Out",
+  "cart":"Cart",
+  "items":"items",
+  "subTotal":"Sub Total",
+  "shippingFee":"Shipping Fee",
+  "total":"Total",
+  "remove":"remove",
+  "moreDetails":"More Details",
+  "addToCart":"Add to Cart",
+  "carModels":"Car Models",
+  "noProductFound":"No Products Found",
+  "cancel":"Cancel",
+  "ok":"Ok",
+  "seeAll":"See All",
+  "search":"Search",
+  "close":"Close",
+  "reviews":"Reviews",
+  "addedToCart":"Added To Cart",
+  "addedSuccess": "Added Successfully"
 
 }

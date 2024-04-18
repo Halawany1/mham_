@@ -30,7 +30,7 @@ required VoidCallback onPress,
             Navigator.of(context).pop();
           },
           child: Text(
-           'cancel' ,
+           locale.cancel ,
             style: font.bodyMedium!.copyWith(
                 color: color.primaryColor),
           ),
@@ -38,7 +38,7 @@ required VoidCallback onPress,
         TextButton(
           onPressed: onPress,
           child: Text(
-          'ok',
+          locale.ok,
             style: font.bodyMedium!.copyWith(
                 color: ColorConstant.error),
           ),

@@ -37,9 +37,42 @@ class ChangeQuantityState extends HomeState {}
 
 class IncreaseReviewState extends HomeState {}
 
+class ChangeTypeCarIndexState extends HomeState {}
+
 class ErrorIncreaseReviewState extends HomeState {
   final String error;
 
   ErrorIncreaseReviewState(this.error);
 }
 
+
+class LoadingGetProductByIDState extends HomeState {}
+
+class SuccessGetProductByIDState extends HomeState {}
+
+class ErrorGetProductByIDState extends HomeState {
+  final String error;
+
+  ErrorGetProductByIDState(this.error);
+}
+class LoadingAddScrapState extends HomeState {}
+
+class SuccessAddScrapState extends HomeState {
+  final RequestScrapModel data;
+  SuccessAddScrapState(this.data);
+}
+
+class ErrorAddScrapState extends HomeState {
+  final String error;
+
+  ErrorAddScrapState(this.error);
+}
+class LoadingAddAndRemoveFavoriteState extends HomeState {}
+
+class SuccessAddAndRemoveFavoriteState extends HomeState {}
+
+class ErrorAddAndRemoveFavoriteState extends HomeState {
+  final String error;
+
+  ErrorAddAndRemoveFavoriteState(this.error);
+}

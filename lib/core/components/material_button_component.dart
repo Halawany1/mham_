@@ -14,7 +14,7 @@ class BuildDefaultButton extends StatelessWidget {
      this.withBorder=false,
   });
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback ?onPressed;
   final double width;
   final double borderRadius;
   final double height;

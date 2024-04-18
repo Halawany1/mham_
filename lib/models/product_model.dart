@@ -29,7 +29,7 @@ class Products {
   String? madeIn;
   dynamic price;
   bool? isOffer;
-  int? offerPrice;
+  dynamic offerPrice;
   String? offerStartDate;
   String? offerEndDate;
   dynamic rating;
@@ -57,6 +57,8 @@ class Products {
   String? createdAt;
   int? businessCategoriesId;
   bool? enabled;
+  bool? inCart;
+  bool? inFavourite;
   String? productsName;
   String? warranty;
   String? disabledAt;
@@ -114,6 +116,8 @@ class Products {
     warranty = json['warranty'];
     disabledAt = json['disabled_at'];
     updatedAt = json['updated_at'];
+    inCart = json['inCart'];
+    inFavourite = json['inFavourite'];
     businessCategory = json['businessCategory'] != null
         ? new BusinessCategory.fromJson(json['businessCategory'])
         : null;

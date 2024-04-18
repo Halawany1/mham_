@@ -20,7 +20,7 @@ class DioHelper {
     dio!.options.headers = {
       'Content-Type': 'application/json',
       'lang': lang,
-      if (token != null) 'token': token,
+      if (token != null) 'authorization': token,
     };
     return await dio!.get(url, queryParameters: query);
   }
@@ -33,7 +33,7 @@ class DioHelper {
     dio!.options.headers = {
       'Content-Type': 'application/json',
       'lang': lang,
-      if (token != null) 'token': token,
+      if (token != null) 'authorization': token,
     };
     return await dio!.post(url, data: data);
   }
@@ -46,7 +46,7 @@ class DioHelper {
     dio!.options.headers = {
       'Content-Type': 'application/json',
       'lang': lang,
-      if (token != null) 'token': token,
+      if (token != null) 'authorization': token,
     };
     return await dio!.put(url, data: data);
   }
@@ -60,7 +60,7 @@ class DioHelper {
     dio!.options.headers = {
       'Content-Type': 'application/json',
       'lang': lang,
-      if (token != null) 'token': token,
+      if (token != null) 'authorization': token,
     };
     return await dio!.patch(url,data: data);
   }
@@ -70,13 +70,14 @@ class DioHelper {
     required url,
     required String lang,
     String? token,
+    Map<String, dynamic>? query,
   }) async {
     dio!.options.headers = {
       'Content-Type': 'application/json',
       'lang': lang,
-      if (token != null) 'token': token,
+      if (token != null) 'authorization': token,
     };
-    return await dio!.delete(url);
+    return await dio!.delete(url,queryParameters: query);
   }
 
 }

@@ -4,10 +4,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mham/controller/cart_cubit/cart_cubit.dart';
+import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/core/components/material_button_component.dart';
-import 'package:mham/core/components/small_button_component.dart';
 import 'package:mham/core/components/small_container_for_type_component.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mham/core/constent/app_constant.dart';
+import 'package:mham/core/network/local.dart';
 
 class BuildProductCard extends StatelessWidget {
   const BuildProductCard({
@@ -20,6 +23,9 @@ class BuildProductCard extends StatelessWidget {
     required this.description,
     required this.offerPrice,
     required this.isOffer,
+    required this.inCart,
+    required this.inFavorite,
+    required this.id,
   });
 
   final dynamic price;
@@ -30,6 +36,9 @@ class BuildProductCard extends StatelessWidget {
   final String description;
   final dynamic offerPrice;
   final bool isOffer;
+  final bool inCart;
+  final bool inFavorite;
+  final int id;
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +47,6 @@ class BuildProductCard extends StatelessWidget {
         .textTheme;
     var color = Theme.of(context);
     final locale = AppLocalizations.of(context);
-
-
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
@@ -67,9 +74,13 @@ class BuildProductCard extends StatelessWidget {
                 right: 8.w,
                 child: InkWell(
                   onTap: () {
-
+                    HomeCubit.get(context).addAndRemoveFavorite(id: id);
                   },
-                  child: Icon(FontAwesomeIcons.heart,
+                  child: Icon(
+                   inFavorite?
+                   FontAwesomeIcons.solidHeart:FontAwesomeIcons.heart,
+                    color:inFavorite?
+                    Colors.red:color.primaryColor,
                   ),
                 )),
             Positioned(
@@ -115,7 +126,7 @@ class BuildProductCard extends StatelessWidget {
               top: 125.h,
               left: 8.w,
               child: Text(
-                '($review reviews)',
+                '($review ${locale.reviews})',
                 style: font.bodyMedium!.copyWith(fontSize: 9.5.sp),
               ),
             ),
@@ -124,7 +135,7 @@ class BuildProductCard extends StatelessWidget {
               top: 142.h,
               left: 8.w,
               child: Text(
-                price.toString()+' KD',
+                price.toString()+' ${locale.kd}',
                 style: font.bodyMedium!.copyWith(
                     decoration: TextDecoration.lineThrough,
                     decorationColor: color.backgroundColor.withOpacity(0.5),
@@ -137,8 +148,8 @@ class BuildProductCard extends StatelessWidget {
               right: 5.w,
               child: Text(
                 isOffer?
-                offerPrice.toString()+' KD':
-                price.toString()+ ' KD',
+                offerPrice.toString()+' ${locale.kd}':
+                price.toString()+ ' ${locale.kd}',
                 style: font.bodyMedium!.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 12.sp,
@@ -156,31 +167,29 @@ class BuildProductCard extends StatelessWidget {
                 allowHalfRating: true,
                 itemCount: 5,
                 maxRating: rate,
-
                 itemSize: 12.sp,
                 itemBuilder: (context, _) =>
                     const Icon(
                       Icons.star,
                       color: Colors.amber,
                     ),
-                onRatingUpdate: (value) {
-
-                },
+                onRatingUpdate: (value) {},
                 tapOnlyMode: true,
               ),
             ),
             Positioned(
               top: 192.h,
-              left: 16.w,
+              left: 22.w,
               child:  BuildDefaultButton(
                 colorText: color.primaryColor,
                 backgorundColor: color.backgroundColor,
                 height: 17.h,
                 fontSize: 10.sp,
-                text: 'Add To Cart',
+                text: inCart?locale.addedToCart:locale.addToCart,
                 width: 100.w,
-                onPressed: () {
-
+                onPressed: inCart?null:() {
+                  CartCubit.get(context).addToCart(token: CacheHelper.getData(key: AppConstant.token),
+                      id: id, quantity: 1);
                 },),
             ),
 

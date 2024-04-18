@@ -42,8 +42,10 @@ void clearAllData() {
       listener: (context, state) {
         var cubit=context.read<AuthenticationCubit>();
         if (state is SuccessRegisterUserState) {
+          print(cubit.userModel!.token);
           CacheHelper.saveData(
-              key: AppConstant.token, value: cubit.userModel!.token);
+              key: AppConstant.token,
+              value: cubit.userModel!.token);
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => LayoutScreen(),));
         }

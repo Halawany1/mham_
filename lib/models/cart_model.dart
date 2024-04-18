@@ -66,7 +66,7 @@ class Product {
   int? productsId;
   int? traderId;
   String? description;
-  int? manufacturerPartNumber;
+  String? manufacturerPartNumber;
   String? brandName;
   List<Address>? address;
   String? productsImg;
@@ -76,7 +76,7 @@ class Product {
   dynamic offerPrice;
   String? offerStartDate;
   String? offerEndDate;
-  int? rating;
+  dynamic rating;
   int? reviewCount;
   String? type;
   bool? isBestSeller;

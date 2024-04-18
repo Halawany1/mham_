@@ -24,6 +24,8 @@ class BuildTextFormField extends StatelessWidget {
     this.readOnly = false,
     this.country = false,
     this.withBorder = false,
+    this.contentPadding = false,
+    this.maxLines = 1,
   });
 
   final String hint;
@@ -41,7 +43,8 @@ class BuildTextFormField extends StatelessWidget {
   final bool country;
   final VoidCallback? onTap;
   final bool withBorder;
-
+  final int maxLines;
+  final bool contentPadding ;
   @override
   Widget build(BuildContext context) {
     var font = Theme.of(context).textTheme;
@@ -72,6 +75,7 @@ class BuildTextFormField extends StatelessWidget {
             validator: validator,
             keyboardType: keyboardType,
             maxLength: maxLength,
+            maxLines: maxLines,
             controller: controller,
             obscureText: withSuffixIcon
                 ? visibleTwo
@@ -123,6 +127,9 @@ class BuildTextFormField extends StatelessWidget {
                     : null,
                 counterText: '',
                 contentPadding:
+                    contentPadding?
+
+                EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h):
                 prefixIcon ? EdgeInsets.symmetric(horizontal: 10.w) : null,
                 suffixIcon: country
                     ? Icon(
