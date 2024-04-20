@@ -5,13 +5,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:mham/views/account_screen/account_screen.dart';
+import 'package:mham/core/constent/app_constant.dart';
+import 'package:mham/core/helper/helper.dart';
+import 'package:mham/core/network/local.dart';
+import 'package:mham/views/get_start_screen/get_start_screen.dart';
 import 'package:mham/views/home_screen/home_screen.dart';
 import 'package:mham/views/order_screen/order_screen.dart';
+import 'package:mham/views/profile_screen/profile_screen.dart';
 import 'package:mham/views/wallet_screen/wallet_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
+PersistentTabController controller = PersistentTabController(initialIndex: 0,);
 class LayoutScreen extends StatelessWidget {
   const LayoutScreen({super.key});
 
@@ -20,9 +24,7 @@ class LayoutScreen extends StatelessWidget {
     final locale = AppLocalizations.of(context);
     var color = Theme.of(context);
     var font = Theme.of(context).textTheme;
-    PersistentTabController _controller;
 
-    _controller = PersistentTabController(initialIndex: 0,);
 
     List<PersistentBottomNavBarItem> _navBarsItems() {
       return [
@@ -35,29 +37,47 @@ class LayoutScreen extends StatelessWidget {
               color.bottomNavigationBarTheme.unselectedItemColor,
         ),
         PersistentBottomNavBarItem(
-          icon: Icon(FontAwesomeIcons.user),
-          title: (locale.account),
-          iconSize: 15.sp,
-          activeColorPrimary: color.backgroundColor,
-          inactiveColorPrimary:
-              color.bottomNavigationBarTheme.unselectedItemColor,
-        ),
-        PersistentBottomNavBarItem(
-          icon: Icon(FontAwesomeIcons.firstOrder),
+          icon: Icon(FontAwesomeIcons.truck),
           title: (locale.orders),
           iconSize: 15.sp,
 
+          onPressed:CacheHelper.getData(key: AppConstant.token)==null?
+              (p0) {
+            if(CacheHelper.getData(key: AppConstant.token)==null){
+              Helper.push(context, GetStartScreen());
+            }
+          }:null,
           activeColorPrimary: color.backgroundColor,
           inactiveColorPrimary:
           color.bottomNavigationBarTheme.unselectedItemColor,
         ),
         PersistentBottomNavBarItem(
+          onPressed:CacheHelper.getData(key: AppConstant.token)==null?
+              (p0) {
+            if(CacheHelper.getData(key: AppConstant.token)==null){
+              Helper.push(context, GetStartScreen());
+            }
+          }:null,
           icon: Icon(FontAwesomeIcons.wallet),
           title: (locale.wallet),
           iconSize: 15.sp,
           activeColorPrimary: color.backgroundColor,
           inactiveColorPrimary:
               color.bottomNavigationBarTheme.unselectedItemColor,
+        ),
+        PersistentBottomNavBarItem(
+          onPressed:CacheHelper.getData(key: AppConstant.token)==null?
+              (p0) {
+            if(CacheHelper.getData(key: AppConstant.token)==null){
+              Helper.push(context, GetStartScreen());
+            }
+          }:null,
+          icon: Icon(FontAwesomeIcons.user),
+          title: (locale.account),
+          iconSize: 15.sp,
+          activeColorPrimary: color.backgroundColor,
+          inactiveColorPrimary:
+          color.bottomNavigationBarTheme.unselectedItemColor,
         ),
 
       ];
@@ -67,21 +87,19 @@ class LayoutScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = context.read<LayoutCubit>();
         return PersistentTabView(
-
           context,
-          controller: _controller,
+          controller: controller,
           screens: [
             HomeScreen(),
-            AccountScreen(),
             OrderScreen(),
             WalletScreen(),
+            ProfileScreen(),
           ],
           hideNavigationBar: cubit.hideNav,
           items: _navBarsItems(),
           confineInSafeArea: true,
           backgroundColor: color.cardColor,
           // Default is Colors.white.
-
           handleAndroidBackButtonPress: true,
           // Default is true.
           resizeToAvoidBottomInset: true,

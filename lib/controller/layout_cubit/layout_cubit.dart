@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/network/local.dart';
-import 'package:mham/views/account_screen/account_screen.dart';
 import 'package:mham/views/home_screen/home_screen.dart';
+import 'package:mham/views/profile_screen/profile_screen.dart';
 part 'layout_state.dart';
 
 class LayoutCubit extends Cubit<LayoutState> {
@@ -15,7 +15,7 @@ class LayoutCubit extends Cubit<LayoutState> {
 
   List<Widget>screens=[
     HomeScreen(),
-   AccountScreen(),
+   ProfileScreen(),
   ];
   int index=0;
   void changeIndex(int value) {

@@ -9,12 +9,12 @@ import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/components/small_container_for_type_component.dart';
 import 'package:mham/core/constent/app_constant.dart';
+import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/constent/image_constant.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
-
-import '../../models/product_model.dart';
+import 'package:mham/views/get_start_screen/get_start_screen.dart';
 
 class DetailsScreen extends StatelessWidget {
   const DetailsScreen({
@@ -53,9 +53,10 @@ class DetailsScreen extends StatelessWidget {
     this.manufacturerPartNumber = null,
     this.placementOfVehile = null,
     this.warranty = null,
+    this.hideAddedToCart = false,
   });
 
-  final double price;
+  final dynamic price;
   final String? category;
   final String brand;
   final String type;
@@ -85,10 +86,11 @@ class DetailsScreen extends StatelessWidget {
   final int? numberSparkPulgs;
   final int? tyreEngraving;
   final int? rimDiameter;
-  final double? offerPrice;
+  final dynamic offerPrice;
   final bool? batteryReplacementAvailable;
   final bool inCart;
   final List<String>? carModels;
+  final bool hideAddedToCart;
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +100,7 @@ class DetailsScreen extends StatelessWidget {
     final locale = AppLocalizations.of(context);
     return BlocConsumer<CartCubit, CartState>(
       listener: (context, state) {
-        if(state is SuccessAddToCart){
+        if (state is SuccessAddToCart) {
           cubit.productModel = null;
           cubit.resetQuantity();
           Helper.pop(context);
@@ -112,29 +114,43 @@ class DetailsScreen extends StatelessWidget {
               onWillPop: () async {
                 cubit.productModel = null;
                 cubit.resetQuantity();
-                Helper.pop(context);
+                if (hideAddedToCart) {
+                  Navigator.pop(context);
+                } else {
+                  Helper.pop(context);
+                }
                 return true;
               },
               child: Scaffold(
-                bottomSheet: Container(
-                  color: inCart ? color.hintColor : color.hoverColor,
-                  padding: EdgeInsets.all(15.h),
-                  child: BuildDefaultButton(
-                      text: inCart ? locale.addedToCart : locale.addToCart,
-                      borderRadius: 12.r,
-                      height: 32.h,
-                      onPressed: inCart
-                          ? null
-                          : () {
-                              CartCubit.get(context).addToCart(
-                                  token: CacheHelper.getData(
-                                      key: AppConstant.token),
-                                  id: productId,
-                                  quantity: cubit.quantity);
+                bottomSheet: !hideAddedToCart
+                    ? Container(
+                        color: color.hoverColor,
+                        padding: EdgeInsets.all(15.h),
+                        child: BuildDefaultButton(
+                            text:
+                                inCart ? locale.addedToCart : locale.addToCart,
+                            borderRadius: 12.r,
+                            height: 32.h,
+                            onPressed: () {
+                              if (!inCart) {
+                                if (CacheHelper.getData(
+                                        key: AppConstant.token) ==
+                                    null) {
+                                  Helper.push(context, GetStartScreen());
+                                } else {
+                                  CartCubit.get(context).addToCart(
+                                      token: CacheHelper.getData(
+                                          key: AppConstant.token),
+                                      id: productId,
+                                      quantity: cubit.quantity);
+                                }
+                              }
                             },
-                      backgorundColor: color.backgroundColor,
-                      colorText: color.primaryColor),
-                ),
+                            backgorundColor:
+                                inCart ? Colors.grey : color.backgroundColor,
+                            colorText: color.primaryColor),
+                      )
+                    : null,
                 appBar: AppBar(
                   centerTitle: true,
                   title: Image.asset(
@@ -147,7 +163,11 @@ class DetailsScreen extends StatelessWidget {
                         cubit.productModel = null;
                         cubit.getAllProduct(lang: 'en');
                         cubit.resetQuantity();
-                        Helper.pop(context);
+                        if (hideAddedToCart) {
+                          Navigator.pop(context);
+                        } else {
+                          Helper.pop(context);
+                        }
                         cubit.productDetailsContainer = false;
                       },
                       child: Icon(
@@ -246,11 +266,14 @@ class DetailsScreen extends StatelessWidget {
                                 ),
                               ),
                               const Spacer(),
-                              Text('${rating}/5'),
+                              Text('${rating.toInt()}/5'),
                               SizedBox(
                                 width: 5.w,
                               ),
-                              const Icon(Icons.star),
+                              Icon(
+                                Icons.star,
+                                color: ColorConstant.backgroundAuth,
+                              ),
                             ],
                           ),
                           SizedBox(
@@ -275,45 +298,46 @@ class DetailsScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '${isOffer == true ? offerPrice : price} ${locale.kd}',
+                                '${isOffer == true ? offerPrice.toString() : price.toString()} ${locale.kd}',
                                 style: font.bodyMedium!.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: color.backgroundColor),
                               ),
-                              if(!inCart)
-                               Row(
-                                children: [
-                                  InkWell(
-                                      onTap: () {
-                                        cubit.changeQuantity(increase: false);
-                                      },
-                                      child: Icon(FontAwesomeIcons.minus)),
-                                  SizedBox(
-                                    width: 8.w,
-                                  ),
-                                  Container(
-                                    alignment: Alignment.center,
-                                    width: 30.w,
-                                    height: 30.w,
-                                    decoration: BoxDecoration(
-                                      border:
-                                          Border.all(color: color.hintColor),
-                                      borderRadius: BorderRadius.circular(5.r),
+                              if (!inCart)
+                                Row(
+                                  children: [
+                                    InkWell(
+                                        onTap: () {
+                                          cubit.changeQuantity(increase: false);
+                                        },
+                                        child: Icon(FontAwesomeIcons.minus)),
+                                    SizedBox(
+                                      width: 8.w,
                                     ),
-                                    child: Text(
-                                      cubit.quantity.toString(),
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: 30.w,
+                                      height: 30.w,
+                                      decoration: BoxDecoration(
+                                        border:
+                                            Border.all(color: color.hintColor),
+                                        borderRadius:
+                                            BorderRadius.circular(5.r),
+                                      ),
+                                      child: Text(
+                                        cubit.quantity.toString(),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 8.w,
-                                  ),
-                                  InkWell(
-                                      onTap: () {
-                                        cubit.changeQuantity(increase: true);
-                                      },
-                                      child: Icon(FontAwesomeIcons.add)),
-                                ],
-                              )
+                                    SizedBox(
+                                      width: 8.w,
+                                    ),
+                                    InkWell(
+                                        onTap: () {
+                                          cubit.changeQuantity(increase: true);
+                                        },
+                                        child: Icon(FontAwesomeIcons.add)),
+                                  ],
+                                )
                             ],
                           ),
                           SizedBox(

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
+import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/core/components/3rd_party_services_component.dart';
 import 'package:mham/core/components/drop_down_menu.dart';
 import 'package:mham/core/components/material_button_component.dart';
@@ -46,6 +47,7 @@ void clearAllData() {
           CacheHelper.saveData(
               key: AppConstant.token,
               value: cubit.userModel!.token);
+          LayoutCubit.get(context).changeHideNav(false);
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => LayoutScreen(),));
         }

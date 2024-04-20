@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mham/core/constent/color_constant.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 
 class BuildMultiSelectDropDownWidget extends StatelessWidget {
@@ -31,16 +32,18 @@ class BuildMultiSelectDropDownWidget extends StatelessWidget {
         dropdownBorderRadius: 10.r,
         onOptionSelected: onOptionSelected,
         inputDecoration: BoxDecoration(
-          color: color.scaffoldBackgroundColor,
+          color: ColorConstant.scaffoldBackground,
           borderRadius: BorderRadius.circular(8.r),
           border: Border.all(color: color.backgroundColor),
         ),
+
         options: options,
         hint: text,
         hintStyle: font.bodyMedium!.copyWith(
             color: color.hintColor,
             fontSize: 10.sp
         ),
+
         selectionType: SelectionType.single,
         chipConfig: const ChipConfig(wrapType: WrapType.wrap),
         selectedOptions: selectedOptions,

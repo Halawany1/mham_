@@ -101,6 +101,23 @@
   "close":"Close",
   "reviews":"Reviews",
   "addedToCart":"Added To Cart",
-  "addedSuccess": "Added Successfully"
-
+  "addedSuccess": "Added Successfully",
+  "successUpdateProfile":"Update Profile Successfully",
+  "myProfile":"My Profile",
+  "profile":"Profile",
+  "favorite":"Favorite",
+  "returns":"Returns",
+  "notifications":"Notifications",
+  "language":"Language",
+  "lightMode":"light mode",
+  "darkMode":"dark mode",
+  "appUpdate":"app update",
+  "logout":"logout",
+  "editProfile":"Edit Profile",
+  "country":"Country",
+  "save":"Save",
+  "chooseLanguage":"Choose Language",
+  "english":"English",
+  "arabic":"Arabic",
+  "welcomeBackGetStart":"Welcome back! Please sign in to your account to access the full version."
 }

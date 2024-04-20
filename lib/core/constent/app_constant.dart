@@ -1,4 +1,4 @@
-class AppConstant {
+class   AppConstant {
   static String onBoarding="onBoarding";
   static String token="token";
   static String lang="lang";

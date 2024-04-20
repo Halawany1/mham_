@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
+import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/core/components/3rd_party_services_component.dart';
 import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/components/snak_bar_component.dart';
@@ -37,12 +38,13 @@ class LoginScreen extends StatelessWidget {
           clearAllData();
           CacheHelper.saveData(
               key: AppConstant.token, value: cubit.userModel!.token);
+          LayoutCubit.get(context).changeHideNav(false);
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => LayoutScreen(),));
         }
         if (state is ErrorLoginUserState) {
          showMessageResponse(message: state.error,
-         context: context, success: true);
+         context: context, success: false);
         }
       },
       builder: (context, state) {

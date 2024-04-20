@@ -3,6 +3,8 @@ class ApiConstant{
       'https://maham-production.up.railway.app/api';
   static const String register='/user/register';
   static const String login='/user/login';
+  static const String profile='/user/profile';
+  static const String updateProfile='/user/updateProfile';
   static const String product='/products/getAll/';
   static const String carModelsAvailable='/carModelsAvailable';
   static const String getCart='/cart/getCart';
@@ -12,5 +14,6 @@ class ApiConstant{
   static const String addToCart='/cart/addToCart';
   static const String getProductByID='products/getOneForUse/';
   static const String addScrap='/user/addScrap';
+  static const String orders='/orders/allForUser';
   static const String addAndRemoveFavorite='/products/addAndRemoveFromFavourite/';
 }

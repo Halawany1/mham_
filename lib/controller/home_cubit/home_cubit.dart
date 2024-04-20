@@ -8,6 +8,7 @@ import 'package:mham/core/network/local.dart';
 import 'package:mham/core/network/remote.dart';
 import 'package:mham/models/car_model.dart';
 import 'package:mham/models/one_product_model.dart';
+import 'package:mham/models/order_model.dart';
 import 'package:mham/models/product_model.dart';
 import 'package:mham/models/request_scrap_model.dart';
 
@@ -276,7 +277,9 @@ class HomeCubit extends Cubit<HomeState> {
     });
   }
 
-  void addAndRemoveFavorite({required int id}) {
+  void addAndRemoveFavorite({required int id,
+    int? busniessId,
+  }) {
     emit(LoadingAddAndRemoveFavoriteState());
     DioHelper.postData(
             url: ApiConstant.addAndRemoveFavorite + id.toString(),
@@ -284,7 +287,9 @@ class HomeCubit extends Cubit<HomeState> {
             lang: 'en')
         .then((value) {
       emit(SuccessAddAndRemoveFavoriteState());
-      getAllProduct(lang: 'en');
+      getAllProduct(lang: 'en',
+        busniessId: busniessId,
+      );
     }).catchError((error) {
       if (error is DioError) {
         print(error.response!.data);
@@ -292,5 +297,31 @@ class HomeCubit extends Cubit<HomeState> {
         emit(ErrorAddAndRemoveFavoriteState(error));
       }
     });
+  }
+
+  OrderModel? orderModel;
+  List<Orders> allOrders = [];
+  void getAllOrders({required String lang,
+  }) async{
+    allOrders.clear();
+    emit(LoadingGetAllOrdersState());
+    DioHelper.getData(
+      url: ApiConstant.orders,
+      lang: lang,
+      token: CacheHelper.getData(key: AppConstant.token),
+    ).then((value) {
+      allOrders.clear();
+      orderModel = OrderModel.fromJson(value.data);
+      print(orderModel!.orders);
+      orderModel!.orders!.forEach((element) {
+        allOrders.add(element);
+      });
+      print(allOrders);
+      emit(SuccessGetAllOrdersState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(ErrorGetAllOrdersState(error.toString()));
+    });
+
   }
 }

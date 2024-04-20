@@ -19,7 +19,7 @@ class BuildDropDownMenu extends StatelessWidget {
     var color=Theme.of(context);
     var font=Theme.of(context).textTheme;
     return DropdownButtonFormField<String>(
-      value: null,
+      value: value,
       validator: (value) {
         return Validation.validateField(value, valueName, context);
       },

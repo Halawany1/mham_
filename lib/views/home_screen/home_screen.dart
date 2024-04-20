@@ -19,6 +19,7 @@ import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/views/cart_screen/cart_screen.dart';
 import 'package:mham/views/details_product_screen/details_product_screen.dart';
+import 'package:mham/views/get_start_screen/get_start_screen.dart';
 import 'package:mham/views/home_screen/widget/car_filter.dart';
 import 'package:mham/views/home_screen/widget/category.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -42,17 +43,16 @@ class HomeScreen extends StatelessWidget {
     var font = Theme.of(context).textTheme;
     return BlocConsumer<CartCubit, CartState>(
       listener: (context, state) {
-        if(state is SuccessAddToCart){
-          showMessageResponse(message: locale.addedSuccess,
-              context: context, success: true);
+        if (state is SuccessAddToCart) {
+          showMessageResponse(
+              message: locale.addedSuccess, context: context, success: true);
           HomeCubit.get(context).getAllProduct(lang: 'en');
         }
-
       },
       builder: (context, cartState) {
         return BlocConsumer<HomeCubit, HomeState>(
           listener: (context, state) {
-            if(state is SuccessAddScrapState){
+            if (state is SuccessAddScrapState) {
               showDialog(
                 context: context,
                 builder: (context) {
@@ -70,35 +70,64 @@ class HomeScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Your request has been sent successfully.',
-                            style: font.bodyMedium!.copyWith(fontSize: 15.sp),),
-                          SizedBox(height: 6.h,),
-                          Text('The required part will be found as soon as possible.',
-                              style: font.bodyMedium!.copyWith(fontSize: 15.sp)),
-                          SizedBox(height: 6.h,),
-                          Text('Keep the order number and contact number.',
-                              style: font.bodyMedium!.copyWith(fontSize: 15.sp)
+                          Text(
+                            'Your request has been sent successfully.',
+                            style: font.bodyMedium!.copyWith(fontSize: 15.sp),
                           ),
-                          SizedBox(height: 12.h,),
+                          SizedBox(
+                            height: 6.h,
+                          ),
+                          Text(
+                              'The required part will be found as soon as possible.',
+                              style:
+                                  font.bodyMedium!.copyWith(fontSize: 15.sp)),
+                          SizedBox(
+                            height: 6.h,
+                          ),
+                          Text('Keep the order number and contact number.',
+                              style:
+                                  font.bodyMedium!.copyWith(fontSize: 15.sp)),
+                          SizedBox(
+                            height: 12.h,
+                          ),
                           Row(
                             children: [
-                              Text('Order number:',style: font.bodyMedium!.copyWith(
-                                  fontSize: 14.sp
-                              ),),
-                              SizedBox(width: 5.w,),
-                              Text('#'+state.data.createScrap!.id.toString()),
-                            ],),
-                          SizedBox(height: 8.h,),
-                          Row(
-                            children: [
-                              Text('contact number:',style: font.bodyMedium!.copyWith(
-                                  fontSize: 14.sp
-                              ),),
-                              SizedBox(width: 5.w,),
-                              Text(''),
+                              Text(
+                                'Order number:',
+                                style:
+                                    font.bodyMedium!.copyWith(fontSize: 14.sp),
+                              ),
+                              SizedBox(
+                                width: 5.w,
+                              ),
+                              Text(
+                                '#' + state.data.createScrap!.id.toString(),
+                                style: font.bodyMedium!
+                                    .copyWith(fontWeight: FontWeight.bold,fontSize: 15.sp),
+                              ),
                             ],
                           ),
-
+                          SizedBox(
+                            height: 8.h,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'contact number:',
+                                style:
+                                    font.bodyMedium!.copyWith(fontSize: 12.sp),
+                              ),
+                              SizedBox(
+                                width: 5.w,
+                              ),
+                              Text(
+                                '+965 1234 5678',
+                                style: font.bodyMedium!.copyWith(
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -110,9 +139,7 @@ class HomeScreen extends StatelessWidget {
           builder: (context, state) {
             var cubit = context.read<HomeCubit>();
             return Scaffold(
-              body: cubit.productModel == null ||
-                      state is LoadingGetAllProduct ||
-                  cartState is CartLoadingState
+              body: cubit.productModel == null
                   ? Center(
                       child: BuildImageLoader(assetName: ImageConstant.logo))
                   : SafeArea(
@@ -134,19 +161,34 @@ class HomeScreen extends StatelessWidget {
                                     SizedBox(
                                       width: 10.w,
                                     ),
-                                    Icon(
-                                      FontAwesomeIcons.bell,
-                                      color: color.primaryColor,
+                                    InkWell(
+                                      onTap: () {
+                                        if(CacheHelper.getData(key: AppConstant.token) == null){
+                                          Helper.push(context, GetStartScreen());
+                                        }else{
+
+                                        }
+
+                                      },
+                                      child: Icon(
+                                        FontAwesomeIcons.bell,
+                                        color: color.primaryColor,
+                                      ),
                                     ),
                                     SizedBox(
                                       width: 10.w,
                                     ),
                                     InkWell(
                                       onTap: () {
-                                        CartCubit.get(context).getCart(
-                                            token: CacheHelper.getData(
-                                                key: AppConstant.token));
-                                        Helper.push(context, CartScreen());
+                                        if(CacheHelper.getData(key: AppConstant.token) != null){
+                                          CartCubit.get(context).getCart(
+                                              token: CacheHelper.getData(
+                                                  key: AppConstant.token));
+                                          Helper.push(context, CartScreen());
+                                        }else{
+                                          Helper.push(context, GetStartScreen());
+                                        }
+
                                       },
                                       child: Icon(
                                         FontAwesomeIcons.shoppingCart,
@@ -422,7 +464,8 @@ class HomeScreen extends StatelessWidget {
                                 SizedBox(
                                   height: 20.h,
                                 ),
-                                state is LoadingGetAllProduct
+                                state is LoadingGetAllProduct ||
+                                    cartState is CartLoadingState
                                     ? Center(
                                         child: CircularProgressIndicator(
                                         color: color.primaryColor,
@@ -467,17 +510,17 @@ class HomeScreen extends StatelessWidget {
                                                 cubit.increaseReview(cubit
                                                     .homeProducts[index]
                                                     .productsId!);
-                                                LayoutCubit.get(context)
-                                                    .changeHideNav(true);
                                                 Helper.push(
                                                     context,
                                                     DetailsScreen(
-                                                      productId:cubit
+                                                      productId: cubit
                                                           .homeProducts[index]
-                                                          .productsId! ,
-                                                      inCart:cubit
-                                                          .homeProducts[index]
-                                                          .inCart??false ,
+                                                          .productsId!,
+                                                      inCart: cubit
+                                                              .homeProducts[
+                                                                  index]
+                                                              .inCart ??
+                                                          false,
                                                       brand: cubit
                                                           .homeProducts[index]
                                                           .brandName!,
@@ -568,11 +611,13 @@ class HomeScreen extends StatelessWidget {
                                                 id: cubit.homeProducts[index]
                                                     .productsId!,
                                                 inCart: cubit
-                                                    .homeProducts[index]
-                                                    .inCart??false,
+                                                        .homeProducts[index]
+                                                        .inCart ??
+                                                    false,
                                                 inFavorite: cubit
-                                                    .homeProducts[index]
-                                                    .inFavourite??false,
+                                                        .homeProducts[index]
+                                                        .inFavourite ??
+                                                    false,
                                                 isOffer: cubit
                                                     .homeProducts[index]
                                                     .isOffer!,

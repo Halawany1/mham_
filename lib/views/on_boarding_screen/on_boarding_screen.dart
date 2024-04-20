@@ -6,6 +6,7 @@ import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/network/local.dart';
+import 'package:mham/layout/layout_screen.dart';
 import 'package:mham/views/login_screen/login_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -122,7 +123,7 @@ class OnBoardingScreen extends StatelessWidget {
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => LoginScreen()));
+                                        builder: (context) => LayoutScreen()));
                               },
                               child: Text(
                                 locale.skip,
@@ -149,7 +150,7 @@ class OnBoardingScreen extends StatelessWidget {
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => LoginScreen()));
+                                        builder: (context) => LayoutScreen()));
                               } else {
                                 controller.nextPage(
                                     duration: const Duration(milliseconds: 900),

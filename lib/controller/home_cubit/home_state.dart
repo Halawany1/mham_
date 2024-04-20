@@ -76,3 +76,12 @@ class ErrorAddAndRemoveFavoriteState extends HomeState {
 
   ErrorAddAndRemoveFavoriteState(this.error);
 }
+class LoadingGetAllOrdersState extends HomeState {}
+
+class SuccessGetAllOrdersState extends HomeState {}
+
+class ErrorGetAllOrdersState extends HomeState {
+  final String error;
+
+  ErrorGetAllOrdersState(this.error);
+}

@@ -1,13 +1,81 @@
-class CartModel {
-  Cart? cart;
+class OrderModel {
+  List<Orders>? orders;
+  int? totalPages;
+  int? currentPage;
+  int? totalOrders;
 
-  CartModel.fromJson(Map<String, dynamic> json) {
-    cart = json['cart'] != null ? new Cart.fromJson(json['cart']) : null;
+
+  OrderModel.fromJson(Map<String, dynamic> json) {
+    if (json['orders'] != null) {
+      orders = <Orders>[];
+      json['orders'].forEach((v) {
+        orders!.add(new Orders.fromJson(v));
+      });
+    }
+    totalPages = json['totalPages'];
+    currentPage = json['currentPage'];
+    totalOrders = json['totalOrders'];
+  }
+
+
+}
+
+class Orders {
+  int? orderId;
+  int? driverId;
+  int? userId;
+  String? status;
+  String? anotherMobile;
+  List<Address>? address;
+  String? createdAt;
+  String? processingAt;
+  String? shippedAt;
+  String? deliveredAt;
+  String? cancelledAt;
+  List<Carts>? carts;
+
+
+
+  Orders.fromJson(Map<String, dynamic> json) {
+    orderId = json['order_id'];
+    driverId = json['driver_id'];
+    userId = json['user_id'];
+    status = json['status'];
+    anotherMobile = json['another_mobile'];
+    if (json['address'] != null) {
+      address = <Address>[];
+      json['address'].forEach((v) {
+        address!.add(new Address.fromJson(v));
+      });
+    }
+    createdAt = json['created_at'];
+    processingAt = json['processing_at'];
+    shippedAt = json['shipped_at'];
+    deliveredAt = json['delivered_at'];
+    cancelledAt = json['cancelled_at'];
+    if (json['carts'] != null) {
+      carts = <Carts>[];
+      json['carts'].forEach((v) {
+        carts!.add(new Carts.fromJson(v));
+      });
+    }
   }
 
 }
 
-class Cart {
+class Address {
+  String? address;
+  String? location;
+
+  Address.fromJson(Map<String, dynamic> json) {
+    address = json['address'];
+    location = json['location'];
+  }
+
+
+}
+
+class Carts {
   int? cartId;
   int? userId;
   dynamic totalPrice;
@@ -18,8 +86,7 @@ class Cart {
   List<CartProducts>? cartProducts;
 
 
-
-  Cart.fromJson(Map<String, dynamic> json) {
+  Carts.fromJson(Map<String, dynamic> json) {
     cartId = json['cart_id'];
     userId = json['user_id'];
     totalPrice = json['total_price'];
@@ -35,7 +102,6 @@ class Cart {
     }
   }
 
-
 }
 
 class CartProducts {
@@ -46,6 +112,8 @@ class CartProducts {
   String? createdAt;
   String? updatedAt;
   Product? product;
+  List<ReturnProduct>? returnProduct;
+
 
 
   CartProducts.fromJson(Map<String, dynamic> json) {
@@ -57,6 +125,12 @@ class CartProducts {
     updatedAt = json['updated_at'];
     product =
     json['product'] != null ? new Product.fromJson(json['product']) : null;
+    if (json['returnProduct'] != null) {
+      returnProduct = <ReturnProduct>[];
+      json['returnProduct'].forEach((v) {
+        returnProduct!.add(new ReturnProduct.fromJson(v));
+      });
+    }
   }
 
 
@@ -76,7 +150,7 @@ class Product {
   dynamic offerPrice;
   String? offerStartDate;
   String? offerEndDate;
-  int? rating;
+  dynamic rating;
   int? reviewCount;
   String? type;
   bool? isBestSeller;
@@ -105,8 +179,8 @@ class Product {
   String? warranty;
   String? disabledAt;
   String? updatedAt;
-  List<AvailableYears>? availableYears;
   BusinessCategory? businessCategory;
+  List<AvailableYears>? availableYears;
 
 
   Product.fromJson(Map<String, dynamic> json) {
@@ -157,27 +231,27 @@ class Product {
     warranty = json['warranty'];
     disabledAt = json['disabled_at'];
     updatedAt = json['updated_at'];
+    businessCategory = json['businessCategory'] != null
+        ?  BusinessCategory.fromJson(json['businessCategory'])
+        : null;
     if (json['availableYears'] != null) {
       availableYears = <AvailableYears>[];
       json['availableYears'].forEach((v) {
         availableYears!.add(new AvailableYears.fromJson(v));
       });
     }
-    businessCategory = json['businessCategory'] != null
-        ? new BusinessCategory.fromJson(json['businessCategory'])
-        : null;
   }
 
 }
 
-class Address {
-  String? address;
-  String? location;
+class BusinessCategory {
+  String? bcNameEn;
+  String? bcNameAr;
 
 
-  Address.fromJson(Map<String, dynamic> json) {
-    address = json['address'];
-    location = json['location'];
+  BusinessCategory.fromJson(Map<String, dynamic> json) {
+    bcNameEn = json['bc_name_en'];
+    bcNameAr = json['bc_name_ar'];
   }
 
 
@@ -195,10 +269,9 @@ class AvailableYears {
     availableYear = json['available_year'];
     carModelId = json['carModelId'];
     carModel = json['carModel'] != null
-        ? new CarModel.fromJson(json['carModel'])
+        ?  CarModel.fromJson(json['carModel'])
         : null;
   }
-
 
 }
 
@@ -207,8 +280,6 @@ class CarModel {
   String? modelName;
   int? carId;
   Car? car;
-
-
   CarModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     modelName = json['model_name'];
@@ -216,30 +287,41 @@ class CarModel {
     car = json['car'] != null ? new Car.fromJson(json['car']) : null;
   }
 
-
 }
 
 class Car {
   int? id;
   String? carName;
 
-
   Car.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     carName = json['car_name'];
   }
 
-
 }
 
-class BusinessCategory {
-  String? bcNameAr;
-  String? bcNameEn;
+class ReturnProduct {
+  int? id;
+  int? quantity;
+  String? reason;
+  String? response;
+  String? createdAt;
+  String? status;
+  String? approvedAt;
+  String? rejectedAt;
+  String? arrivedAt;
 
 
-  BusinessCategory.fromJson(Map<String, dynamic> json) {
-    bcNameAr = json['bc_name_ar'];
-    bcNameEn = json['bc_name_en'];
+  ReturnProduct.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    quantity = json['quantity'];
+    reason = json['reason'];
+    response = json['response'];
+    createdAt = json['created_at'];
+    status = json['status'];
+    approvedAt = json['approvedAt'];
+    rejectedAt = json['rejectedAt'];
+    arrivedAt = json['arrivedAt'];
   }
 
 

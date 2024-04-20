@@ -9,6 +9,7 @@ import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
 import 'package:mham/controller/cart_cubit/cart_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
+import 'package:mham/controller/profile_cubit/profile_cubit.dart';
 import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/constent/image_constant.dart';
@@ -27,9 +28,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheHelper.init();
   await DioHelper.init();
-  await CacheHelper.deleteAllData();
-  // CacheHelper.saveData(key: AppConstant.token,
-  //     value: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsInVzZXJfbmFtZSI6IkFkZCB5b29keSIsIm1vYmlsZSI6IisyMDExMjU1NzMyNTAiLCJyb2xlIjoidXNlciIsImNvdW50cnkiOnsiY291bnRyeV9pZCI6NCwiY291bnRyeV9uYW1lX2VuIjoiVW5pdGVkIEFyYWIgRW1pcmF0ZXMiLCJjb3VudHJ5X25hbWVfYXIiOiLYp9mE2KXZhdin2LHYp9iqINin2YTYudix2KjZitipINin2YTZhdiq2K3Yr9ipIn0sImlhdCI6MTcxMzMzODU1NiwiZXhwIjoxNzQ0NDQyNTU2fQ.1lVRXD-Z6-emZRYC6DPlXUM9mU7zX70vNItMEtnjyRQ');
+ //await CacheHelper.deleteAllData();
+  CacheHelper.saveData(key: AppConstant.token,
+      value: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsInVzZXJfbmFtZSI6IkFkZCB5b29keSIsIm1vYmlsZSI6IisyMDExMjU1NzMyNTAiLCJyb2xlIjoidXNlciIsImNvdW50cnkiOnsiY291bnRyeV9pZCI6NCwiY291bnRyeV9uYW1lX2VuIjoiVW5pdGVkIEFyYWIgRW1pcmF0ZXMiLCJjb3VudHJ5X25hbWVfYXIiOiLYp9mE2KXZhdin2LHYp9iqINin2YTYudix2KjZitipINin2YTZhdiq2K3Yr9ipIn0sImlhdCI6MTcxMzEwNDk4NCwiZXhwIjoxNzQ0MjA4OTg0fQ.4AhUPyoWNxOgqCDC9IXId1wn2o26skh_Qz6BRMpZDkY');
   Bloc.observer = MyBlocObserver();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -43,11 +44,7 @@ void main() async {
   if (CacheHelper.getData(key: AppConstant.onBoarding) == null) {
     widget = const OnBoardingScreen();
   } else {
-    if (CacheHelper.getData(key: AppConstant.token) != null) {
-      widget = const LayoutScreen();
-    } else {
-      widget = const LoginScreen();
-    }
+    widget = const LayoutScreen();
   }
   //print(CacheHelper.getData(key: AppConstant.token));
   runApp(
@@ -75,10 +72,13 @@ class MyApp extends StatelessWidget {
           HomeCubit()
             ..
             getAllProduct(lang: 'en')
-            ..getCarModels(),
+            ..getCarModels()..getAllOrders(lang: 'en'),
         ),
         BlocProvider(
           create: (context) => AuthenticationCubit(),
+        ),
+        BlocProvider(
+          create: (context) => ProfileCubit()..getProfile(),
         ),
         BlocProvider(
           create: (context) =>
@@ -94,8 +94,8 @@ class MyApp extends StatelessWidget {
             builder: (context, state) {
               var cubit = context.read<LayoutCubit>();
               return MaterialApp(
-                theme: lightTheme(),
-                locale: Locale('en'),
+                theme: cubit.theme?lightTheme():darkTheme(),
+                locale: Locale(cubit.lang),
                 localizationsDelegates: const [
                   AppLocalizations.delegate,
                   GlobalMaterialLocalizations.delegate,

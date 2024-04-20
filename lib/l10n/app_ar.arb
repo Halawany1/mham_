@@ -101,6 +101,24 @@
   "close": "إغلاق",
   "reviews":"المراجعات",
   "addedToCart":"تمت الإضافة إلى السلة",
-  "addedSuccess": "تمت الإضافة بنجاح"
+  "addedSuccess": "تمت الإضافة بنجاح",
+  "successUpdateProfile":"تم تحديث الملف الشخصي بنجاح",
+  "myProfile":"ملفي الشخصي",
+  "profile":"الملف الشخصي",
+  "favorite":"المفضلة",
+  "returns":"الارجاعات",
+  "notifications":"الاشعارات",
+  "language":"اللغة",
+  "lightMode":"الوضع الفاتح",
+  "darkMode":"الوضع المظلم",
+  "appUpdate":"تحديث التطبيق",
+  "logout":"تسجيل خروج",
+  "editProfile":"تعديل الملف الشخصي",
+  "country":"الدولة",
+  "save":"حفظ",
+  "chooseLanguage":"اختر اللغة",
+  "english":"English",
+  "arabic":"العربية",
+  "welcomeBackGetStart":"مرحبًا بعودتك، سجل الدخول للحصول على التفاصيل"
 
 }

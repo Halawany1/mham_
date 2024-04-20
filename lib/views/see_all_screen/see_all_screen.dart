@@ -112,12 +112,12 @@ class SeeAllScreen extends StatelessWidget {
                         SizedBox(
                           height: 25.h,
                         ),
-                        // if( CacheHelper.getData(key: AppConstant.businessId)==1||
-                        //     CacheHelper.getData(key: AppConstant.businessId)==6)
-                        //   BuildCarFilter(),
-                        // if( CacheHelper.getData(key: AppConstant.businessId)==1||
-                        //     CacheHelper.getData(key: AppConstant.businessId)==6)
-                        //   SizedBox(height: 10.h,),
+                        if( CacheHelper.getData(key: AppConstant.businessId)==1||
+                            CacheHelper.getData(key: AppConstant.businessId)==6)
+                          BuildCarFilter(),
+                        if( CacheHelper.getData(key: AppConstant.businessId)==1||
+                            CacheHelper.getData(key: AppConstant.businessId)==6)
+                          SizedBox(height: 10.h,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [

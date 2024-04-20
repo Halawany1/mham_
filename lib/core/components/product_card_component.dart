@@ -10,7 +10,9 @@ import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/components/small_container_for_type_component.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/core/constent/app_constant.dart';
+import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
+import 'package:mham/views/get_start_screen/get_start_screen.dart';
 
 class BuildProductCard extends StatelessWidget {
   const BuildProductCard({
@@ -74,7 +76,15 @@ class BuildProductCard extends StatelessWidget {
                 right: 8.w,
                 child: InkWell(
                   onTap: () {
-                    HomeCubit.get(context).addAndRemoveFavorite(id: id);
+                    if(CacheHelper.getData(key: AppConstant.token)==null){
+                      Helper.push(context, GetStartScreen());
+                    }else{
+                      HomeCubit.get(context).addAndRemoveFavorite(
+                          busniessId:
+                          CacheHelper.getData(key: AppConstant.businessId),
+                          id: id);
+                    }
+
                   },
                   child: Icon(
                    inFavorite?
@@ -182,14 +192,24 @@ class BuildProductCard extends StatelessWidget {
               left: 22.w,
               child:  BuildDefaultButton(
                 colorText: color.primaryColor,
-                backgorundColor: color.backgroundColor,
+                backgorundColor:inCart?
+                    Colors.grey:color.backgroundColor,
                 height: 17.h,
                 fontSize: 10.sp,
-                text: inCart?locale.addedToCart:locale.addToCart,
+                text: inCart?
+                locale.addedToCart: locale.addToCart,
                 width: 100.w,
-                onPressed: inCart?null:() {
-                  CartCubit.get(context).addToCart(token: CacheHelper.getData(key: AppConstant.token),
-                      id: id, quantity: 1);
+                onPressed: () {
+                  if(!inCart){
+                    if(CacheHelper.getData(key: AppConstant.token)==null){
+                      Helper.push(context, GetStartScreen());
+                    }else{
+                      CartCubit.get(context).addToCart(token: CacheHelper.getData(key: AppConstant.token),
+                          id: id, quantity: 1);
+                    }
+
+                  }
+
                 },),
             ),
 

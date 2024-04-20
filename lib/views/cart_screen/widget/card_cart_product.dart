@@ -29,173 +29,176 @@ class BuildCartCardProduct extends StatelessWidget {
             color: color.scaffoldBackgroundColor),
         width: double.infinity,
         height: 100.h,
-        child: Stack(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12.r),
-              child: Image.asset(
-                'assets/images/product.png',
-                height: 100.h,
-                width: 100.w,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Positioned(
-              top: 5.h,
-              left: 5.w,
-              child: SizedBox(
-                  width: 60.w,
-                  height: 16.h,
-                  child: BuildContainerType(
-                      type: cubit.cartModel!.cart!.cartProducts![index].product!
-                          .type!)),
-            ),
-            Positioned(
-              top: 4.h,
-              left: 110.w,
-              child: SizedBox(
-                width: 140.w,
-                child: Text(
-                  cubit.cartModel!.cart!.cartProducts![index].product!
-                      .productsName!,
-                  overflow: TextOverflow.ellipsis,
-                  style: font.bodyMedium!.copyWith(fontSize: 13.sp),
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12.r),
+                child: Image.asset(
+                  'assets/images/product.png',
+                  height: 100.h,
+                  width: 100.w,
+                  fit: BoxFit.cover,
                 ),
               ),
-            ),
-            if (cubit.cartModel!.cart!.cartProducts![index].product!.isOffer!)
               Positioned(
-                top: 20.h,
+                top: 5.h,
+                left: 5.w,
+                child: SizedBox(
+                    width: 60.w,
+                    height: 16.h,
+                    child: BuildContainerType(
+                        type: cubit.cartModel!.cart!.cartProducts![index].product!
+                            .type!)),
+              ),
+              Positioned(
+                top: 4.h,
+                left: 110.w,
+                child: SizedBox(
+                  width: 140.w,
+                  child: Text(
+                    cubit.cartModel!.cart!.cartProducts![index].product!
+                        .productsName!,
+                    overflow: TextOverflow.ellipsis,
+                    style: font.bodyMedium!.copyWith(fontSize: 13.sp),
+                  ),
+                ),
+              ),
+              if (cubit.cartModel!.cart!.cartProducts![index].product!.isOffer!)
+                Positioned(
+                  top: 20.h,
+                  left: 110.w,
+                  child: Text(
+                    cubit.cartModel!.cart!.cartProducts![index].product!.price!
+                            .toString() +
+                        ' ${locale.kd}',
+                    style: font.bodyMedium!.copyWith(
+                        decoration: TextDecoration.lineThrough,
+                        decorationColor: color.backgroundColor.withOpacity(0.5),
+                        fontSize: 12.sp,
+                        color: color.backgroundColor.withOpacity(0.5)),
+                  ),
+                ),
+              Positioned(
+                top: 35.h,
                 left: 110.w,
                 child: Text(
-                  cubit.cartModel!.cart!.cartProducts![index].product!.price!
-                          .toString() +
-                      ' ${locale.kd}',
+                  '${cubit.cartModel!.cart!.cartProducts![index].product!.isOffer! ? cubit.cartModel!.cart!.cartProducts![index].product!.offerPrice : cubit.cartModel!.cart!.cartProducts![index].product!.price} KD',
                   style: font.bodyMedium!.copyWith(
-                      decoration: TextDecoration.lineThrough,
-                      decorationColor: color.backgroundColor.withOpacity(0.5),
+                      fontWeight: FontWeight.bold,
                       fontSize: 12.sp,
-                      color: color.backgroundColor.withOpacity(0.5)),
+                      color: color.backgroundColor),
                 ),
               ),
-            Positioned(
-              top: 35.h,
-              left: 110.w,
-              child: Text(
-                '${cubit.cartModel!.cart!.cartProducts![index].product!.isOffer! ? cubit.cartModel!.cart!.cartProducts![index].product!.offerPrice : cubit.cartModel!.cart!.cartProducts![index].product!.price} KD',
-                style: font.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.sp,
-                    color: color.backgroundColor),
-              ),
-            ),
-            Positioned(
-              top: 54.h,
-              left: 110.w,
-              child: RatingBar.builder(
-                ignoreGestures: true,
-                initialRating: double.parse(cubit
-                    .cartModel!.cart!.cartProducts![index].product!.rating!
-                    .toString()),
-                minRating: 0,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                maxRating: double.parse(cubit
-                    .cartModel!.cart!.cartProducts![index].product!.rating!
-                    .toString()),
-                itemSize: 12.sp,
-                itemBuilder: (context, _) => const Icon(
-                  Icons.star,
-                  color: Colors.amber,
+              Positioned(
+                top: 54.h,
+                left: 110.w,
+                child: RatingBar.builder(
+                  ignoreGestures: true,
+                  initialRating: double.parse(cubit
+                      .cartModel!.cart!.cartProducts![index].product!.rating!
+                      .toString()),
+                  minRating: 0,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  maxRating: double.parse(cubit
+                      .cartModel!.cart!.cartProducts![index].product!.rating!
+                      .toString()),
+                  itemSize: 12.sp,
+                  itemBuilder: (context, _) => const Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                  onRatingUpdate: (value) {},
+                  tapOnlyMode: true,
                 ),
-                onRatingUpdate: (value) {},
-                tapOnlyMode: true,
               ),
-            ),
-            Positioned(
-              top: 50.h,
-              right: 12.w,
-              child: Row(
-                children: [
-                  InkWell(onTap: () {
-                    if(cubit.cartModel!.cart!.cartProducts![index].quantity!>1){
-                      cubit.updateCart(
-                          token: CacheHelper.getData(
-                              key: AppConstant.token),
-                          id: cubit.cartModel!.cart!.cartProducts![index].product!.productsId!,
-                          quantity: cubit.cartModel!.cart!.
-                          cartProducts![index].quantity!-1);
-                    }
+              Positioned(
+                top: 50.h,
+                right: 12.w,
+                child: Row(
+                  children: [
+                    InkWell(onTap: () {
+                      if(cubit.cartModel!.cart!.cartProducts![index].quantity!>1){
+                        cubit.updateCart(
+                            token: CacheHelper.getData(
+                                key: AppConstant.token),
+                            id: cubit.cartModel!.cart!.cartProducts![index].product!.productsId!,
+                            quantity: cubit.cartModel!.cart!.
+                            cartProducts![index].quantity!-1);
+                      }
 
-                  }, child: Icon(FontAwesomeIcons.minus)),
-                  SizedBox(
-                    width: 5.w,
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: 20.w,
-                    height: 20.w,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: color.hintColor),
-                      borderRadius: BorderRadius.circular(5.r),
+                    }, child: Icon(FontAwesomeIcons.minus)),
+                    SizedBox(
+                      width: 5.w,
                     ),
-                    child: Text(
-                      cubit.cartModel!.cart!.cartProducts![index].quantity!
-                          .toString(),
-                      style: font.bodyMedium!.copyWith(fontSize: 12.sp),
+                    Container(
+                      alignment: Alignment.center,
+                      width: 20.w,
+                      height: 20.w,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: color.hintColor),
+                        borderRadius: BorderRadius.circular(5.r),
+                      ),
+                      child: Text(
+                        cubit.cartModel!.cart!.cartProducts![index].quantity!
+                            .toString(),
+                        style: font.bodyMedium!.copyWith(fontSize: 12.sp),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 5.w,
-                  ),
-                  InkWell(onTap: () {
-                    cubit.updateCart(token: CacheHelper.getData(
-                        key: AppConstant.token),
-                        id: cubit.cartModel!.cart!.cartProducts![index].product!.productsId!,
-                        quantity: cubit.cartModel!.cart!.cartProducts![index].quantity!+1);
-                  }, child: Icon(FontAwesomeIcons.add)),
-                ],
+                    SizedBox(
+                      width: 5.w,
+                    ),
+                    InkWell(onTap: () {
+                      cubit.updateCart(token: CacheHelper.getData(
+                          key: AppConstant.token),
+                          id: cubit.cartModel!.cart!.cartProducts![index].product!.productsId!,
+                          quantity: cubit.cartModel!.cart!.cartProducts![index].quantity!+1);
+                    }, child: Icon(FontAwesomeIcons.add)),
+                  ],
+                ),
               ),
-            ),
-            Positioned(
-                top: 4.h,
+              Positioned(
+                  top: 4.h,
+                  right: 5.w,
+                  child: Image.asset(
+                    'assets/images/hundia.png',
+                  )),
+              Positioned(
+                top: 65.h,
                 right: 5.w,
-                child: Image.asset(
-                  'assets/images/hundia.png',
-                )),
-            Positioned(
-              top: 65.h,
-              right: 5.w,
-              child: Row(
-                children: [
-                  BuildSmallButton(
-                    text: locale.remove,
-                    icon: FontAwesomeIcons.trash,
-                    withIcon: true,
-                    width: 70.w,
-                    hieght: 16.h,
-                    edit: false,
-                    onPressed: () {
-                      cubit.deleteCart(
-                          token: CacheHelper.getData(key: AppConstant.token),
-                          id: cubit.cartModel!.cart!.cartProducts![index].id!);
-                    },
-                  ),
-                  SizedBox(
-                    width: 12.w,
-                  ),
-                  BuildSmallButton(
-                    text: locale.moreDetails,
-                    width: 70.w,
-                    hieght: 16.h,
-                    withIcon: false,
-                    onPressed: () {},
-                  )
-                ],
-              ),
-            )
-          ],
+                child: Row(
+                  children: [
+                    BuildSmallButton(
+                      text: locale.remove,
+                      icon: FontAwesomeIcons.trash,
+                      withIcon: true,
+                      width: 70.w,
+                      hieght: 16.h,
+                      edit: false,
+                      onPressed: () {
+                        cubit.deleteCart(
+                            token: CacheHelper.getData(key: AppConstant.token),
+                            id: cubit.cartModel!.cart!.cartProducts![index].id!);
+                      },
+                    ),
+                    SizedBox(
+                      width: 12.w,
+                    ),
+                    BuildSmallButton(
+                      text: locale.moreDetails,
+                      width: 70.w,
+                      hieght: 16.h,
+                      withIcon: false,
+                      onPressed: () {},
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

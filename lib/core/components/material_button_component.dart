@@ -34,15 +34,18 @@ class BuildDefaultButton extends StatelessWidget {
         minWidth: width.w,
         shape: RoundedRectangleBorder(
           side: withBorder?
-          BorderSide(color: color.backgroundColor):BorderSide.none,
+          BorderSide(color: color.primaryColor):BorderSide.none,
           borderRadius: BorderRadius.circular(borderRadius.r),
         ),
         color: backgorundColor,
         onPressed:onPressed,
-        child: Text(text,style: font.titleMedium!.copyWith(
-          fontSize: fontSize.sp,
-          color: colorText
-        ),),
+        child: FittedBox(
+          fit: BoxFit.contain,
+          child: Text(text,style: font.titleMedium!.copyWith(
+            fontSize: fontSize.sp,
+            color: colorText
+          ),),
+        ),
       ),
     );
   }

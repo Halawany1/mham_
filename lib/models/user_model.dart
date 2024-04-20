@@ -24,20 +24,20 @@ class User {
     mobile = json['mobile'];
     role = json['role'];
     country =
-    json['country'] != null ? new Country.fromJson(json['country']) : null;
+    json['country'] != null ?  Country.fromJson(json['country']) : null;
   }
 
 }
 
 class Country {
   int? countryId;
-  String? countryName;
+  String? countryNameEn;
   String? countryNameAr;
 
 
   Country.fromJson(Map<String, dynamic> json) {
     countryId = json['country_id'];
-    countryName = json['country_name'];
+    countryNameEn = json['country_name_en'];
     countryNameAr = json['country_name_ar'];
   }
 
