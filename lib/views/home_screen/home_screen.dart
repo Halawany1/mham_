@@ -14,6 +14,7 @@ import 'package:mham/core/components/row_product_and_see_all_component.dart';
 import 'package:mham/core/components/search_form_filed_component.dart';
 import 'package:mham/core/components/snak_bar_component.dart';
 import 'package:mham/core/constent/app_constant.dart';
+import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
@@ -59,7 +60,7 @@ class HomeScreen extends StatelessWidget {
                   var color = Theme.of(context);
                   return AlertDialog(
                     backgroundColor: color.cardColor,
-                    title: Text('Request Scrap'),
+                    title: Text(locale.requestScrap),
                     content: Container(
                       height: 220.h,
                       decoration: BoxDecoration(
@@ -71,20 +72,20 @@ class HomeScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Your request has been sent successfully.',
+                            locale.requestScrapSuccess,
                             style: font.bodyMedium!.copyWith(fontSize: 15.sp),
                           ),
                           SizedBox(
                             height: 6.h,
                           ),
                           Text(
-                              'The required part will be found as soon as possible.',
+                              locale.requiredPartWillBeFoundSoon,
                               style:
                                   font.bodyMedium!.copyWith(fontSize: 15.sp)),
                           SizedBox(
                             height: 6.h,
                           ),
-                          Text('Keep the order number and contact number.',
+                          Text(locale.keepOrderAndContactNumber,
                               style:
                                   font.bodyMedium!.copyWith(fontSize: 15.sp)),
                           SizedBox(
@@ -93,7 +94,7 @@ class HomeScreen extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                'Order number:',
+                                locale.orderNumber,
                                 style:
                                     font.bodyMedium!.copyWith(fontSize: 14.sp),
                               ),
@@ -113,7 +114,7 @@ class HomeScreen extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                'contact number:',
+                                locale.contactNumber,
                                 style:
                                     font.bodyMedium!.copyWith(fontSize: 12.sp),
                               ),
@@ -192,6 +193,7 @@ class HomeScreen extends StatelessWidget {
                                       },
                                       child: Icon(
                                         FontAwesomeIcons.shoppingCart,
+                                        color: ColorConstant.backgroundAuth,
                                       ),
                                     ),
                                   ],
@@ -483,7 +485,7 @@ class HomeScreen extends StatelessWidget {
                                                     crossAxisCount: 2,
                                                     mainAxisSpacing: 10.h,
                                                     crossAxisSpacing: 4.w,
-                                                    mainAxisExtent: 230.h),
+                                                    mainAxisExtent: 258.h),
                                             itemBuilder: (context, index) =>
                                                 InkWell(
                                               onTap: () {
@@ -513,6 +515,21 @@ class HomeScreen extends StatelessWidget {
                                                 Helper.push(
                                                     context,
                                                     DetailsScreen(
+                                                      rateStarFive:double.parse(cubit
+                                                          .homeProducts[index]
+                                                          .ratePercentage!.fiveStar.toString()) ,
+                                                      rateStarFour:double.parse(cubit
+                                                          .homeProducts[index]
+                                                          .ratePercentage!.fourStar.toString()) ,
+                                                      rateStarOne: double.parse(cubit
+                                                          .homeProducts[index]
+                                                          .ratePercentage!.oneStar.toString()),
+                                                      rateStarThree: double.parse(cubit
+                                                          .homeProducts[index]
+                                                          .ratePercentage!.threeStar.toString()),
+                                                      rateStarTwo: double.parse(cubit
+                                                          .homeProducts[index]
+                                                          .ratePercentage!.twoStar.toString()),
                                                       productId: cubit
                                                           .homeProducts[index]
                                                           .productsId!,
@@ -686,10 +703,19 @@ class HomeScreen extends StatelessWidget {
                                                 ? 57.w
                                                 : 30.w;
 
-                                            return Image.asset(
-                                              ImageConstant.cars(index),
-                                              width: width,
-                                              height: height,
+                                            return InkWell(
+                                              onTap: () {
+                                                cubit.getAllProduct(lang: 'en',
+                                                carId: index + 1);
+                                                Helper.push(context,
+                                                    SeeAllScreen(title:''));
+                                              },
+                                              child: Image.asset(
+                                                ImageConstant.cars(index),
+                                                width: width,
+
+                                                height: height,
+                                              ),
                                             );
                                           }),
                                           options: CarouselOptions(

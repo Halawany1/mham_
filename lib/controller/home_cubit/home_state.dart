@@ -70,6 +70,8 @@ class ErrorAddScrapState extends HomeState {
 class LoadingAddAndRemoveFavoriteState extends HomeState {}
 
 class SuccessAddAndRemoveFavoriteState extends HomeState {}
+class ChangeOrderDetailsContainerState extends HomeState {}
+class Change extends HomeState {}
 
 class ErrorAddAndRemoveFavoriteState extends HomeState {
   final String error;
@@ -84,4 +86,22 @@ class ErrorGetAllOrdersState extends HomeState {
   final String error;
 
   ErrorGetAllOrdersState(this.error);
+}
+class LoadingCancelProductState extends HomeState {}
+
+class SuccessCancelProductState extends HomeState {}
+
+class ErrorCancelProductState extends HomeState {
+  final String error;
+
+  ErrorCancelProductState(this.error);
+}
+class LoadingCancelOrderState extends HomeState {}
+
+class SuccessCancelOrderState extends HomeState {}
+
+class ErrorCancelOrderState extends HomeState {
+  final String error;
+
+  ErrorCancelOrderState(this.error);
 }

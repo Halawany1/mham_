@@ -86,7 +86,7 @@ class SeeAllScreen extends StatelessWidget {
                                   LayoutCubit.get(context).lang == 'en'
                                       ? FontAwesomeIcons.arrowLeft
                                       : FontAwesomeIcons.arrowRight,
-                                  color: color.hoverColor,
+                                  color: color.primaryColor,
                                 )),
                             SizedBox(
                               width: 20.w,
@@ -150,7 +150,7 @@ class SeeAllScreen extends StatelessWidget {
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 10.h,
                                 crossAxisSpacing: 4.w,
-                                mainAxisExtent: 230.h),
+                                mainAxisExtent: 258.h),
                             itemBuilder: (context, index) =>
                                 InkWell(
                                   onTap: () {
@@ -167,6 +167,21 @@ class SeeAllScreen extends StatelessWidget {
                                     cubit.increaseReview(cubit.allProducts[index].productsId!);
                                     LayoutCubit.get(context).changeHideNav(true);
                                   Helper.push(context, DetailsScreen(
+                                    rateStarFive:double.parse(cubit
+                                        .allProducts[index]
+                                        .ratePercentage!.fiveStar.toString()) ,
+                                    rateStarFour:double.parse(cubit
+                                        .allProducts[index]
+                                        .ratePercentage!.fourStar.toString()) ,
+                                    rateStarOne: double.parse(cubit
+                                        .allProducts[index]
+                                        .ratePercentage!.oneStar.toString()),
+                                    rateStarThree: double.parse(cubit
+                                        .allProducts[index]
+                                        .ratePercentage!.threeStar.toString()),
+                                    rateStarTwo: double.parse(cubit
+                                        .allProducts[index]
+                                        .ratePercentage!.twoStar.toString()),
                                     productId:cubit
                                         .allProducts[index]
                                         .productsId! ,

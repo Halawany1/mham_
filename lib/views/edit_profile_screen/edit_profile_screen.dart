@@ -11,6 +11,7 @@ import 'package:mham/core/components/drop_down_menu.dart';
 import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/components/snak_bar_component.dart';
 import 'package:mham/core/components/text_form_field_component.dart';
+import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/error/validation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/views/sign_up_screen/sign_up_screen.dart';
@@ -202,7 +203,7 @@ class EditProfileScreen extends StatelessWidget {
                                             phone: phoneController.text);
                                       },
                                       backgorundColor: color.backgroundColor,
-                                      colorText: color.primaryColor),
+                                      colorText: ColorConstant.brown),
                             ],
                           ),
                         )

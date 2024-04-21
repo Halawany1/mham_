@@ -52,7 +52,7 @@ class BuildCarFilter extends StatelessWidget {
           left: 12.w,
           child: Text(
             locale.enterYourData,
-            style: font.bodyMedium!.copyWith(color: color.cardColor),
+            style: font.bodyMedium!.copyWith(color: Colors.white),
           ),
         ),
         Positioned(

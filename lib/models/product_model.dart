@@ -66,7 +66,7 @@ class Products {
   BusinessCategory? businessCategory;
   Trader? trader;
   List<AvailableYears>? availableYears;
-
+  RatePercentage? ratePercentage;
 
   Products.fromJson(Map<String, dynamic> json) {
     productsId = json['products_id'];
@@ -82,6 +82,9 @@ class Products {
     }
     productsImg = json['products_img'];
     madeIn = json['madeIn'];
+    ratePercentage = json['ratePercentage'] != null
+        ?  RatePercentage.fromJson(json['ratePercentage'])
+        : null;
     price = json['price'];
     isOffer = json['is_offer'];
     offerPrice = json['offer_price'];
@@ -230,4 +233,21 @@ class Car {
     carName = json['car_name'];
   }
 
+}
+
+class RatePercentage {
+  dynamic oneStar;
+  dynamic twoStar;
+  dynamic threeStar;
+  dynamic fourStar;
+  dynamic fiveStar;
+
+
+  RatePercentage.fromJson(Map<String, dynamic> json) {
+    oneStar = json['oneStar'];
+    twoStar = json['twoStar'];
+    threeStar = json['threeStar'];
+    fourStar = json['fourStar'];
+    fiveStar = json['fiveStar'];
+  }
 }

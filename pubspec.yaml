@@ -52,6 +52,8 @@ dependencies:
   persistent_bottom_nav_bar: ^5.0.2
   multi_dropdown: ^2.1.4
   carousel_slider: ^4.2.1
+  another_stepper: ^1.2.2
+  rating_summary: ^1.0.2+1
 
 
 dev_dependencies:

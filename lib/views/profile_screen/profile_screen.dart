@@ -99,14 +99,6 @@ class ProfileScreen extends StatelessWidget {
                         height: 10.h,
                       ),
                       BuildCards(
-                        icon: FontAwesomeIcons.truck,
-                        text: locale.orders,
-                        onTap: () {},
-                      ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      BuildCards(
                         icon: FontAwesomeIcons.undo,
                         text: locale.returns,
                         onTap: () {},
@@ -173,7 +165,7 @@ class ProfileScreen extends StatelessWidget {
                           phoneController.clear();
                           passwordController.clear();
                           CacheHelper.removeData(key: AppConstant.token);
-                          LayoutCubit.get(context).changeTheme(false);
+                          LayoutCubit.get(context).changeTheme(true);
                           controller.jumpToTab(0);
                         },
                       ),

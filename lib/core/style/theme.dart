@@ -54,7 +54,9 @@ ThemeData lightTheme() => ThemeData(
 
 
 ThemeData darkTheme() => ThemeData(
-    appBarTheme: AppBarTheme(color: BlackColorConstant.scaffoldBackground),
+    appBarTheme: AppBarTheme(
+        color: BlackColorConstant.scaffoldBackground),
+
     cardColor:Color(0xFF1F1F1F),
     hoverColor: Color(0xFF343434),
     backgroundColor: BlackColorConstant.backgroundAuth,

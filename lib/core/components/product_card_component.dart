@@ -6,10 +6,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mham/controller/cart_cubit/cart_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
+import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/components/small_container_for_type_component.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/core/constent/app_constant.dart';
+import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/views/get_start_screen/get_start_screen.dart';
@@ -51,6 +53,8 @@ class BuildProductCard extends StatelessWidget {
     final locale = AppLocalizations.of(context);
     return Card(
       elevation: 4,
+      color:LayoutCubit.get(context).theme?
+      color.scaffoldBackgroundColor:color.cardColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.r),
       ),
@@ -58,7 +62,9 @@ class BuildProductCard extends StatelessWidget {
         height: 220.h,
         width: 155.w,
         decoration: BoxDecoration(
-          color: color.scaffoldBackgroundColor,
+          color: LayoutCubit.get(context).theme?
+          color.scaffoldBackgroundColor
+          :color.cardColor,
           borderRadius: BorderRadius.circular(15.r),
         ),
         child: Stack(
@@ -90,7 +96,7 @@ class BuildProductCard extends StatelessWidget {
                    inFavorite?
                    FontAwesomeIcons.solidHeart:FontAwesomeIcons.heart,
                     color:inFavorite?
-                    Colors.red:color.primaryColor,
+                    Colors.red:ColorConstant.brown,
                   ),
                 )),
             Positioned(
@@ -177,6 +183,7 @@ class BuildProductCard extends StatelessWidget {
                 allowHalfRating: true,
                 itemCount: 5,
                 maxRating: rate,
+                unratedColor: color.highlightColor.withOpacity(0.8),
                 itemSize: 12.sp,
                 itemBuilder: (context, _) =>
                     const Icon(
@@ -189,7 +196,7 @@ class BuildProductCard extends StatelessWidget {
             ),
             Positioned(
               top: 192.h,
-              left: 22.w,
+              left: 18.5.w,
               child:  BuildDefaultButton(
                 colorText: color.primaryColor,
                 backgorundColor:inCart?
@@ -213,7 +220,20 @@ class BuildProductCard extends StatelessWidget {
                 },),
             ),
 
+            Positioned(
+              top: 222.h,
+              left: 18.5.w,
+              child:  BuildDefaultButton(
+                colorText: color.primaryColor,
+                backgorundColor:color.backgroundColor,
+                height: 17.h,
+                fontSize: 10.sp,
+                text: 'Buy Now',
+                width: 100.w,
+                onPressed: () {
 
+                },),
+            ),
           ],
         ),
       ),

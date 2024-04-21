@@ -23,18 +23,20 @@ class BuildDropDownMenu extends StatelessWidget {
       validator: (value) {
         return Validation.validateField(value, valueName, context);
       },
+      dropdownColor: color.cardColor,
       onChanged: onChange,
       items: list
           .map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value,style:
-          font.bodyMedium!.copyWith(fontSize: 16.sp,color: Colors.black),),
+          font.bodyMedium!.copyWith(fontSize: 16.sp,
+              color: color.primaryColor),),
         );
       }).toList(),
       icon: Icon(Icons.keyboard_arrow_down,color: color.backgroundColor,),
       hint: Text(valueName,style:font.bodyMedium!
-          .copyWith(color: color.hintColor,fontSize: 15.sp) ,),
+          .copyWith(color: color.primaryColor.withOpacity(0.75),fontSize: 15.sp) ,),
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20.r),

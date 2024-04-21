@@ -324,4 +324,56 @@ class HomeCubit extends Cubit<HomeState> {
     });
 
   }
+
+  List<bool>cardProductDetails=[];
+  void openAndCloseCardProductDetails(int index) {
+    cardProductDetails[index]=!cardProductDetails[index];
+    emit(ChangeOrderDetailsContainerState());
+  }
+
+  bool trackingContainer = false;
+  void openAndCloseTrackingContainer() {
+   trackingContainer = !trackingContainer;
+    emit(ChangeOrderDetailsContainerState());
+  }
+
+  void cancelProduct({required int id}) {
+    emit(LoadingCancelProductState());
+    DioHelper.putData(
+        url: ApiConstant.cancelOrder,
+        data: {'order_id': id},
+        token: CacheHelper.getData(key: AppConstant.token),
+        lang: 'en')
+        .then((value) {
+      emit(SuccessCancelProductState());
+    }).catchError((error) {
+      if (error is DioError) {
+        print(error.response!.data);
+        emit(ErrorCancelProductState(error.response!.data['message'][0]));
+      } else {
+        emit(ErrorCancelProductState(error));
+      }
+    });
+  }
+
+  void cancelOrder({required int id}) {
+    emit(LoadingCancelOrderState());
+    DioHelper.putData(
+        url: ApiConstant.cancelOrder,
+        data: {'order_id': id},
+        token: CacheHelper.getData(key: AppConstant.token),
+        lang: 'en')
+        .then((value) {
+      emit(SuccessCancelOrderState());
+      getAllOrders(lang: 'en');
+    }).catchError((error) {
+      if (error is DioError) {
+        print(error.response!.data);
+        emit(ErrorCancelOrderState(error.response!.data['message'][0]));
+      } else {
+        emit(ErrorCancelOrderState(error));
+      }
+    });
+  }
+
 }

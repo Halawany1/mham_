@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mham/core/constent/color_constant.dart';
 
 class BuildContainerType extends StatelessWidget {
   const BuildContainerType({super.key,
@@ -20,10 +21,13 @@ class BuildContainerType extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(
             horizontal: 5.w, vertical: 2.h),
-        child: Text(
-          type,
-          style: font.bodyMedium!
-              .copyWith(fontSize: 10.sp),
+        child: FittedBox(
+          fit: BoxFit.contain,
+          child: Text(
+            type,
+            style: font.bodyMedium!
+                .copyWith(fontSize: 10.sp,color: ColorConstant.brown),
+          ),
         ),
       ),
     );

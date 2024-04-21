@@ -8,6 +8,17 @@ class Helper {
     String formattedDate = DateFormat('d MMM, H:mm').format(dateTime);
     return formattedDate;
   }
+
+  static String trackingTimeFormat(String dateTimeString) {
+    DateTime dateTime = DateTime.parse(dateTimeString);
+    String formattedDateTime = DateFormat('h:mm a - MMM dd').format(dateTime);
+    return formattedDateTime;
+  }
+  static String formatDayAndMonthAndYear(String dateString) {
+    DateTime dateTime = DateFormat('dd/MM/yyyy').parse(dateString);
+    String formattedDateTime = DateFormat('h:mm a - MMM dd').format(dateTime);
+    return formattedDateTime;
+  }
   static void push(BuildContext context, Widget widget) {
     LayoutCubit.get(context).changeHideNav(true);
     Navigator.push(context, MaterialPageRoute(builder:

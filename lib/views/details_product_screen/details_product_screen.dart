@@ -15,6 +15,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/views/get_start_screen/get_start_screen.dart';
+import 'package:rating_summary/rating_summary.dart';
 
 class DetailsScreen extends StatelessWidget {
   const DetailsScreen({
@@ -25,6 +26,11 @@ class DetailsScreen extends StatelessWidget {
     required this.rating,
     required this.brand,
     required this.productId,
+    required this.rateStarFive,
+    required this.rateStarFour,
+    required this.rateStarOne,
+    required this.rateStarThree,
+    required this.rateStarTwo,
     required this.inCart,
     this.tyreSpreedRate,
     this.maximumTyreLoad,
@@ -91,6 +97,12 @@ class DetailsScreen extends StatelessWidget {
   final bool inCart;
   final List<String>? carModels;
   final bool hideAddedToCart;
+  final double rateStarOne;
+  final double rateStarTwo;
+  final double rateStarThree;
+  final double rateStarFour;
+  final double rateStarFive;
+
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +124,6 @@ class DetailsScreen extends StatelessWidget {
             var cubit = context.read<HomeCubit>();
             return WillPopScope(
               onWillPop: () async {
-                cubit.productModel = null;
                 cubit.resetQuantity();
                 if (hideAddedToCart) {
                   Navigator.pop(context);
@@ -160,8 +171,6 @@ class DetailsScreen extends StatelessWidget {
                   ),
                   leading: InkWell(
                       onTap: () {
-                        cubit.productModel = null;
-                        cubit.getAllProduct(lang: 'en');
                         cubit.resetQuantity();
                         if (hideAddedToCart) {
                           Navigator.pop(context);
@@ -320,7 +329,7 @@ class DetailsScreen extends StatelessWidget {
                                       height: 30.w,
                                       decoration: BoxDecoration(
                                         border:
-                                            Border.all(color: color.hintColor),
+                                            Border.all(color: color.primaryColor),
                                         borderRadius:
                                             BorderRadius.circular(5.r),
                                       ),
@@ -760,7 +769,24 @@ class DetailsScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            height: 50.h,
+                            height: 20.h,
+                          ),
+                          RatingSummary(
+                            counter: 13,
+                            average:rating,
+                            averageStyle: font.bodyMedium!.copyWith(
+                              fontSize: 19.sp
+                            ),
+                            showAverage: true,
+                            backgroundColor: Colors.grey.shade400,
+                            counterFiveStars: rateStarFive.toInt(),
+                            counterFourStars: rateStarFour.toInt(),
+                            counterThreeStars: rateStarThree.toInt(),
+                            counterTwoStars: rateStarTwo.toInt(),
+                            counterOneStars: rateStarOne.toInt(),
+                          ),
+                          SizedBox(
+                            height: 90.h,
                           ),
                         ],
                       ),

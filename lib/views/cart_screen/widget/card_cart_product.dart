@@ -23,10 +23,11 @@ class BuildCartCardProduct extends StatelessWidget {
     var cubit = CartCubit.get(context);
     return Card(
       elevation: 4,
+      color: color.scaffoldBackgroundColor,
       child: Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15.r),
-            color: color.scaffoldBackgroundColor),
+            color: color.cardColor),
         width: double.infinity,
         height: 100.h,
         child: Directionality(
@@ -101,6 +102,7 @@ class BuildCartCardProduct extends StatelessWidget {
                       .toString()),
                   minRating: 0,
                   direction: Axis.horizontal,
+                  unratedColor: color.highlightColor.withOpacity(0.7),
                   allowHalfRating: true,
                   itemCount: 5,
                   maxRating: double.parse(cubit
@@ -139,7 +141,7 @@ class BuildCartCardProduct extends StatelessWidget {
                       width: 20.w,
                       height: 20.w,
                       decoration: BoxDecoration(
-                        border: Border.all(color: color.hintColor),
+                        border: Border.all(color: color.primaryColor),
                         borderRadius: BorderRadius.circular(5.r),
                       ),
                       child: Text(
@@ -161,7 +163,7 @@ class BuildCartCardProduct extends StatelessWidget {
                 ),
               ),
               Positioned(
-                  top: 4.h,
+                  top: 6.h,
                   right: 5.w,
                   child: Image.asset(
                     'assets/images/hundia.png',

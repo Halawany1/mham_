@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class BuildSmallButton extends StatelessWidget {
   const BuildSmallButton({super.key,
     required this.text,
-     this.edit=true,
+    this.edit=true,
     required this.onPressed,
     this.hieght=22,
     this.width=68,
@@ -39,15 +39,15 @@ class BuildSmallButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if(withIcon)
-              Icon(
-                icon,
-                size: 12.sp,
-                color: color.cardColor,
-              ),
+                Icon(
+                  icon,
+                  size: 12.sp,
+                  color: color.cardColor,
+                ),
               if(withIcon)
-              SizedBox(
-                width: 10.w,
-              ),
+                SizedBox(
+                  width: 10.w,
+                ),
               Text(
                 text,
                 style: font.bodyMedium!.copyWith(
