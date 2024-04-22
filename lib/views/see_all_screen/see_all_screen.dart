@@ -167,6 +167,8 @@ class SeeAllScreen extends StatelessWidget {
                                     cubit.increaseReview(cubit.allProducts[index].productsId!);
                                     LayoutCubit.get(context).changeHideNav(true);
                                   Helper.push(context, DetailsScreen(
+                                    rateCount:cubit
+                                        .allProducts[index].rateCount! ,
                                     rateStarFive:double.parse(cubit
                                         .allProducts[index]
                                         .ratePercentage!.fiveStar.toString()) ,
@@ -205,7 +207,7 @@ class SeeAllScreen extends StatelessWidget {
                                         .productsName!,
                                     rating: double.parse(cubit
                                         .allProducts[index]
-                                        .rating!.toString()),
+                                        .averageRate!.toString()),
                                     type: cubit
                                         .allProducts[index]
                                         .type!,
@@ -282,7 +284,7 @@ class SeeAllScreen extends StatelessWidget {
                                         .bcNameEn!,
                                     type: cubit.allProducts[index].type!,
                                     rate: double.parse(
-                                        cubit.allProducts[index].rating.toString()),
+                                        cubit.allProducts[index].averageRate.toString()),
                                     review: cubit.allProducts[index].reviewCount,
                                     price: cubit.allProducts[index].price!,
                                     title: cubit.allProducts[index].productsName!,

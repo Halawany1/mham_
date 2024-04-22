@@ -7,7 +7,7 @@ class RequestScrapModel {
   RequestScrapModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     createScrap = json['createScrap'] != null
-        ? new CreateScrap.fromJson(json['createScrap'])
+        ?  CreateScrap.fromJson(json['createScrap'])
         : null;
   }
 

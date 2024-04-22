@@ -14,6 +14,7 @@ import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
+import 'package:mham/views/checkout_screen/checkout_screen.dart';
 import 'package:mham/views/get_start_screen/get_start_screen.dart';
 
 class BuildProductCard extends StatelessWidget {
@@ -224,14 +225,14 @@ class BuildProductCard extends StatelessWidget {
               top: 222.h,
               left: 18.5.w,
               child:  BuildDefaultButton(
-                colorText: color.primaryColor,
-                backgorundColor:color.backgroundColor,
+                colorText: color.cardColor,
+                backgorundColor:color.primaryColor,
                 height: 17.h,
                 fontSize: 10.sp,
                 text: 'Buy Now',
                 width: 100.w,
                 onPressed: () {
-
+                  Helper.push(context, CheckoutScreen());
                 },),
             ),
           ],

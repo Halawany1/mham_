@@ -57,6 +57,8 @@ class ErrorGetProductByIDState extends HomeState {
 }
 class LoadingAddScrapState extends HomeState {}
 
+class ChangeRateState extends HomeState {}
+
 class SuccessAddScrapState extends HomeState {
   final RequestScrapModel data;
   SuccessAddScrapState(this.data);
@@ -104,4 +106,14 @@ class ErrorCancelOrderState extends HomeState {
   final String error;
 
   ErrorCancelOrderState(this.error);
+}
+
+class LoadingAddRateState extends HomeState {}
+
+class SuccessAddRateState extends HomeState {}
+
+class ErrorAddRateState extends HomeState {
+  final String error;
+
+  ErrorAddRateState(this.error);
 }

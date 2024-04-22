@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mham/controller/cart_cubit/cart_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mham/core/components/snak_bar_component.dart';
+import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/models/order_model.dart';
 import 'package:mham/views/order_details_screen/widget/card_product_details.dart';
@@ -13,12 +16,10 @@ import 'package:mham/views/order_details_screen/widget/card_product_details.dart
 class OrderDetailsScreen extends StatelessWidget {
   const OrderDetailsScreen({
     super.key,
-    required this.orders,
     required this.currentIndex,
     required this.totalPrice,
   });
 
-  final Orders orders;
   final int currentIndex;
   final double totalPrice;
 
@@ -27,63 +28,79 @@ class OrderDetailsScreen extends StatelessWidget {
     var color = Theme.of(context);
     var font = Theme.of(context).textTheme;
     final locale = AppLocalizations.of(context);
+    var cubit = HomeCubit.get(context);
     List<StepperData> stepperData = [
       StepperData(
           title: StepperText(locale.ordered, textStyle: font.bodyMedium),
           subtitle: StepperText(
             locale.orderPlaced +
-                Helper.trackingTimeFormat(orders.createdAt!),
+                Helper.trackingTimeFormat(
+                    cubit.allOrders[currentIndex].createdAt!),
             textStyle: font.bodyMedium!.copyWith(
-                fontSize: 12.sp,
-                color: color.primaryColor.withOpacity(0.7)),
+                fontSize: 12.sp, color: color.primaryColor.withOpacity(0.7)),
           ),
           iconWidget: Container(
-            padding: EdgeInsets.all(5.h),
+            alignment: Alignment.center,
             decoration: BoxDecoration(
                 color: color.backgroundColor,
                 borderRadius: BorderRadius.all(Radius.circular(15.r))),
-            child: const Icon(Icons.looks_one, color: Colors.white),
+            child: Text('1',
+                style: font.bodyMedium!.copyWith(color: ColorConstant.brown)),
           )),
       StepperData(
           title: StepperText(locale.processing, textStyle: font.bodyMedium),
-          subtitle: orders.processingAt == null
+          subtitle: cubit.allOrders[currentIndex].processingAt == null
               ? null
-              : StepperText(locale.orderPrepared+
-              Helper.trackingTimeFormat(orders.processingAt!),
+              : StepperText(
+                  locale.orderPrepared +
+                      Helper.trackingTimeFormat(
+                          cubit.allOrders[currentIndex].processingAt!),
                   textStyle: font.bodySmall!.copyWith(color: Colors.grey)),
           iconWidget: Container(
-            padding: EdgeInsets.all(5.h),
+            alignment: Alignment.center,
             decoration: BoxDecoration(
-                color:
-                    orders.status == 'Shipped' || orders.status == 'Delivered'
-                        ? color.backgroundColor
-                        : Colors.grey,
+                color: cubit.allOrders[currentIndex].processingAt != null
+                    ? color.backgroundColor:Colors.grey,
                 borderRadius: BorderRadius.all(Radius.circular(15.r))),
-            child: const Icon(Icons.looks_two, color: Colors.white),
+            child: Text('2',
+                style: font.bodyMedium!.copyWith(color:cubit.allOrders[currentIndex].processingAt != null
+                    ? ColorConstant.brown:Colors.grey)),
           )),
       StepperData(
           title: StepperText(locale.shipped, textStyle: font.bodyMedium),
-          subtitle: orders.shippedAt == null
+          subtitle: cubit.allOrders[currentIndex].shippedAt == null
               ? null
               : StepperText(
-                  textStyle: font.bodySmall!.copyWith(
-                      color: Colors.grey),
-              locale.deliverItem+
-                  Helper.trackingTimeFormat(orders.shippedAt!)),
+                  textStyle: font.bodySmall!.copyWith(color: Colors.grey),
+                  locale.deliverItem +
+                      Helper.trackingTimeFormat(
+                          cubit.allOrders[currentIndex].shippedAt!)),
           iconWidget: Container(
-            padding: EdgeInsets.all(5.h),
+            alignment: Alignment.center,
             decoration: BoxDecoration(
-                color: orders.status == 'Delivered'
-                    ? color.backgroundColor
-                    : Colors.grey,
+                color:cubit.allOrders[currentIndex].shippedAt != null
+                    ? color.backgroundColor:Colors.grey,
                 borderRadius: BorderRadius.all(Radius.circular(15.r))),
-            child: const Icon(Icons.looks_3, color: Colors.white),
+            child: Text('3',
+                style: font.bodyMedium!.copyWith(color:
+                cubit.allOrders[currentIndex].shippedAt != null
+                    ? ColorConstant.brown:Colors.grey)),
           )),
       StepperData(
         title: StepperText(locale.delivered, textStyle: font.bodyMedium),
       ),
     ];
-    return BlocBuilder<HomeCubit, HomeState>(
+    return BlocConsumer<HomeCubit, HomeState>(
+      listener: (context, state) {
+        if (state is SuccessCancelProductState) {
+          showMessageResponse(
+              message: 'Order Canceled', context: context, success: true);
+        }
+        if (state is ErrorCancelProductState) {
+          showMessageResponse(
+              message: state.error, context: context, success: false);
+        }
+      },
       builder: (context, state) {
         var cubit = context.read<HomeCubit>();
         return WillPopScope(
@@ -146,13 +163,16 @@ class OrderDetailsScreen extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        Helper.formatDate(orders.createdAt!),
+                                        Helper.formatDate(cubit
+                                            .allOrders[currentIndex]
+                                            .createdAt!),
                                         style: font.bodyMedium!.copyWith(
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Spacer(),
                                       Text(
-                                        orders.status.toString(),
+                                        cubit.allOrders[currentIndex].status
+                                            .toString(),
                                         style: font.bodyMedium!.copyWith(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12.sp,
@@ -185,7 +205,9 @@ class OrderDetailsScreen extends StatelessWidget {
                                               BorderRadius.circular(5.r),
                                         ),
                                         child: Text(
-                                          orders.carts!.length.toString(),
+                                          cubit.allOrders[currentIndex].carts!
+                                              .length
+                                              .toString(),
                                         ),
                                       )
                                     ],
@@ -249,7 +271,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                      locale.trackYourOrder,
+                                        locale.trackYourOrder,
                                         style: font.bodyLarge!
                                             .copyWith(fontSize: 20.sp),
                                       ),
@@ -264,11 +286,34 @@ class OrderDetailsScreen extends StatelessWidget {
                               ),
                               if (cubit.trackingContainer)
                                 Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SizedBox(
                                       height: 5.h,
                                     ),
                                     Divider(),
+                                    Text(
+                                      'order' +
+                                          ' #' +
+                                          cubit.allOrders[currentIndex].orderId
+                                              .toString(),
+                                      style: font.bodySmall!.copyWith(
+                                          fontSize: 12.sp,
+                                          color: color.primaryColor),
+                                    ),
+                                    SizedBox(
+                                      height: 10.h,
+                                    ),
+                                    Text(
+                                      'Order Date ' +
+                                          Helper.
+                                          trackingTimeFormat(cubit
+                                              .allOrders[currentIndex].
+                                          createdAt.toString()),
+                                      style: font.bodySmall!.copyWith(
+                                          fontSize: 12.sp,
+                                          color: color.primaryColor),
+                                    ),
                                     SizedBox(
                                       height: 10.h,
                                     ),
@@ -326,12 +371,13 @@ class OrderDetailsScreen extends StatelessWidget {
                               carModels: carModels,
                               opened: cubit.cardProductDetails[index],
                               index: index,
-                              orders: orders);
+                              orders: cubit.allOrders[currentIndex]);
                         },
                         separatorBuilder: (context, index) => SizedBox(
                           height: 20.h,
                         ),
-                        itemCount: orders.carts![0].cartProducts!.length,
+                        itemCount: cubit.allOrders[currentIndex].carts![0]
+                            .cartProducts!.length,
                       ),
                     ],
                   ),

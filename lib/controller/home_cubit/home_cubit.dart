@@ -153,7 +153,7 @@ class HomeCubit extends Cubit<HomeState> {
     selectedCarModels.forEach((e) {
       carModel!.models!.forEach((element) {
         if (!carYears.any((item) =>
-            item.label.toString() == element.availableYear.toString())) {
+        item.label.toString() == element.availableYear.toString())) {
           if (e.value == element.carModelId) {
             carYears.add(ValueItem(
                 label: element.availableYear.toString(), value: element.id));
@@ -217,7 +217,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   void increaseReview(int id) {
     DioHelper.getData(
-            url: ApiConstant.increaseReview + id.toString(), lang: 'en')
+        url: ApiConstant.increaseReview + id.toString(), lang: 'en')
         .then((value) {
       emit(IncreaseReviewState());
     }).catchError((error) {
@@ -240,7 +240,7 @@ class HomeCubit extends Cubit<HomeState> {
   void getProductByID({required int id}) {
     emit(LoadingGetProductByIDState());
     DioHelper.getData(
-            url: ApiConstant.getProductByID + id.toString(), lang: 'en')
+        url: ApiConstant.getProductByID + id.toString(), lang: 'en')
         .then((value) {
       oneProductModel = OneProductModel.fromJson(value.data);
       emit(SuccessGetProductByIDState());
@@ -259,12 +259,12 @@ class HomeCubit extends Cubit<HomeState> {
   void addScrap({required String description}) {
     emit(LoadingAddScrapState());
     DioHelper.postData(
-            url: ApiConstant.addScrap,
-            data: {'description': description},
-            token: CacheHelper.getData(key: AppConstant.token),
-            lang: 'en')
+        url: ApiConstant.addScrap,
+        data: {'description': description},
+        token: CacheHelper.getData(key: AppConstant.token),
+        lang: 'en')
         .then((value) {
-          requestScrapModel = RequestScrapModel.fromJson(value.data);
+      requestScrapModel = RequestScrapModel.fromJson(value.data);
       emit(SuccessAddScrapState(requestScrapModel!));
     }).catchError((error) {
       if (error is DioError) {
@@ -282,9 +282,9 @@ class HomeCubit extends Cubit<HomeState> {
   }) {
     emit(LoadingAddAndRemoveFavoriteState());
     DioHelper.postData(
-            url: ApiConstant.addAndRemoveFavorite + id.toString(),
-            token: CacheHelper.getData(key: AppConstant.token),
-            lang: 'en')
+        url: ApiConstant.addAndRemoveFavorite + id.toString(),
+        token: CacheHelper.getData(key: AppConstant.token),
+        lang: 'en')
         .then((value) {
       emit(SuccessAddAndRemoveFavoriteState());
       getAllProduct(lang: 'en',
@@ -301,8 +301,9 @@ class HomeCubit extends Cubit<HomeState> {
 
   OrderModel? orderModel;
   List<Orders> allOrders = [];
+
   void getAllOrders({required String lang,
-  }) async{
+  }) async {
     allOrders.clear();
     emit(LoadingGetAllOrdersState());
     DioHelper.getData(
@@ -322,26 +323,32 @@ class HomeCubit extends Cubit<HomeState> {
       print(error.toString());
       emit(ErrorGetAllOrdersState(error.toString()));
     });
-
   }
 
-  List<bool>cardProductDetails=[];
+  List<bool>cardProductDetails = [];
+
   void openAndCloseCardProductDetails(int index) {
-    cardProductDetails[index]=!cardProductDetails[index];
+    cardProductDetails[index] = !cardProductDetails[index];
     emit(ChangeOrderDetailsContainerState());
   }
 
   bool trackingContainer = false;
+
   void openAndCloseTrackingContainer() {
-   trackingContainer = !trackingContainer;
+    trackingContainer = !trackingContainer;
     emit(ChangeOrderDetailsContainerState());
   }
 
-  void cancelProduct({required int id}) {
+  void cancelProduct({required int orderId,
+    required int productId,
+  }) {
     emit(LoadingCancelProductState());
     DioHelper.putData(
-        url: ApiConstant.cancelOrder,
-        data: {'order_id': id},
+        url: ApiConstant.cancelProduct,
+        data: {
+          'order_id': orderId,
+        'cartProduct_id':productId
+        },
         token: CacheHelper.getData(key: AppConstant.token),
         lang: 'en')
         .then((value) {
@@ -376,4 +383,36 @@ class HomeCubit extends Cubit<HomeState> {
     });
   }
 
+  int rate = 0;
+
+  void changeRate({required int value}) {
+    rate = value;
+    emit(ChangeRateState());
+  }
+
+  void addRate({required int id, String ?comment,
+    required double rate
+  }) {
+    emit(LoadingAddRateState());
+    DioHelper.postData(
+        url: ApiConstant.addRate + id.toString(),
+        data: {
+          "rateData": {
+            "rate": rate,
+            if(comment != null) "comment": comment //optinal
+          }
+        },
+        token: CacheHelper.getData(key: AppConstant.token),
+        lang: 'en')
+        .then((value) {
+      emit(SuccessAddRateState());
+    }).catchError((error) {
+      if (error is DioError) {
+        print(error.response!.data);
+        emit(ErrorAddRateState(error.response!.data['message'][0]));
+      } else {
+        emit(ErrorAddRateState(error));
+      }
+    });
+  }
 }

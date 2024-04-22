@@ -206,31 +206,10 @@ class HomeScreen extends StatelessWidget {
                                       ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(12.r),
-                                        child: Image.network(
-                                          "https://img.freepik.com/free-psd/car-rental-horizontal-banner-template-with-toy-car_23-2149442089.jpg?t=st=1713425769~exp=1713429369~hmac=d7f8bf92e9672fa739a6752958ac751c1a0203ad1efd3ff7f54c567869cbad15&w=1380",
+                                        child: Image.asset(
+                                          ImageConstant.ads,
                                           width: double.infinity,
                                           height: 90.h,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(12.r),
-                                        child: Image.network(
-                                          "https://img.freepik.com/free-psd/banner-mechanic-shop-template_23-2148747138.jpg?t=st=1713425689~exp=1713429289~hmac=fedb5c4723e821bf2e3fda573c094e0d4d5da9ab88e9d3c55403cbf94532e821&w=1380",
-                                          width: double.infinity,
-                                          height: 90.h,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(12.r),
-                                        child: Image.network(
-                                          "https://img.freepik.com/free-psd/motorbike-extreme-sport-facebook-template_23-2149859119.jpg?t=st=1713425861~exp=1713429461~hmac=1a80b95a7fc4a6e7292cd15c0323f3dc6859657e11eec5a20d5d69b6dfe5ccc6&w=1380",
-                                          width: double.infinity,
-                                          height: 90.h,
-                                          fit: BoxFit.cover,
                                         ),
                                       ),
                                     ],
@@ -249,7 +228,7 @@ class HomeScreen extends StatelessWidget {
                                       scrollDirection: Axis.horizontal,
                                     )),
                                 SizedBox(
-                                  height: 22.h,
+                                  height: 10.h,
                                 ),
                                 Text(
                                   locale.whatAreYouLookingFor,
@@ -515,6 +494,9 @@ class HomeScreen extends StatelessWidget {
                                                 Helper.push(
                                                     context,
                                                     DetailsScreen(
+                                                      rateCount:cubit
+                                                          .homeProducts[index]
+                                                          .rateCount! ,
                                                       rateStarFive:double.parse(cubit
                                                           .homeProducts[index]
                                                           .ratePercentage!.fiveStar.toString()) ,
@@ -556,7 +538,7 @@ class HomeScreen extends StatelessWidget {
                                                           .productsName!,
                                                       rating: double.parse(cubit
                                                           .homeProducts[index]
-                                                          .rating!
+                                                          .averageRate!
                                                           .toString()),
                                                       type: cubit
                                                           .homeProducts[index]
@@ -648,7 +630,7 @@ class HomeScreen extends StatelessWidget {
                                                 type: cubit
                                                     .homeProducts[index].type!,
                                                 rate: double.parse(cubit
-                                                    .homeProducts[index].rating
+                                                    .homeProducts[index].averageRate
                                                     .toString()),
                                                 review: cubit
                                                     .homeProducts[index]

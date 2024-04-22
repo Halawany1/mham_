@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/components/pop_up_sure_component.dart';
 import 'package:mham/core/components/small_container_for_type_component.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mham/core/components/snak_bar_component.dart';
 import 'package:mham/models/order_model.dart';
 
 class BuildCardProductDetails extends StatelessWidget {
@@ -34,7 +36,8 @@ class BuildCardProductDetails extends StatelessWidget {
       decoration: BoxDecoration(
           border: Border.all(color: color.backgroundColor),
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20.r), topRight: Radius.circular(20.r))),
+              topLeft: Radius.circular(20.r),
+              topRight: Radius.circular(20.r))),
       child: Padding(
         padding: EdgeInsets.all(12.h),
         child: Column(
@@ -81,8 +84,8 @@ class BuildCardProductDetails extends StatelessWidget {
                                 width: 140.w,
                                 child: Text(
                                   overflow: TextOverflow.ellipsis,
-                                  orders.carts![0].cartProducts![index].product!
-                                      .productsName!,
+                                  orders.carts![0].cartProducts![index]
+                                      .product!.productsName!,
                                   style: font.bodyMedium!.copyWith(
                                     fontSize: 15.sp,
                                   ),
@@ -122,13 +125,15 @@ class BuildCardProductDetails extends StatelessWidget {
                                 width: 20.w,
                                 height: 20.w,
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: color.disabledColor),
+                                  border:
+                                      Border.all(color: color.disabledColor),
                                   borderRadius: BorderRadius.circular(5.r),
                                 ),
                                 child: Text(
-                                  style:
-                                      font.bodyMedium!.copyWith(fontSize: 13.sp),
-                                  orders.carts![0].cartProducts![index].quantity
+                                  style: font.bodyMedium!
+                                      .copyWith(fontSize: 13.sp),
+                                  orders
+                                      .carts![0].cartProducts![index].quantity
                                       .toString(),
                                 ),
                               ),
@@ -157,8 +162,8 @@ class BuildCardProductDetails extends StatelessWidget {
                   ),
                   Text(
                     locale.specifications,
-                    style:
-                        font.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
+                    style: font.bodyMedium!
+                        .copyWith(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
                     height: 10.h,
@@ -214,12 +219,10 @@ class BuildCardProductDetails extends StatelessWidget {
                             child: SizedBox(
                               width: 90.w,
                               child: Text(
-                                  orders.carts![0].cartProducts![index].product!
-                                      .brandName!,
-                                  style: font.bodyMedium!
-                                      .copyWith(
-                                      color:
-                                  color.backgroundColor)),
+                                  orders.carts![0].cartProducts![index]
+                                      .product!.brandName!,
+                                  style: font.bodyMedium!.copyWith(
+                                      color: color.backgroundColor)),
                             ),
                           ),
                           SizedBox(
@@ -426,8 +429,8 @@ class BuildCardProductDetails extends StatelessWidget {
                               .tyreWidth !=
                           null)
                         Text(
-                          orders
-                              .carts![0].cartProducts![index].product!.tyreWidth
+                          orders.carts![0].cartProducts![index].product!
+                              .tyreWidth
                               .toString(),
                           style: font.bodyMedium!
                               .copyWith(color: color.backgroundColor),
@@ -438,13 +441,15 @@ class BuildCardProductDetails extends StatelessWidget {
                         SizedBox(
                           height: 10.h,
                         ),
-                      if (orders.carts![0].cartProducts![index].product!.volt !=
+                      if (orders
+                              .carts![0].cartProducts![index].product!.volt !=
                           null)
                         Text(
                           locale.volt,
                           style: font.bodyMedium,
                         ),
-                      if (orders.carts![0].cartProducts![index].product!.volt !=
+                      if (orders
+                              .carts![0].cartProducts![index].product!.volt !=
                           null)
                         Text(
                           orders.carts![0].cartProducts![index].product!.volt
@@ -452,42 +457,44 @@ class BuildCardProductDetails extends StatelessWidget {
                           style: font.bodyMedium!
                               .copyWith(color: color.backgroundColor),
                         ),
-                      if (orders.carts![0].cartProducts![index].product!.volt !=
+                      if (orders
+                              .carts![0].cartProducts![index].product!.volt !=
                           null)
                         SizedBox(
                           height: 10.h,
                         ),
-                      if (orders
-                              .carts![0].cartProducts![index].product!.ampere !=
+                      if (orders.carts![0].cartProducts![index].product!
+                              .ampere !=
                           null)
                         Text(
                           locale.ampere,
                           style: font.bodyMedium,
                         ),
-                      if (orders
-                              .carts![0].cartProducts![index].product!.ampere !=
+                      if (orders.carts![0].cartProducts![index].product!
+                              .ampere !=
                           null)
                         Text(
-                          orders.carts![0].cartProducts![index].product!.ampere
+                          orders
+                              .carts![0].cartProducts![index].product!.ampere
                               .toString(),
                           style: font.bodyMedium!
                               .copyWith(color: color.backgroundColor),
                         ),
-                      if (orders
-                              .carts![0].cartProducts![index].product!.ampere !=
+                      if (orders.carts![0].cartProducts![index].product!
+                              .ampere !=
                           null)
                         SizedBox(
                           height: 10.h,
                         ),
-                      if (orders
-                              .carts![0].cartProducts![index].product!.liter !=
+                      if (orders.carts![0].cartProducts![index].product!
+                              .liter !=
                           null)
                         Text(
                           locale.liters,
                           style: font.bodyMedium,
                         ),
-                      if (orders
-                              .carts![0].cartProducts![index].product!.liter !=
+                      if (orders.carts![0].cartProducts![index].product!
+                              .liter !=
                           null)
                         Text(
                           orders.carts![0].cartProducts![index].product!.liter
@@ -495,21 +502,21 @@ class BuildCardProductDetails extends StatelessWidget {
                           style: font.bodyMedium!
                               .copyWith(color: color.backgroundColor),
                         ),
-                      if (orders
-                              .carts![0].cartProducts![index].product!.liter !=
+                      if (orders.carts![0].cartProducts![index].product!
+                              .liter !=
                           null)
                         SizedBox(
                           height: 10.h,
                         ),
-                      if (orders
-                              .carts![0].cartProducts![index].product!.color !=
+                      if (orders.carts![0].cartProducts![index].product!
+                              .color !=
                           null)
                         Text(
                           locale.color,
                           style: font.bodyMedium,
                         ),
-                      if (orders
-                              .carts![0].cartProducts![index].product!.color !=
+                      if (orders.carts![0].cartProducts![index].product!
+                              .color !=
                           null)
                         Text(
                           orders.carts![0].cartProducts![index].product!.color
@@ -517,8 +524,8 @@ class BuildCardProductDetails extends StatelessWidget {
                           style: font.bodyMedium!
                               .copyWith(color: color.backgroundColor),
                         ),
-                      if (orders
-                              .carts![0].cartProducts![index].product!.color !=
+                      if (orders.carts![0].cartProducts![index].product!
+                              .color !=
                           null)
                         SizedBox(
                           height: 10.h,
@@ -557,7 +564,8 @@ class BuildCardProductDetails extends StatelessWidget {
                               .oilType !=
                           null)
                         Text(
-                          orders.carts![0].cartProducts![index].product!.oilType
+                          orders
+                              .carts![0].cartProducts![index].product!.oilType
                               .toString(),
                           style: font.bodyMedium!
                               .copyWith(color: color.backgroundColor),
@@ -600,19 +608,26 @@ class BuildCardProductDetails extends StatelessWidget {
                               height: 30.h,
                               borderRadius: 8.r,
                               onPressed: () {
-                                confirmPopUp(
+                                showDialog(
                                   context: context,
-                                  onPress: () {
-                                    HomeCubit.get(context).cancelProduct(
-                                        id: orders
-                                            .carts![0]
-                                            .cartProducts![index]
-                                            .product!
-                                            .productsId!);
-                                    Navigator.pop(context);
+                                  builder: (context) {
+                                    return confirmPopUp(
+                                      context: context,
+                                      onPress: () {
+                                        HomeCubit.get(context).cancelProduct(
+                                            orderId:
+                                                orders.carts![0].orderId!,
+                                            productId: orders
+                                                .carts![0]
+                                                .cartProducts![index]
+                                                .product!
+                                                .productsId!);
+                                        Navigator.pop(context);
+                                      },
+                                      title: locale.cancelItem,
+                                      content: locale.areYourSureToCancelItem,
+                                    );
                                   },
-                                  title: locale.cancelItem,
-                                  content: locale.areYourSureToCancelItem,
                                 );
                               },
                               backgorundColor: color.backgroundColor,

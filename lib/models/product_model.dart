@@ -32,7 +32,7 @@ class Products {
   dynamic offerPrice;
   String? offerStartDate;
   String? offerEndDate;
-  dynamic rating;
+  dynamic averageRate;
   int? reviewCount;
   String? type;
   bool? isBestSeller;
@@ -54,6 +54,7 @@ class Products {
   int? liter;
   String? color;
   int? numberSparkPulgs;
+  int? rateCount;
   String? createdAt;
   int? businessCategoriesId;
   bool? enabled;
@@ -71,6 +72,7 @@ class Products {
   Products.fromJson(Map<String, dynamic> json) {
     productsId = json['products_id'];
     traderId = json['trader_id'];
+    rateCount = json['rateCount'];
     description = json['description'];
     manufacturerPartNumber = json['manufacturer_part_number'];
     brandName = json['brand_name'];
@@ -90,7 +92,7 @@ class Products {
     offerPrice = json['offer_price'];
     offerStartDate = json['offer_start_date'];
     offerEndDate = json['offer_end_date'];
-    rating = json['rating'];
+    averageRate = json['averageRate'];
     reviewCount = json['review_count'];
     type = json['type'];
     isBestSeller = json['is_best_seller'];

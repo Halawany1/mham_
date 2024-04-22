@@ -72,7 +72,7 @@ class SearchScreen extends StatelessWidget {
                           .bcNameEn!,
                       type: cubit.allProducts[index].type!,
                       rate: double.parse(
-                          cubit.allProducts[index].rating.toString()),
+                          cubit.allProducts[index].averageRate.toString()),
                       review: cubit.allProducts[index].reviewCount,
                       price: cubit.allProducts[index].price!,
                       title: cubit.allProducts[index].productsName!,

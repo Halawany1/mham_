@@ -16,6 +16,7 @@ class ImageConstant{
   static String tires="assets/images/tires.png";
   static String logo="assets/images/logo.png";
   static String cart="assets/images/cart.png";
+  static String creditCard="assets/images/creditCard.png";
   static String cars(int index)=>"assets/images/car$index.png";
   static String onBoarding(int index)=>"assets/images/onboarding$index.png";
 }

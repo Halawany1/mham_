@@ -98,7 +98,8 @@ class BuildCartCardProduct extends StatelessWidget {
                 child: RatingBar.builder(
                   ignoreGestures: true,
                   initialRating: double.parse(cubit
-                      .cartModel!.cart!.cartProducts![index].product!.rating!
+                      .cartModel!.cart!.cartProducts![index].
+                  product!.averageRate!
                       .toString()),
                   minRating: 0,
                   direction: Axis.horizontal,
@@ -106,7 +107,8 @@ class BuildCartCardProduct extends StatelessWidget {
                   allowHalfRating: true,
                   itemCount: 5,
                   maxRating: double.parse(cubit
-                      .cartModel!.cart!.cartProducts![index].product!.rating!
+                      .cartModel!.cart!.cartProducts![index].
+                  product!.averageRate!
                       .toString()),
                   itemSize: 12.sp,
                   itemBuilder: (context, _) => const Icon(

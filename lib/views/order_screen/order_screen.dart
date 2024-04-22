@@ -77,7 +77,6 @@ class OrderScreen extends StatelessWidget {
                                             OrderDetailsScreen(
                                               currentIndex: index,
                                               totalPrice: totalPrice,
-                                              orders: cubit.allOrders[index],
                                             ));
                                       },
                                       child: BuildCardOrderList(

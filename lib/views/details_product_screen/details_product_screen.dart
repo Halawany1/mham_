@@ -2,20 +2,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
 import 'package:mham/controller/cart_cubit/cart_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/components/small_container_for_type_component.dart';
+import 'package:mham/core/components/snak_bar_component.dart';
+import 'package:mham/core/components/text_form_field_component.dart';
 import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/constent/image_constant.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
+import 'package:mham/views/details_product_screen/widget/card_reviews.dart';
 import 'package:mham/views/get_start_screen/get_start_screen.dart';
 import 'package:rating_summary/rating_summary.dart';
+
+var comment = TextEditingController();
 
 class DetailsScreen extends StatelessWidget {
   const DetailsScreen({
@@ -32,6 +39,7 @@ class DetailsScreen extends StatelessWidget {
     required this.rateStarThree,
     required this.rateStarTwo,
     required this.inCart,
+    required this.rateCount,
     this.tyreSpreedRate,
     this.maximumTyreLoad,
     this.batteryReplacementAvailable,
@@ -67,6 +75,7 @@ class DetailsScreen extends StatelessWidget {
   final String brand;
   final String type;
   final int productId;
+  final int rateCount;
   final String productName;
   final String? madeIn;
   final String? manufacturerPartNumber;
@@ -103,11 +112,12 @@ class DetailsScreen extends StatelessWidget {
   final double rateStarFour;
   final double rateStarFive;
 
-
   @override
   Widget build(BuildContext context) {
     var cubit = context.read<HomeCubit>();
-    var font = Theme.of(context).textTheme;
+    var font = Theme
+        .of(context)
+        .textTheme;
     var color = Theme.of(context);
     final locale = AppLocalizations.of(context);
     return BlocConsumer<CartCubit, CartState>(
@@ -119,12 +129,23 @@ class DetailsScreen extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        return BlocBuilder<HomeCubit, HomeState>(
+        return BlocConsumer<HomeCubit, HomeState>(
+          listener: (context, state) {
+            if (state is SuccessAddRateState) {
+              showMessageResponse(
+                  message: 'Add Rate Successfully',
+                  context: context,
+                  success: true);
+              comment.clear();
+              cubit.changeRate(value: 0);
+            }
+          },
           builder: (context, state) {
             var cubit = context.read<HomeCubit>();
             return WillPopScope(
               onWillPop: () async {
                 cubit.resetQuantity();
+                cubit.changeRate(value: 0);
                 if (hideAddedToCart) {
                   Navigator.pop(context);
                 } else {
@@ -135,32 +156,32 @@ class DetailsScreen extends StatelessWidget {
               child: Scaffold(
                 bottomSheet: !hideAddedToCart
                     ? Container(
-                        color: color.hoverColor,
-                        padding: EdgeInsets.all(15.h),
-                        child: BuildDefaultButton(
-                            text:
-                                inCart ? locale.addedToCart : locale.addToCart,
-                            borderRadius: 12.r,
-                            height: 32.h,
-                            onPressed: () {
-                              if (!inCart) {
-                                if (CacheHelper.getData(
-                                        key: AppConstant.token) ==
-                                    null) {
-                                  Helper.push(context, GetStartScreen());
-                                } else {
-                                  CartCubit.get(context).addToCart(
-                                      token: CacheHelper.getData(
-                                          key: AppConstant.token),
-                                      id: productId,
-                                      quantity: cubit.quantity);
-                                }
-                              }
-                            },
-                            backgorundColor:
-                                inCart ? Colors.grey : color.backgroundColor,
-                            colorText: color.primaryColor),
-                      )
+                  color: color.hoverColor,
+                  padding: EdgeInsets.all(15.h),
+                  child: BuildDefaultButton(
+                      text:
+                      inCart ? locale.addedToCart : locale.addToCart,
+                      borderRadius: 12.r,
+                      height: 32.h,
+                      onPressed: () {
+                        if (!inCart) {
+                          if (CacheHelper.getData(
+                              key: AppConstant.token) ==
+                              null) {
+                            Helper.push(context, GetStartScreen());
+                          } else {
+                            CartCubit.get(context).addToCart(
+                                token: CacheHelper.getData(
+                                    key: AppConstant.token),
+                                id: productId,
+                                quantity: cubit.quantity);
+                          }
+                        }
+                      },
+                      backgorundColor:
+                      inCart ? Colors.grey : color.backgroundColor,
+                      colorText: color.primaryColor),
+                )
                     : null,
                 appBar: AppBar(
                   centerTitle: true,
@@ -172,6 +193,7 @@ class DetailsScreen extends StatelessWidget {
                   leading: InkWell(
                       onTap: () {
                         cubit.resetQuantity();
+                        cubit.changeRate(value: 0);
                         if (hideAddedToCart) {
                           Navigator.pop(context);
                         } else {
@@ -230,18 +252,19 @@ class DetailsScreen extends StatelessWidget {
                             height: 90.w,
                             child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) => Container(
+                                itemBuilder: (context, index) =>
+                                    Container(
                                       decoration: index == 0
                                           ? BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.r),
-                                              border: Border.all(
-                                                  color: color.backgroundColor,
-                                                  width: 2.w))
+                                          borderRadius:
+                                          BorderRadius.circular(10.r),
+                                          border: Border.all(
+                                              color: color.backgroundColor,
+                                              width: 2.w))
                                           : null,
                                       child: ClipRRect(
                                         borderRadius:
-                                            BorderRadius.circular(10.r),
+                                        BorderRadius.circular(10.r),
                                         child: Image.asset(
                                           'assets/images/product.png',
                                           fit: BoxFit.cover,
@@ -250,7 +273,8 @@ class DetailsScreen extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                separatorBuilder: (context, index) => SizedBox(
+                                separatorBuilder: (context, index) =>
+                                    SizedBox(
                                       width: 8.w,
                                     ),
                                 itemCount: 5),
@@ -294,10 +318,10 @@ class DetailsScreen extends StatelessWidget {
                               style: font.bodyMedium!.copyWith(
                                   decoration: TextDecoration.lineThrough,
                                   decorationColor:
-                                      color.backgroundColor.withOpacity(0.5),
+                                  color.backgroundColor.withOpacity(0.5),
                                   fontSize: 15.sp,
                                   color:
-                                      color.backgroundColor.withOpacity(0.5)),
+                                  color.backgroundColor.withOpacity(0.5)),
                             ),
                           if (isOffer == true)
                             SizedBox(
@@ -307,7 +331,9 @@ class DetailsScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '${isOffer == true ? offerPrice.toString() : price.toString()} ${locale.kd}',
+                                '${isOffer == true
+                                    ? offerPrice.toString()
+                                    : price.toString()} ${locale.kd}',
                                 style: font.bodyMedium!.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: color.backgroundColor),
@@ -328,10 +354,10 @@ class DetailsScreen extends StatelessWidget {
                                       width: 30.w,
                                       height: 30.w,
                                       decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: color.primaryColor),
+                                        border: Border.all(
+                                            color: color.primaryColor),
                                         borderRadius:
-                                            BorderRadius.circular(5.r),
+                                        BorderRadius.circular(5.r),
                                       ),
                                       child: Text(
                                         cubit.quantity.toString(),
@@ -356,7 +382,7 @@ class DetailsScreen extends StatelessWidget {
                             width: double.infinity,
                             decoration: BoxDecoration(
                                 border:
-                                    Border.all(color: color.backgroundColor),
+                                Border.all(color: color.backgroundColor),
                                 borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(20.r),
                                     topRight: Radius.circular(20.r))),
@@ -370,7 +396,7 @@ class DetailsScreen extends StatelessWidget {
                                     },
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           locale.productDetails,
@@ -382,7 +408,7 @@ class DetailsScreen extends StatelessWidget {
                                           !cubit.productDetailsContainer
                                               ? Icons.keyboard_arrow_up_outlined
                                               : Icons
-                                                  .keyboard_arrow_down_rounded,
+                                              .keyboard_arrow_down_rounded,
                                           color: color.backgroundColor,
                                         )
                                       ],
@@ -391,7 +417,7 @@ class DetailsScreen extends StatelessWidget {
                                   if (cubit.productDetailsContainer)
                                     Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         Divider(),
                                         SizedBox(
@@ -409,7 +435,7 @@ class DetailsScreen extends StatelessWidget {
                                           children: [
                                             Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   locale.category,
@@ -419,8 +445,8 @@ class DetailsScreen extends StatelessWidget {
                                                   category!,
                                                   style: font.bodyMedium!
                                                       .copyWith(
-                                                          color: color
-                                                              .backgroundColor),
+                                                      color: color
+                                                          .backgroundColor),
                                                 ),
                                                 SizedBox(
                                                   height: 5.h,
@@ -435,8 +461,8 @@ class DetailsScreen extends StatelessWidget {
                                                     madeIn!,
                                                     style: font.bodyMedium!
                                                         .copyWith(
-                                                            color: color
-                                                                .backgroundColor),
+                                                        color: color
+                                                            .backgroundColor),
                                                   ),
                                               ],
                                             ),
@@ -445,7 +471,7 @@ class DetailsScreen extends StatelessWidget {
                                             ),
                                             Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   locale.brand,
@@ -458,8 +484,8 @@ class DetailsScreen extends StatelessWidget {
                                                     child: Text(brand,
                                                         style: font.bodyMedium!
                                                             .copyWith(
-                                                                color: color
-                                                                    .backgroundColor)),
+                                                            color: color
+                                                                .backgroundColor)),
                                                   ),
                                                 ),
                                                 SizedBox(
@@ -472,8 +498,8 @@ class DetailsScreen extends StatelessWidget {
                                                 Text(type,
                                                     style: font.bodyMedium!
                                                         .copyWith(
-                                                            color: color
-                                                                .backgroundColor)),
+                                                        color: color
+                                                            .backgroundColor)),
                                               ],
                                             )
                                           ],
@@ -483,7 +509,7 @@ class DetailsScreen extends StatelessWidget {
                                         ),
                                         Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             if (manufacturerPartNumber != null)
                                               Text(
@@ -496,8 +522,8 @@ class DetailsScreen extends StatelessWidget {
                                                     .toString(),
                                                 style: font.bodyMedium!
                                                     .copyWith(
-                                                        color: color
-                                                            .backgroundColor),
+                                                    color: color
+                                                        .backgroundColor),
                                               ),
                                             if (manufacturerPartNumber != null)
                                               SizedBox(
@@ -513,8 +539,8 @@ class DetailsScreen extends StatelessWidget {
                                                 frontOrRear!.toString(),
                                                 style: font.bodyMedium!
                                                     .copyWith(
-                                                        color: color
-                                                            .backgroundColor),
+                                                    color: color
+                                                        .backgroundColor),
                                               ),
                                             if (frontOrRear != null)
                                               SizedBox(
@@ -522,7 +548,8 @@ class DetailsScreen extends StatelessWidget {
                                               ),
                                             if (rimDiameter != null)
                                               Text(
-                                                '${locale.assembledProductDimensions}\n(L x W x H)',
+                                                '${locale
+                                                    .assembledProductDimensions}\n(L x W x H)',
                                                 style: font.bodyMedium,
                                               ),
                                             if (rimDiameter != null)
@@ -530,8 +557,8 @@ class DetailsScreen extends StatelessWidget {
                                                 rimDiameter!.toString(),
                                                 style: font.bodyMedium!
                                                     .copyWith(
-                                                        color: color
-                                                            .backgroundColor),
+                                                    color: color
+                                                        .backgroundColor),
                                               ),
                                             if (rimDiameter != null)
                                               SizedBox(
@@ -547,8 +574,8 @@ class DetailsScreen extends StatelessWidget {
                                                 warranty!,
                                                 style: font.bodyMedium!
                                                     .copyWith(
-                                                        color: color
-                                                            .backgroundColor),
+                                                    color: color
+                                                        .backgroundColor),
                                               ),
                                             if (warranty != null)
                                               SizedBox(
@@ -576,8 +603,8 @@ class DetailsScreen extends StatelessWidget {
                                                 maximumTyreLoad.toString(),
                                                 style: font.bodyMedium!
                                                     .copyWith(
-                                                        color: color
-                                                            .backgroundColor),
+                                                    color: color
+                                                        .backgroundColor),
                                               ),
                                             if (maximumTyreLoad != null)
                                               SizedBox(
@@ -593,8 +620,8 @@ class DetailsScreen extends StatelessWidget {
                                                 tyreEngraving.toString(),
                                                 style: font.bodyMedium!
                                                     .copyWith(
-                                                        color: color
-                                                            .backgroundColor),
+                                                    color: color
+                                                        .backgroundColor),
                                               ),
                                             if (tyreEngraving != null)
                                               SizedBox(
@@ -610,8 +637,8 @@ class DetailsScreen extends StatelessWidget {
                                                 tyreHeight.toString(),
                                                 style: font.bodyMedium!
                                                     .copyWith(
-                                                        color: color
-                                                            .backgroundColor),
+                                                    color: color
+                                                        .backgroundColor),
                                               ),
                                             if (tyreHeight != null)
                                               SizedBox(
@@ -627,8 +654,8 @@ class DetailsScreen extends StatelessWidget {
                                                 tyreWidth.toString(),
                                                 style: font.bodyMedium!
                                                     .copyWith(
-                                                        color: color
-                                                            .backgroundColor),
+                                                    color: color
+                                                        .backgroundColor),
                                               ),
                                             if (tyreWidth != null)
                                               SizedBox(
@@ -644,8 +671,8 @@ class DetailsScreen extends StatelessWidget {
                                                 volt.toString(),
                                                 style: font.bodyMedium!
                                                     .copyWith(
-                                                        color: color
-                                                            .backgroundColor),
+                                                    color: color
+                                                        .backgroundColor),
                                               ),
                                             if (volt != null)
                                               SizedBox(
@@ -661,8 +688,8 @@ class DetailsScreen extends StatelessWidget {
                                                 ampere.toString(),
                                                 style: font.bodyMedium!
                                                     .copyWith(
-                                                        color: color
-                                                            .backgroundColor),
+                                                    color: color
+                                                        .backgroundColor),
                                               ),
                                             if (ampere != null)
                                               SizedBox(
@@ -678,8 +705,8 @@ class DetailsScreen extends StatelessWidget {
                                                 liter.toString(),
                                                 style: font.bodyMedium!
                                                     .copyWith(
-                                                        color: color
-                                                            .backgroundColor),
+                                                    color: color
+                                                        .backgroundColor),
                                               ),
                                             if (liter != null)
                                               SizedBox(
@@ -695,8 +722,8 @@ class DetailsScreen extends StatelessWidget {
                                                 productColor.toString(),
                                                 style: font.bodyMedium!
                                                     .copyWith(
-                                                        color: color
-                                                            .backgroundColor),
+                                                    color: color
+                                                        .backgroundColor),
                                               ),
                                             if (productColor != null)
                                               SizedBox(
@@ -712,8 +739,8 @@ class DetailsScreen extends StatelessWidget {
                                                 numberSparkPulgs.toString(),
                                                 style: font.bodyMedium!
                                                     .copyWith(
-                                                        color: color
-                                                            .backgroundColor),
+                                                    color: color
+                                                        .backgroundColor),
                                               ),
                                             if (numberSparkPulgs != null)
                                               SizedBox(
@@ -729,8 +756,8 @@ class DetailsScreen extends StatelessWidget {
                                                 oilType.toString(),
                                                 style: font.bodyMedium!
                                                     .copyWith(
-                                                        color: color
-                                                            .backgroundColor),
+                                                    color: color
+                                                        .backgroundColor),
                                               ),
                                             if (oilType != null)
                                               SizedBox(
@@ -746,15 +773,15 @@ class DetailsScreen extends StatelessWidget {
                                                 itemCount: carModels!.length,
                                                 shrinkWrap: true,
                                                 physics:
-                                                    NeverScrollableScrollPhysics(),
+                                                NeverScrollableScrollPhysics(),
                                                 itemBuilder: (context, index) =>
                                                     Text(
-                                                  carModels![index],
-                                                  style: font.bodyMedium!
-                                                      .copyWith(
+                                                      carModels![index],
+                                                      style: font.bodyMedium!
+                                                          .copyWith(
                                                           color: color
                                                               .backgroundColor),
-                                                ),
+                                                    ),
                                               ),
                                             if (availableYears != null)
                                               SizedBox(
@@ -771,12 +798,18 @@ class DetailsScreen extends StatelessWidget {
                           SizedBox(
                             height: 20.h,
                           ),
+                          Text(
+                            'Product Ratings',
+                            style: font.bodyMedium,
+                          ),
+                          SizedBox(
+                            height: 15.h,
+                          ),
                           RatingSummary(
-                            counter: 13,
-                            average:rating,
-                            averageStyle: font.bodyMedium!.copyWith(
-                              fontSize: 19.sp
-                            ),
+                            counter: rateCount==0?1:rateCount,
+                            average: rating,
+                            averageStyle:
+                            font.bodyMedium!.copyWith(fontSize: 19.sp),
                             showAverage: true,
                             backgroundColor: Colors.grey.shade400,
                             counterFiveStars: rateStarFive.toInt(),
@@ -784,6 +817,135 @@ class DetailsScreen extends StatelessWidget {
                             counterThreeStars: rateStarThree.toInt(),
                             counterTwoStars: rateStarTwo.toInt(),
                             counterOneStars: rateStarOne.toInt(),
+                          ),
+                          SizedBox(
+                            height: 25.h,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'Reviews',
+                                style: font.bodyMedium,
+                              ),
+                              SizedBox(
+                                width: 5.w,
+                              ),
+                              Text(
+                                '(33 reviews)',
+                                style: font.bodyMedium!.copyWith(
+                                    fontSize: 13.sp,
+                                    color: color.primaryColor.withOpacity(0.5)),
+                              ),
+                              Spacer(),
+                              TextButton(
+                                  onPressed: () {},
+                                  child: Text(
+                                    'See All',
+                                    style: font.bodyMedium!.copyWith(
+                                        fontSize: 13.sp,
+                                        color: color.primaryColor),
+                                  ))
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          ListView.separated(
+                            itemCount: 5,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) => BuildCardReviews(),
+                            separatorBuilder: (context, index) => SizedBox(height:15.h,),
+                          ),
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          Text(
+                            'Add Rate',
+                            style: font.bodyMedium!.copyWith(fontSize: 15.sp),
+                          ),
+                          SizedBox(
+                            height: 5.h,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                width: 190.w,
+                                height: 54.h,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                    color: color.primaryColor.withOpacity(0.1)),
+                                child: RatingBarIndicator(
+                                  rating: cubit.rate.toDouble(),
+                                  itemBuilder: (context, index) =>
+                                      GestureDetector(
+                                        onTap: () {
+                                          cubit.changeRate(value: index + 1);
+                                        },
+                                        child: Icon(
+                                          Icons.star,
+                                          color: Colors.amber,
+                                        ),
+                                      ),
+                                  unratedColor:
+                                  color.primaryColor.withOpacity(0.22),
+                                  itemCount: 5,
+                                  itemSize: 30.r,
+                                  direction: Axis.horizontal,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 18.h,
+                          ),
+                          BuildTextFormField(
+                              title: 'comment',
+                              hint: 'Write Your Comment',
+                              cubit: AuthenticationCubit.get(context),
+                              controller: comment,
+                              maxLines: 4,
+                              contentPadding: true,
+                              withBorder: true,
+                              validator: (p0) {
+                                return null;
+                              },
+                              keyboardType: TextInputType.text,
+                              maxLength: 1000),
+                          SizedBox(
+                            height: 18.h,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              state is LoadingAddRateState
+                                  ? Center(child: CircularProgressIndicator())
+                                  : BuildDefaultButton(
+                                  text: 'Add Rate',
+                                  width: 80.w,
+                                  height: 22.h,
+                                  borderRadius: 8.r,
+                                  onPressed: () {
+                                    if (cubit.rate != 0) {
+                                      cubit.addRate(
+                                          id: productId,
+                                          rate: cubit.rate.toDouble(),
+                                          comment: comment.text.isEmpty
+                                              ? null
+                                              : comment.text);
+                                    } else {
+                                      showMessageResponse(
+                                          message:
+                                          'add at least one star for rating',
+                                          context: context,
+                                          success: false);
+                                    }
+                                  },
+                                  backgorundColor: color.backgroundColor,
+                                  colorText: ColorConstant.brown),
+                            ],
                           ),
                           SizedBox(
                             height: 90.h,

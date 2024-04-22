@@ -76,7 +76,7 @@ class Product {
   dynamic offerPrice;
   String? offerStartDate;
   String? offerEndDate;
-  int? rating;
+  dynamic averageRate;
   int? reviewCount;
   String? type;
   bool? isBestSeller;
@@ -105,6 +105,7 @@ class Product {
   String? warranty;
   String? disabledAt;
   String? updatedAt;
+  int? rateCount;
   List<AvailableYears>? availableYears;
   BusinessCategory? businessCategory;
   RatePercentage? ratePercentage;
@@ -112,6 +113,7 @@ class Product {
   Product.fromJson(Map<String, dynamic> json) {
     productsId = json['products_id'];
     traderId = json['trader_id'];
+    rateCount = json['rateCount'];
     description = json['description'];
     manufacturerPartNumber = json['manufacturer_part_number'];
     brandName = json['brand_name'];
@@ -131,7 +133,7 @@ class Product {
     offerPrice = json['offer_price'];
     offerStartDate = json['offer_start_date'];
     offerEndDate = json['offer_end_date'];
-    rating = json['rating'];
+    averageRate = json['averageRate'];
     reviewCount = json['review_count'];
     type = json['type'];
     isBestSeller = json['is_best_seller'];

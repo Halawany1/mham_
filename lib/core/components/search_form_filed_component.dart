@@ -30,11 +30,11 @@ class BuildSearchFormField extends StatelessWidget {
       child: TextFormField(
         readOnly: readOnly,
         style: TextStyle(
-          color: color.primaryColor.withOpacity(0.75),
+          color:Colors.white,
           fontSize: 15.sp,
         ),
         onChanged: onSave,
-        cursorColor: color.primaryColor,
+        cursorColor: Colors.white,
         onTap: onTap,
         decoration: InputDecoration(
             border: OutlineInputBorder(
