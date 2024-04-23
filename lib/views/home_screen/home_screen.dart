@@ -199,7 +199,7 @@ class HomeScreen extends StatelessWidget {
                                   ],
                                 ),
                                 SizedBox(
-                                  height: 30.h,
+                                  height: 10.h,
                                 ),
                                 CarouselSlider(
                                     items: [
@@ -227,9 +227,6 @@ class HomeScreen extends StatelessWidget {
                                       enlargeFactor: 0.3,
                                       scrollDirection: Axis.horizontal,
                                     )),
-                                SizedBox(
-                                  height: 10.h,
-                                ),
                                 Text(
                                   locale.whatAreYouLookingFor,
                                   style: font.bodyMedium,
@@ -468,142 +465,16 @@ class HomeScreen extends StatelessWidget {
                                             itemBuilder: (context, index) =>
                                                 InkWell(
                                               onTap: () {
-                                                List<String> carModels = [];
-                                                if (cubit.homeProducts[index]
-                                                        .availableYears !=
-                                                    null) {
-                                                  cubit.homeProducts[index]
-                                                      .availableYears!
-                                                      .forEach((element) {
-                                                    carModels.add(element
-                                                            .carModel!
-                                                            .car!
-                                                            .carName! +
-                                                        ' ' +
-                                                        element.carModel!
-                                                            .modelName! +
-                                                        ' ' +
-                                                        element.availableYear
-                                                            .toString());
-                                                  });
-                                                }
-
+                                                cubit.oneProductModel=null;
+                                                cubit.getProductDetails(id:cubit
+                                                    .homeProducts[index]
+                                                    .productsId!);
                                                 cubit.increaseReview(cubit
                                                     .homeProducts[index]
                                                     .productsId!);
                                                 Helper.push(
                                                     context,
                                                     DetailsScreen(
-                                                      rateCount:cubit
-                                                          .homeProducts[index]
-                                                          .rateCount! ,
-                                                      rateStarFive:double.parse(cubit
-                                                          .homeProducts[index]
-                                                          .ratePercentage!.fiveStar.toString()) ,
-                                                      rateStarFour:double.parse(cubit
-                                                          .homeProducts[index]
-                                                          .ratePercentage!.fourStar.toString()) ,
-                                                      rateStarOne: double.parse(cubit
-                                                          .homeProducts[index]
-                                                          .ratePercentage!.oneStar.toString()),
-                                                      rateStarThree: double.parse(cubit
-                                                          .homeProducts[index]
-                                                          .ratePercentage!.threeStar.toString()),
-                                                      rateStarTwo: double.parse(cubit
-                                                          .homeProducts[index]
-                                                          .ratePercentage!.twoStar.toString()),
-                                                      productId: cubit
-                                                          .homeProducts[index]
-                                                          .productsId!,
-                                                      inCart: cubit
-                                                              .homeProducts[
-                                                                  index]
-                                                              .inCart ??
-                                                          false,
-                                                      brand: cubit
-                                                          .homeProducts[index]
-                                                          .brandName!,
-                                                      description: cubit
-                                                          .homeProducts[index]
-                                                          .description!,
-                                                      isOffer: cubit
-                                                          .homeProducts[index]
-                                                          .isOffer!,
-                                                      price: double.parse(cubit
-                                                          .homeProducts[index]
-                                                          .price!
-                                                          .toString()),
-                                                      productName: cubit
-                                                          .homeProducts[index]
-                                                          .productsName!,
-                                                      rating: double.parse(cubit
-                                                          .homeProducts[index]
-                                                          .averageRate!
-                                                          .toString()),
-                                                      type: cubit
-                                                          .homeProducts[index]
-                                                          .type!,
-                                                      category: cubit
-                                                          .homeProducts[index]
-                                                          .businessCategory!
-                                                          .bcNameEn!,
-                                                      warranty: cubit
-                                                          .homeProducts[index]
-                                                          .warranty,
-                                                      placementOfVehile: cubit
-                                                          .homeProducts[index]
-                                                          .frontOrRear,
-                                                      volt: cubit
-                                                          .homeProducts[index]
-                                                          .volt,
-                                                      tyreWidth: cubit
-                                                          .homeProducts[index]
-                                                          .tyreWidth,
-                                                      tyreSpreedRate: cubit
-                                                          .homeProducts[index]
-                                                          .tyreSpeedRate,
-                                                      tyreHeight: cubit
-                                                          .homeProducts[index]
-                                                          .tyreHeight,
-                                                      tyre_engraving: cubit
-                                                          .homeProducts[index]
-                                                          .tyreEngraving,
-                                                      maximumTyreLoad: cubit
-                                                          .homeProducts[index]
-                                                          .maximumTyreLoad,
-                                                      number_spark_pulgs: cubit
-                                                          .homeProducts[index]
-                                                          .numberSparkPulgs,
-                                                      oilType: cubit
-                                                          .homeProducts[index]
-                                                          .oilType,
-                                                      madeIn: cubit
-                                                          .homeProducts[index]
-                                                          .madeIn,
-                                                      liter: cubit
-                                                          .homeProducts[index]
-                                                          .liter,
-                                                      dimension: cubit
-                                                          .homeProducts[index]
-                                                          .rimDiameter,
-                                                      ampere: cubit
-                                                          .homeProducts[index]
-                                                          .ampere,
-                                                      manufacturerPartNumber: cubit
-                                                          .homeProducts[index]
-                                                          .manufacturerPartNumber,
-                                                      productColor: cubit
-                                                          .homeProducts[index]
-                                                          .color,
-                                                      batteryReplacementAvailable:
-                                                          cubit
-                                                              .homeProducts[
-                                                                  index]
-                                                              .batteryReplacementAvailable,
-                                                      offerPrice: cubit
-                                                          .homeProducts[index]
-                                                          .offerPrice,
-                                                      carModels: carModels,
                                                     ));
                                               },
                                               child: BuildProductCard(

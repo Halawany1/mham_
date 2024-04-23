@@ -22,36 +22,40 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var color = Theme.of(context);
-    var font = Theme
-        .of(context)
-        .textTheme;
+    var font = Theme.of(context).textTheme;
     final locale = AppLocalizations.of(context);
     return BlocConsumer<CartCubit, CartState>(
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = context.read<CartCubit>();
         return Scaffold(
-            bottomSheet: cubit.cartModel != null ? cubit.
-            cartModel!.cart!.cartProducts!.isEmpty ? null :
-            Container(
-              padding: EdgeInsets.all(12.h),
-              width: double.infinity,
-              height: 70.h,
-              decoration: BoxDecoration(
-                color: color.cardColor,
-              ),
-              child: BuildDefaultButton(
-                  borderRadius: 12.r,
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => CheckoutScreen(
-                        products:cubit.cartModel!.cart!.cartProducts! ,
-                      ),));
-                  },
-                  text: locale.checkOut,
-                  backgorundColor: color.backgroundColor,
-                  colorText: ColorConstant.brown),
-            ) : null,
+            bottomSheet: cubit.cartModel != null
+                ? cubit.cartModel!.cart!.cartProducts!.isEmpty
+                    ? null
+                    : Container(
+                        padding: EdgeInsets.all(12.h),
+                        width: double.infinity,
+                        height: 70.h,
+                        decoration: BoxDecoration(
+                          color: color.cardColor,
+                        ),
+                        child: BuildDefaultButton(
+                            borderRadius: 12.r,
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CheckoutScreen(
+                                      products:
+                                          cubit.cartModel!.cart!.cartProducts!,
+                                    ),
+                                  ));
+                            },
+                            text: locale.checkOut,
+                            backgorundColor: color.backgroundColor,
+                            colorText: ColorConstant.brown),
+                      )
+                : null,
             appBar: AppBar(
               centerTitle: true,
               title: Image.asset(
@@ -72,349 +76,122 @@ class CartScreen extends StatelessWidget {
             body: state is CartLoadingState || cubit.cartModel == null
                 ? Center(child: BuildImageLoader(assetName: ImageConstant.logo))
                 : Padding(
-              padding: EdgeInsets.all(20.h),
-              child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(locale.cart),
-                        SizedBox(
-                          width: 5.w,
-                        ),
-                        if (cubit.cartModel!.cart!.cartProducts!.length >
-                            0)
-                          Text(
-                            '(${cubit.cartModel!.cart!.cartProducts!
-                                .length} ${locale.items})',
-                            style: font.bodyMedium!.copyWith(
-                                fontSize: 12.sp,
-                                color:
-                                color.primaryColor.withOpacity(0.5)),
-                          ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    if (cubit.cartModel!.cart!.cartProducts!.length > 0)
-                      ListView.separated(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) =>
-                              InkWell(
-                                onTap: () {
-                                  List<String> carModels = [];
-                                  if (cubit
-                                      .cartModel!
-                                      .cart!
-                                      .cartProducts![index]
-                                      .product!
-                                      .availableYears !=
-                                      null) {
-                                    cubit
-                                        .cartModel!
-                                        .cart!
-                                        .cartProducts![index]
-                                        .product!
-                                        .availableYears!
-                                        .forEach((element) {
-                                      carModels.add(element
-                                          .carModel!.car!.carName! +
-                                          ' ' +
-                                          element.carModel!.modelName! +
-                                          ' ' +
-                                          element.availableYear
-                                              .toString());
-                                    });
-                                  }
-
-                                  HomeCubit.get(context).increaseReview(
-                                      cubit
-                                          .cartModel!
-                                          .cart!
-                                          .cartProducts![index]
-                                          .product!
-                                          .productsId!);
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            DetailsScreen(
-                                              rateCount:cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!.rateCount! ,
-                                              rateStarFive: double.parse(cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .ratePercentage!.fiveStar
-                                                  .toString()),
-                                              rateStarFour: double.parse(cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .ratePercentage!.fourStar
-                                                  .toString()),
-                                              rateStarOne: double.parse(cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .ratePercentage!.oneStar
-                                                  .toString()),
-                                              rateStarThree: double.parse(cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .ratePercentage!.threeStar
-                                                  .toString()),
-                                              rateStarTwo: double.parse(cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .ratePercentage!.twoStar
-                                                  .toString()),
-                                              hideAddedToCart: true,
-                                              productId: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .productsId!,
-                                              inCart: true,
-                                              brand: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .brandName!,
-                                              description: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .description!,
-                                              isOffer: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .isOffer!,
-                                              price: double.parse(cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .price!
-                                                  .toString()),
-                                              productName: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .productsName!,
-                                              rating: double.parse(cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .averageRate!
-                                                  .toString()),
-                                              type: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .type!,
-                                              category: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .businessCategory!
-                                                  .bcNameEn!,
-                                              warranty: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .warranty,
-                                              placementOfVehile: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .frontOrRear,
-                                              volt: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .volt,
-                                              tyreWidth: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .tyreWidth,
-                                              tyreSpreedRate: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .tyreSpeedRate,
-                                              tyreHeight: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .tyreHeight,
-                                              tyre_engraving: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .tyreEngraving,
-                                              maximumTyreLoad: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .maximumTyreLoad,
-                                              number_spark_pulgs: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .numberSparkPulgs,
-                                              oilType: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .oilType,
-                                              madeIn: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .madeIn,
-                                              liter: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .liter,
-                                              dimension: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .rimDiameter,
-                                              ampere: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .ampere,
-                                              manufacturerPartNumber: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .manufacturerPartNumber,
-                                              productColor: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .color,
-                                              batteryReplacementAvailable: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .batteryReplacementAvailable,
-                                              offerPrice: cubit
-                                                  .cartModel!
-                                                  .cart!
-                                                  .cartProducts![index]
-                                                  .product!
-                                                  .offerPrice,
-                                              carModels: carModels,
-                                            ),
-                                      ));
-                                },
-                                child: BuildCartCardProduct(
-                                  index: index,
-                                ),
-                              ),
-                          separatorBuilder: (context, index) =>
-                              SizedBox(
-                                height: 20.h,
-                              ),
-                          itemCount: cubit
-                              .cartModel!.cart!.cartProducts!.length),
-                    if (cubit.cartModel!.cart!.cartProducts!.length == 0)
-                      Center(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 50.h),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                    padding: EdgeInsets.all(20.h),
+                    child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Image.asset(ImageConstant.cart),
+                              Text(locale.cart),
                               SizedBox(
-                                height: 10.h,
+                                width: 5.w,
                               ),
-                              Text(
-                                locale.cartEmpty,
-                                style: font.bodyMedium!
-                                    .copyWith(fontSize: 16.sp),
-                              ),
-                              SizedBox(
-                                height: 15.h,
-                              ),
-                              BuildDefaultButton(
-                                  text: locale.startShopping,
-                                  width: 120.w,
-                                  height: 28.h,
-                                  borderRadius: 8.r,
-                                  onPressed: () {
-                                    HomeCubit.get(context)
-                                        .getAllProduct(lang: 'en');
-                                    Helper.pop(context);
-                                  },
-                                  backgorundColor: color.backgroundColor,
-                                  colorText: color.primaryColor)
+                              if (cubit.cartModel!.cart!.cartProducts!.length >
+                                  0)
+                                Text(
+                                  '(${cubit.cartModel!.cart!.cartProducts!.length} ${locale.items})',
+                                  style: font.bodyMedium!.copyWith(
+                                      fontSize: 12.sp,
+                                      color:
+                                          color.primaryColor.withOpacity(0.5)),
+                                ),
                             ],
                           ),
-                        ),
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          if (cubit.cartModel!.cart!.cartProducts!.length > 0)
+                            ListView.separated(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) => InkWell(
+                                      onTap: () {
+                                        HomeCubit.get(context).oneProductModel=null;
+                                        HomeCubit.get(context).getProductDetails(
+                                            id: cubit
+                                                .cartModel!
+                                                .cart!
+                                                .cartProducts![index]
+                                                .product!
+                                                .productsId!);
+                                        HomeCubit.get(context).increaseReview(
+                                            cubit
+                                                .cartModel!
+                                                .cart!
+                                                .cartProducts![index]
+                                                .product!
+                                                .productsId!);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DetailsScreen(
+                                                  ),
+                                            ));
+                                      },
+                                      child: BuildCartCardProduct(
+                                        index: index,
+                                      ),
+                                    ),
+                                separatorBuilder: (context, index) => SizedBox(
+                                      height: 20.h,
+                                    ),
+                                itemCount: cubit
+                                    .cartModel!.cart!.cartProducts!.length),
+                          if (cubit.cartModel!.cart!.cartProducts!.length == 0)
+                            Center(
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 50.h),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(ImageConstant.cart),
+                                    SizedBox(
+                                      height: 10.h,
+                                    ),
+                                    Text(
+                                      locale.cartEmpty,
+                                      style: font.bodyMedium!
+                                          .copyWith(fontSize: 16.sp),
+                                    ),
+                                    SizedBox(
+                                      height: 15.h,
+                                    ),
+                                    BuildDefaultButton(
+                                        text: locale.startShopping,
+                                        width: 120.w,
+                                        height: 28.h,
+                                        borderRadius: 8.r,
+                                        onPressed: () {
+                                          HomeCubit.get(context)
+                                              .getAllProduct(lang: 'en');
+                                          Helper.pop(context);
+                                        },
+                                        backgorundColor: color.backgroundColor,
+                                        colorText: color.primaryColor)
+                                  ],
+                                ),
+                              ),
+                            ),
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          if (cubit.cartModel!.cart!.cartProducts!.length > 0)
+                            BuildTotalCardPrice(
+                                lenghtItems:
+                                    cubit.cartModel!.cart!.cartProducts!.length,
+                                totalPrice: cubit.totalPrice,
+                                totalPriceWithShippingFee:
+                                    cubit.totalPrice + 10),
+                          SizedBox(
+                            height: 60.h,
+                          ),
+                        ],
                       ),
-                    SizedBox(
-                      height: 20.h,
                     ),
-                    if (cubit.cartModel!.cart!.cartProducts!.length > 0)
-                      BuildTotalCardPrice(
-                          lenghtItems: cubit.cartModel!.cart!.cartProducts!
-                              .length,
-                          totalPrice: cubit.totalPrice,
-                          totalPriceWithShippingFee: cubit.totalPrice + 10),
-                    SizedBox(
-                      height: 60.h,
-                    ),
-                  ],
-                ),
-              ),
-            ));
+                  ));
       },
     );
   }

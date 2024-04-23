@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mham/controller/home_cubit/home_cubit.dart';
 
 class BuildCardReviews extends StatelessWidget {
-  const BuildCardReviews({super.key});
-
+  const BuildCardReviews({super.key,required this.index});
+  final int index;
   @override
   Widget build(BuildContext context) {
     var color = Theme.of(context);
     var font = Theme.of(context).textTheme;
+    var cubit= HomeCubit.get(context);
     return Container(
       width: double.infinity,
-      height: 98.h,
       padding: EdgeInsets.all(12.h),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.r),
@@ -23,7 +24,7 @@ class BuildCardReviews extends StatelessWidget {
             radius: 28.r,
             backgroundColor: color.primaryColor,
             child: Text(
-              'A',
+              cubit.oneProductModel!.product!.productRating![index].user!.userName![0],
               style: font.bodyLarge!
                   .copyWith(color: color.cardColor),
             ),
@@ -40,18 +41,25 @@ class BuildCardReviews extends StatelessWidget {
                   mainAxisAlignment:
                   MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Ahmed Mohamed',
-                      style: font.bodyMedium,
+                    SizedBox(
+                      width: 150.w,
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(
+                          cubit.oneProductModel!.product!.productRating![index].user!.userName!,
+                          style: font.bodyMedium,
+                        ),
+                      ),
                     ),
                     RatingBar.builder(
                       ignoreGestures: true,
-                      initialRating: 4,
-                      minRating: 4,
+                      initialRating: cubit.oneProductModel!.product!.productRating![index].ratingNum!
+                          .toDouble(),
+                      minRating: cubit.oneProductModel!.product!.productRating![index].ratingNum!
+                          .toDouble(),
                       direction: Axis.horizontal,
                       allowHalfRating: true,
                       itemCount: 5,
-                      maxRating: 4,
                       unratedColor: color.highlightColor
                           .withOpacity(0.8),
                       itemSize: 12.sp,
@@ -69,7 +77,8 @@ class BuildCardReviews extends StatelessWidget {
                   height: 5.h,
                 ),
                 Text(
-                  'Lorem ipsum dolor sit amet consectetur.',
+                  cubit.oneProductModel!.product!.productRating!
+                  [index].review??'No Review',
                   style: font.bodyMedium!
                       .copyWith(fontSize: 12.sp),
                 ),

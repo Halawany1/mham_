@@ -7,6 +7,7 @@ import 'package:mham/core/components/product_card_component.dart';
 import 'package:mham/core/components/search_form_filed_component.dart';
 import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/helper/helper.dart';
+import 'package:mham/views/details_product_screen/details_product_screen.dart';
 import 'package:mham/views/home_screen/widget/products_not_found.dart';
 
 class SearchScreen extends StatelessWidget {
@@ -59,23 +60,38 @@ class SearchScreen extends StatelessWidget {
                     crossAxisCount: 2,
                     mainAxisSpacing: 10.h,
                     crossAxisSpacing: 4.w,
-                    mainAxisExtent: 230.h),
+                    mainAxisExtent: 258.h),
                 itemBuilder: (context, index) =>
-                    BuildProductCard(
-                      id: cubit.allProducts[index].productsId!,
-                      inFavorite: cubit.allProducts[index].inFavourite!,
-                      inCart: cubit.allProducts[index].inCart!,
-                      isOffer: cubit.allProducts[index].isOffer!,
-                      offerPrice: cubit.allProducts[index].offerPrice,
-                      description: cubit
-                          .allProducts[index].businessCategory!
-                          .bcNameEn!,
-                      type: cubit.allProducts[index].type!,
-                      rate: double.parse(
-                          cubit.allProducts[index].averageRate.toString()),
-                      review: cubit.allProducts[index].reviewCount,
-                      price: cubit.allProducts[index].price!,
-                      title: cubit.allProducts[index].productsName!,
+                    InkWell(
+                      onTap: () {
+                        cubit.oneProductModel=null;
+                        cubit.getProductDetails(id:cubit
+                            .allProducts[index]
+                            .productsId!);
+                        cubit.increaseReview(cubit
+                            .allProducts[index]
+                            .productsId!);
+                        Helper.push(
+                            context,
+                            DetailsScreen(
+                            ));
+                      },
+                      child: BuildProductCard(
+                        id: cubit.allProducts[index].productsId!,
+                        inFavorite: cubit.allProducts[index].inFavourite!,
+                        inCart: cubit.allProducts[index].inCart!,
+                        isOffer: cubit.allProducts[index].isOffer!,
+                        offerPrice: cubit.allProducts[index].offerPrice,
+                        description: cubit
+                            .allProducts[index].businessCategory!
+                            .bcNameEn!,
+                        type: cubit.allProducts[index].type!,
+                        rate: double.parse(
+                            cubit.allProducts[index].averageRate.toString()),
+                        review: cubit.allProducts[index].reviewCount,
+                        price: cubit.allProducts[index].price!,
+                        title: cubit.allProducts[index].productsName!,
+                      ),
                     ),
               ),
             ),

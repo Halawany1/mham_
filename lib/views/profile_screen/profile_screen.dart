@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
+import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/controller/profile_cubit/profile_cubit.dart';
 import 'package:mham/core/components/laoding_animation_component.dart';
@@ -16,6 +17,7 @@ import 'package:mham/layout/layout_screen.dart';
 import 'package:mham/views/edit_profile_screen/edit_profile_screen.dart';
 import 'package:mham/views/profile_screen/widget/card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mham/views/recent_purchases_screen/recent_purchases_screen.dart';
 import 'package:mham/views/sign_up_screen/sign_up_screen.dart';
 import 'widget/language_dailog_selection_component.dart';
 
@@ -102,6 +104,18 @@ class ProfileScreen extends StatelessWidget {
                         icon: FontAwesomeIcons.undo,
                         text: locale.returns,
                         onTap: () {},
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      BuildCards(
+                        icon: FontAwesomeIcons.shoppingBag,
+                        text: 'Recent Purchases',
+                        onTap: () {
+                          HomeCubit.get(context).orderModel=null;
+                          HomeCubit.get(context).getAllOrders(lang: 'en');
+                          Helper.push(context, RecentPurchasesScreen());
+                        },
                       ),
                       SizedBox(
                         height: 10.h,

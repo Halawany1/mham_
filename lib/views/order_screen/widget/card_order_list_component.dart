@@ -13,10 +13,20 @@ class BuildCardOrderList extends StatelessWidget {
     super.key,
     required this.index,
     required this.totalPrice,
+    required this.quantity,
+    required this.orderId,
+    required this.createdAt,
+    required this.status,
+     this.returnOrder=false,
   });
 
   final int index;
   final double totalPrice;
+  final String createdAt;
+  final String status;
+  final int orderId;
+  final int quantity;
+  final bool returnOrder;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +63,7 @@ class BuildCardOrderList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    Helper.formatDate(cubit.allOrders[index].createdAt!),
+                    Helper.formatDate(createdAt),
                     overflow: TextOverflow.ellipsis,
                     style: font.bodyMedium!.copyWith(fontSize: 15.sp),
                   ),
@@ -72,7 +82,7 @@ class BuildCardOrderList extends StatelessWidget {
                     child: Row(
                       children: [
                         Text(
-                          cubit.allOrders[index].status.toString(),
+                         status.toString(),
                           style: font.bodyMedium!.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 12.sp,
@@ -88,7 +98,7 @@ class BuildCardOrderList extends StatelessWidget {
                             borderRadius: BorderRadius.circular(5.r),
                           ),
                           child: Text(
-                            cubit.allOrders[index].carts!.length.toString(),
+                            quantity.toString(),
                             style: font.bodyMedium!.copyWith(fontSize: 12.sp),
                           ),
                         ),
@@ -100,13 +110,15 @@ class BuildCardOrderList extends StatelessWidget {
                           edit: false,
                           width: 75.w,
                           hieght: 17.h,
-                          text: locale.cancelOrder,
+                          text: returnOrder?
+                          'Return Order'
+                          :locale.cancelOrder,
                           onPressed: () {
                           showDialog(context: context,
                               builder: (context) {
                                 return confirmPopUp(context: context,
                                     onPress: () {
-                                  cubit.cancelOrder(id: cubit.allOrders[index].orderId!);
+                                  cubit.cancelOrder(id: orderId);
                                   Navigator.pop(context);
                                     }, title:  locale.cancelOrder,
                                     content:

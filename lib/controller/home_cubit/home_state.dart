@@ -117,3 +117,22 @@ class ErrorAddRateState extends HomeState {
 
   ErrorAddRateState(this.error);
 }
+
+class LoadingGetProductDetailsState extends HomeState {}
+
+class SuccessGetProductDetailsState extends HomeState {}
+
+class ErrorGetProductDetailsState extends HomeState {
+  final String error;
+
+  ErrorGetProductDetailsState(this.error);
+}
+class LoadingReturnOrderState extends HomeState {}
+
+class SuccessReturnOrderState extends HomeState {}
+
+class ErrorReturnOrderState extends HomeState {
+  final String error;
+
+  ErrorReturnOrderState(this.error);
+}

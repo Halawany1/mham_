@@ -18,10 +18,14 @@ class OrderDetailsScreen extends StatelessWidget {
     super.key,
     required this.currentIndex,
     required this.totalPrice,
+    this.hideNav = false,
+    this.returnOrder = false,
   });
 
   final int currentIndex;
   final double totalPrice;
+  final bool hideNav;
+  final bool returnOrder;
 
   @override
   Widget build(BuildContext context) {
@@ -59,16 +63,19 @@ class OrderDetailsScreen extends StatelessWidget {
           iconWidget: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                color: cubit.allOrders[currentIndex].processingAt != null
-                    ? color.backgroundColor:Colors.grey,
+                color: cubit.allOrders[currentIndex].deliveredAt != null
+                    ? color.backgroundColor
+                    : Colors.grey,
                 borderRadius: BorderRadius.all(Radius.circular(15.r))),
             child: Text('2',
-                style: font.bodyMedium!.copyWith(color:cubit.allOrders[currentIndex].processingAt != null
-                    ? ColorConstant.brown:Colors.grey)),
+                style: font.bodyMedium!.copyWith(
+                    color: cubit.allOrders[currentIndex].deliveredAt != null
+                        ? ColorConstant.brown
+                        : Colors.grey)),
           )),
       StepperData(
           title: StepperText(locale.shipped, textStyle: font.bodyMedium),
-          subtitle: cubit.allOrders[currentIndex].shippedAt == null
+          subtitle:cubit.allOrders[currentIndex].shippedAt == null
               ? null
               : StepperText(
                   textStyle: font.bodySmall!.copyWith(color: Colors.grey),
@@ -78,20 +85,42 @@ class OrderDetailsScreen extends StatelessWidget {
           iconWidget: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                color:cubit.allOrders[currentIndex].shippedAt != null
-                    ? color.backgroundColor:Colors.grey,
+                color: cubit.allOrders[currentIndex].deliveredAt != null
+                    ? color.backgroundColor
+                    : Colors.grey,
                 borderRadius: BorderRadius.all(Radius.circular(15.r))),
             child: Text('3',
-                style: font.bodyMedium!.copyWith(color:
-                cubit.allOrders[currentIndex].shippedAt != null
-                    ? ColorConstant.brown:Colors.grey)),
+                style: font.bodyMedium!.copyWith(
+                    color: cubit.allOrders[currentIndex].deliveredAt != null
+                        ? ColorConstant.brown
+                        : Colors.grey)),
           )),
       StepperData(
+        iconWidget: Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              border: cubit.allOrders[currentIndex].deliveredAt != null
+                  ?Border.all(color: color.primaryColor):null,
+              color: cubit.allOrders[currentIndex].deliveredAt != null
+                  ? color.backgroundColor
+                  : Colors.grey,
+              borderRadius: BorderRadius.all(Radius.circular(15.r))),
+        ),
         title: StepperText(locale.delivered, textStyle: font.bodyMedium),
       ),
     ];
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
+        if(state is SuccessReturnOrderState){
+          showMessageResponse(
+              message: 'Order Returned Successfully', context: context, success: true);
+        }
+        if(state is ErrorReturnOrderState)
+          {
+            showMessageResponse(
+                message: state.error, context: context, success: false);
+
+          }
         if (state is SuccessCancelProductState) {
           showMessageResponse(
               message: 'Order Canceled', context: context, success: true);
@@ -105,14 +134,25 @@ class OrderDetailsScreen extends StatelessWidget {
         var cubit = context.read<HomeCubit>();
         return WillPopScope(
           onWillPop: () async {
-            Helper.pop(context);
+            if(hideNav){
+              Navigator.pop(context);
+            }else{
+              Helper.pop(context);
+            }
+
             return true;
           },
           child: Scaffold(
             appBar: AppBar(
               leading: InkWell(
                   onTap: () {
-                    Helper.pop(context);
+                    if(hideNav){
+                      cubit.cardProductDetails.clear();
+                      cubit.trackingContainer = false;
+                      Navigator.pop(context);
+                    }else{
+                      Helper.pop(context);
+                    }
                   },
                   child: Icon(Icons.arrow_back, color: color.primaryColor)),
               centerTitle: true,
@@ -306,10 +346,9 @@ class OrderDetailsScreen extends StatelessWidget {
                                     ),
                                     Text(
                                       'Order Date ' +
-                                          Helper.
-                                          trackingTimeFormat(cubit
-                                              .allOrders[currentIndex].
-                                          createdAt.toString()),
+                                          Helper.trackingTimeFormat(cubit
+                                              .allOrders[currentIndex].createdAt
+                                              .toString()),
                                       style: font.bodySmall!.copyWith(
                                           fontSize: 12.sp,
                                           color: color.primaryColor),
@@ -320,6 +359,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                     AnotherStepper(
                                       verticalGap: 15.h,
                                       stepperList: stepperData,
+                                      activeIndex: 1,
                                       stepperDirection: Axis.vertical,
                                       iconWidth: 32.w,
                                       // Height that will be applied to all the stepper icons
@@ -364,11 +404,19 @@ class OrderDetailsScreen extends StatelessWidget {
                                   element.availableYear.toString());
                             });
                           }
+
+                          List<String>quantities = [];
+                         for(int i=1;i<= cubit.allOrders[currentIndex].carts![0]
+                             .cartProducts![index].quantity!;i++){
+                           quantities.add(i.toString());
+                         }
                           return BuildCardProductDetails(
+                            quantity: quantities,
                               onTap: () {
                                 cubit.openAndCloseCardProductDetails(index);
                               },
                               carModels: carModels,
+                              returnProduct: returnOrder,
                               opened: cubit.cardProductDetails[index],
                               index: index,
                               orders: cubit.allOrders[currentIndex]);

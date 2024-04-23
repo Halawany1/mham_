@@ -80,12 +80,16 @@ class OrderScreen extends StatelessWidget {
                                             ));
                                       },
                                       child: BuildCardOrderList(
+                                        status: cubit.allOrders[index].status!,
+                                          quantity: cubit.allOrders.length,
+                                          createdAt: cubit.allOrders[index].createdAt!,
+                                          orderId: cubit.allOrders[index].orderId!,
                                           totalPrice: totalPrice,
                                           index: index));
                                 },
                                 separatorBuilder: (context, index) => SizedBox(
-                                      height: 10.h,
-                                    ),
+                                  height: 10.h,
+                                ),
                                 itemCount: cubit.allOrders.length):
                                 Padding(
                                   padding: EdgeInsets.only(top: 120.h),
