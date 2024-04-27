@@ -1,5 +1,7 @@
 import 'dart:ui';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,8 +31,10 @@ void main() async {
   await CacheHelper.init();
   await DioHelper.init();
  //await CacheHelper.deleteAllData();
-  CacheHelper.saveData(key: AppConstant.token,
-      value: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsInVzZXJfbmFtZSI6IkFkZCB5b29keSIsIm1vYmlsZSI6IisyMDExMjU1NzMyNTAiLCJyb2xlIjoidXNlciIsImNvdW50cnkiOnsiY291bnRyeV9pZCI6NCwiY291bnRyeV9uYW1lX2VuIjoiVW5pdGVkIEFyYWIgRW1pcmF0ZXMiLCJjb3VudHJ5X25hbWVfYXIiOiLYp9mE2KXZhdin2LHYp9iqINin2YTYudix2KjZitipINin2YTZhdiq2K3Yr9ipIn0sImlhdCI6MTcxMzMzODU1NiwiZXhwIjoxNzQ0NDQyNTU2fQ.1lVRXD-Z6-emZRYC6DPlXUM9mU7zX70vNItMEtnjyRQ');
+ //  await Firebase.initializeApp();
+ //  var token = await FirebaseMessaging.instance.getToken();
+ //  print(token);
+
   Bloc.observer = MyBlocObserver();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -46,7 +50,7 @@ void main() async {
   } else {
     widget = const LayoutScreen();
   }
-  //print(CacheHelper.getData(key: AppConstant.token));
+  print(CacheHelper.getData(key: AppConstant.token));
   runApp(
     MyApp(
       widget: widget,
@@ -69,10 +73,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) =>
-          HomeCubit()
-            ..
-            getAllProduct(lang: 'en')
-            ..getCarModels()..getAllOrders(lang: 'en'),
+          HomeCubit(),
         ),
         BlocProvider(
           create: (context) => AuthenticationCubit(),

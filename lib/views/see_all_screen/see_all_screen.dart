@@ -48,7 +48,6 @@ class SeeAllScreen extends StatelessWidget {
                       cubit.getAllProduct(
                         busniessId:
                             CacheHelper.getData(key: AppConstant.businessId),
-                        lang: LayoutCubit.get(context).lang,
                         page: cubit.productModel!.currentPage! + 1,
                       );
                     }
@@ -100,7 +99,6 @@ class SeeAllScreen extends StatelessWidget {
                                   cubit.getAllProduct(
                                       busniessId: CacheHelper.getData(
                                           key: AppConstant.businessId),
-                                      lang: LayoutCubit.get(context).lang,
                                       search: value);
                                 }
                               },

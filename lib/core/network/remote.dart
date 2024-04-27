@@ -1,6 +1,8 @@
 
 import 'package:dio/dio.dart';
 import 'package:mham/core/constent/api_constant.dart';
+import 'package:mham/core/constent/app_constant.dart';
+import 'package:mham/core/network/local.dart';
 
 class DioHelper {
   static Dio? dio;
@@ -14,12 +16,11 @@ class DioHelper {
   static Future<Response> getData({
     required url,
     Map<String, dynamic>? query,
-    required String lang,
     String? token,
   }) async {
     dio!.options.headers = {
       'Content-Type': 'application/json',
-      'lang': lang,
+      'lang': CacheHelper.getData(key: AppConstant.lang)??'en',
       if (token != null) 'authorization': token,
     };
     return await dio!.get(url, queryParameters: query);
@@ -28,11 +29,10 @@ class DioHelper {
   static Future<Response> postData(
       {required url,
         Map<String, dynamic>? data,
-        required String lang ,
         String? token}) async {
     dio!.options.headers = {
       'Content-Type': 'application/json',
-      'lang': lang,
+      'lang': CacheHelper.getData(key: AppConstant.lang)??'en',
       if (token != null) 'authorization': token,
     };
     return await dio!.post(url, data: data);
@@ -41,11 +41,10 @@ class DioHelper {
   static Future<Response> putData(
       {required url,
         required Map<String, dynamic> data,
-        required String lang,
         String? token}) async {
     dio!.options.headers = {
       'Content-Type': 'application/json',
-      'lang': lang,
+      'lang': CacheHelper.getData(key: AppConstant.lang)??'en',
       if (token != null) 'authorization': token,
     };
     return await dio!.put(url, data: data);
@@ -54,12 +53,11 @@ class DioHelper {
   static Future<Response> patchData({
     required url,
     Map<String, dynamic>? data,
-    required String lang,
     String? token,
   }) async {
     dio!.options.headers = {
       'Content-Type': 'application/json',
-      'lang': lang,
+      'lang': CacheHelper.getData(key: AppConstant.lang)??'en',
       if (token != null) 'authorization': token,
     };
     return await dio!.patch(url,data: data);
@@ -68,13 +66,12 @@ class DioHelper {
 
   static Future<Response> deleteData({
     required url,
-    required String lang,
     String? token,
     Map<String, dynamic>? query,
   }) async {
     dio!.options.headers = {
       'Content-Type': 'application/json',
-      'lang': lang,
+      'lang': CacheHelper.getData(key: AppConstant.lang)??'en',
       if (token != null) 'authorization': token,
     };
     return await dio!.delete(url,queryParameters: query);

@@ -8,7 +8,7 @@ class ProductModel {
     if (json['products'] != null) {
       products = <Products>[];
       json['products'].forEach((v) {
-        products!.add(new Products.fromJson(v));
+        products!.add( Products.fromJson(v));
       });
     }
     totalPages = json['totalPages'];
@@ -68,10 +68,11 @@ class Products {
   Trader? trader;
   List<AvailableYears>? availableYears;
   RatePercentage? ratePercentage;
-
+  String ?status;
   Products.fromJson(Map<String, dynamic> json) {
     productsId = json['products_id'];
     traderId = json['trader_id'];
+    status = json['status'];
     rateCount = json['rateCount'];
     description = json['description'];
     manufacturerPartNumber = json['manufacturer_part_number'];
@@ -79,7 +80,7 @@ class Products {
     if (json['address'] != null) {
       address = <Address>[];
       json['address'].forEach((v) {
-        address!.add(new Address.fromJson(v));
+        address!.add( Address.fromJson(v));
       });
     }
     productsImg = json['products_img'];
@@ -124,14 +125,14 @@ class Products {
     inCart = json['inCart'];
     inFavourite = json['inFavourite'];
     businessCategory = json['businessCategory'] != null
-        ? new BusinessCategory.fromJson(json['businessCategory'])
+        ?  BusinessCategory.fromJson(json['businessCategory'])
         : null;
     trader =
-    json['trader'] != null ? new Trader.fromJson(json['trader']) : null;
+    json['trader'] != null ?  Trader.fromJson(json['trader']) : null;
     if (json['availableYears'] != null) {
       availableYears = <AvailableYears>[];
       json['availableYears'].forEach((v) {
-        availableYears!.add(new AvailableYears.fromJson(v));
+        availableYears!.add( AvailableYears.fromJson(v));
       });
     }
   }
@@ -203,7 +204,7 @@ class AvailableYears {
     availableYear = json['available_year'];
     carModelId = json['carModelId'];
     carModel = json['carModel'] != null
-        ? new CarModel.fromJson(json['carModel'])
+        ?  CarModel.fromJson(json['carModel'])
         : null;
   }
 

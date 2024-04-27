@@ -14,6 +14,7 @@ import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
+import 'package:mham/models/product_model.dart';
 import 'package:mham/views/checkout_screen/checkout_screen.dart';
 import 'package:mham/views/get_start_screen/get_start_screen.dart';
 
@@ -120,13 +121,6 @@ class BuildProductCard extends StatelessWidget {
               ),
             ),
             Positioned(
-                top: 90.h,
-                right: 8.w,
-                child: Image.asset(
-                    fit: BoxFit.cover,
-                    width: 35.w,
-                    'assets/images/hundia.png')),
-            Positioned(
               top: 108.h,
               left: 8.w,
               right: 5.w,
@@ -199,7 +193,7 @@ class BuildProductCard extends StatelessWidget {
               top: 192.h,
               left: 18.5.w,
               child:  BuildDefaultButton(
-                colorText: color.primaryColor,
+                colorText: ColorConstant.brown,
                 backgorundColor:inCart?
                     Colors.grey:color.backgroundColor,
                 height: 17.h,
@@ -229,10 +223,14 @@ class BuildProductCard extends StatelessWidget {
                 backgorundColor:color.primaryColor,
                 height: 17.h,
                 fontSize: 10.sp,
-                text: 'Buy Now',
+                text: locale.buyNow,
                 width: 100.w,
                 onPressed: () {
-                  Helper.push(context, CheckoutScreen());
+                  Helper.push(context, CheckoutScreen(
+                    totalPrice: double.parse(price.toString()),
+                    oneProductName: title,
+                    price: double.parse(price.toString()),
+                  ));
                 },),
             ),
           ],

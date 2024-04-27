@@ -25,7 +25,7 @@ class HomeCubit extends Cubit<HomeState> {
   ProductModel? productModel;
   List<Products> homeProducts = [];
   List<Products> allProducts = [];
-
+  List<Products>favoriteProducts = [];
   void getAllProduct({
     int page = 1,
     int pageSize = 5,
@@ -36,7 +36,6 @@ class HomeCubit extends Cubit<HomeState> {
     int? availableYearId,
     int? busniessId,
     String? search,
-    required String lang,
   }) {
     if (page == 1) {
       homeProducts.clear();
@@ -50,7 +49,6 @@ class HomeCubit extends Cubit<HomeState> {
     }
     DioHelper.getData(
       url: ApiConstant.product,
-      lang: lang,
       query: {
         'page': page,
         if (busniessId != null) 'busCat_id': busniessId,
@@ -64,6 +62,7 @@ class HomeCubit extends Cubit<HomeState> {
       },
       token: CacheHelper.getData(key: AppConstant.token),
     ).then((value) {
+      favoriteProducts.clear();
       if (search != null || search == '') {
         allProducts.clear();
       }
@@ -79,7 +78,11 @@ class HomeCubit extends Cubit<HomeState> {
       }
       productModel!.products!.forEach((element) {
         allProducts.add(element);
+        if(element.inFavourite!){
+          favoriteProducts.add(element);
+        }
       });
+
       emit(SuccessGetAllProduct());
     }).catchError((error) {
       print(error.toString());
@@ -102,7 +105,7 @@ class HomeCubit extends Cubit<HomeState> {
     selectedCarModels.clear();
     selectedCarYears.clear();
     carYears.clear();
-    DioHelper.getData(url: ApiConstant.carModelsAvailable, lang: 'en')
+    DioHelper.getData(url: ApiConstant.carModelsAvailable, )
         .then((value) {
       carType.clear();
       selectedCarType.clear();
@@ -218,7 +221,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   void increaseReview(int id) {
     DioHelper.getData(
-            url: ApiConstant.increaseReview + id.toString(), lang: 'en')
+            url: ApiConstant.increaseReview + id.toString(), )
         .then((value) {
       emit(IncreaseReviewState());
     }).catchError((error) {
@@ -244,7 +247,7 @@ class HomeCubit extends Cubit<HomeState> {
             url: ApiConstant.addScrap,
             data: {'description': description},
             token: CacheHelper.getData(key: AppConstant.token),
-            lang: 'en')
+            )
         .then((value) {
       requestScrapModel = RequestScrapModel.fromJson(value.data);
       emit(SuccessAddScrapState(requestScrapModel!));
@@ -267,11 +270,11 @@ class HomeCubit extends Cubit<HomeState> {
     DioHelper.postData(
             url: ApiConstant.addAndRemoveFavorite + id.toString(),
             token: CacheHelper.getData(key: AppConstant.token),
-            lang: 'en')
+            )
         .then((value) {
       emit(SuccessAddAndRemoveFavoriteState());
       getAllProduct(
-        lang: 'en',
+
         busniessId: busniessId,
       );
     }).catchError((error) {
@@ -286,19 +289,17 @@ class HomeCubit extends Cubit<HomeState> {
   OrderModel? orderModel;
   List<Orders> allOrders = [];
   List<Orders> recentPurchases = [];
-
-  void getAllOrders({
-    required String lang,
-  }) async {
+  List<Orders> returnsOrder = [];
+  void getAllOrders() async {
     allOrders.clear();
     emit(LoadingGetAllOrdersState());
     DioHelper.getData(
       url: ApiConstant.orders,
-      lang: lang,
       token: CacheHelper.getData(key: AppConstant.token),
     ).then((value) {
       allOrders.clear();
       recentPurchases.clear();
+      returnsOrder.clear();
       orderModel = OrderModel.fromJson(value.data);
       orderModel!.orders!.forEach((element) {
         allOrders.add(element);
@@ -306,6 +307,19 @@ class HomeCubit extends Cubit<HomeState> {
       orderModel!.orders!.forEach((element) {
         if (element.status == 'Delivered') {
           recentPurchases.add(element);
+        }
+      });
+      recentPurchases.forEach((element) {
+        bool flag=false;
+        element.carts!.forEach((element) {
+          element.cartProducts!.forEach((element) {
+            if(!element.returnProduct!.isEmpty){
+              flag=true;
+            }
+          });
+        });
+        if(!flag){
+          returnsOrder.add(element);
         }
       });
       emit(SuccessGetAllOrdersState());
@@ -337,7 +351,7 @@ class HomeCubit extends Cubit<HomeState> {
             url: ApiConstant.cancelProduct,
             data: {'order_id': orderId, 'cartProduct_id': productId},
             token: CacheHelper.getData(key: AppConstant.token),
-            lang: 'en')
+            )
         .then((value) {
       emit(SuccessCancelProductState());
     }).catchError((error) {
@@ -356,10 +370,10 @@ class HomeCubit extends Cubit<HomeState> {
             url: ApiConstant.cancelOrder,
             data: {'order_id': id},
             token: CacheHelper.getData(key: AppConstant.token),
-            lang: 'en')
+            )
         .then((value) {
       emit(SuccessCancelOrderState());
-      getAllOrders(lang: 'en');
+      getAllOrders();
     }).catchError((error) {
       if (error is DioError) {
         print(error.response!.data);
@@ -388,7 +402,7 @@ class HomeCubit extends Cubit<HomeState> {
               }
             },
             token: CacheHelper.getData(key: AppConstant.token),
-            lang: 'en')
+            )
         .then((value) {
       emit(SuccessAddRateState());
       getProductDetails(id: id);
@@ -406,12 +420,11 @@ class HomeCubit extends Cubit<HomeState> {
   OneProductModel? oneProductModel;
 
   void getProductDetails({required int id}) {
-    print(CacheHelper.getData(key: AppConstant.token));
     emit(LoadingGetProductDetailsState());
     DioHelper.getData(
             url: ApiConstant.productDetails + id.toString(),
             token: CacheHelper.getData(key: AppConstant.token),
-            lang: 'en')
+            )
         .then((value) {
       modelsCar.clear();
       oneProductModel = OneProductModel.fromJson(value.data);
@@ -443,7 +456,7 @@ class HomeCubit extends Cubit<HomeState> {
           "returnData": returns
         },
         token: CacheHelper.getData(key: AppConstant.token),
-        lang: 'en')
+        )
         .then((value) {
       emit(SuccessReturnOrderState());
     }).catchError((error) {

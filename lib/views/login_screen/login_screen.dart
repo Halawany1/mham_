@@ -138,7 +138,7 @@ class LoginScreen extends StatelessWidget {
                                           : cubit.selectedCountry!.dialCode;
 
                                   cubit.userLogin(
-                                      lang: 'en',
+                                      lang: LayoutCubit.get(context).lang,
                                       phone: countryCode + phoneController.text,
                                       password: passwordController.text);
                                 }

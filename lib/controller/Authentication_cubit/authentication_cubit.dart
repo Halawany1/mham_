@@ -50,7 +50,6 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   }) {
     emit(LoadingLoginUserState());
     DioHelper.postData(url: ApiConstant.login,
-        lang: lang,
         data: {
           "phonenumber": phone,
           "password": password
@@ -80,8 +79,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   void getCountries() {
     emit(LoadingGetCountriesState());
     DioHelper.getData(url:
-    'https://maham-production.up.railway.app/api/countries',
-        lang: 'en').then((value) {
+    '/countries',).then((value) {
       countriesId.clear();
       countriesList.clear();
       countriesModel = CountriesModel.fromJson(value.data);
@@ -174,7 +172,6 @@ String ?countryId;
   }) {
     emit(LoadingRegisterUserState());
     DioHelper.postData(url: ApiConstant.register,
-        lang: lang,
         data: {
           "username": userName,
           "password":password,

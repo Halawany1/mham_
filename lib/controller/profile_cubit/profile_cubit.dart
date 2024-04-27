@@ -17,7 +17,6 @@ class ProfileCubit extends Cubit<ProfileState> {
   void getProfile() {
     emit(LoadingProfileState());
     DioHelper.getData(url: ApiConstant.profile,
-        lang: 'en',
       token: CacheHelper.getData(key: AppConstant.token)
     ).then((value) {
       userModel = UserModel.fromJson(value.data);
@@ -35,7 +34,6 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(LoadingUpdateProfileState());
     DioHelper.putData(
         url: ApiConstant.updateProfile,
-        lang: 'en',
         token: CacheHelper.getData(key: AppConstant.token),
         data: {
           'user_name': userName,

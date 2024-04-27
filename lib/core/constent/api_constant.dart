@@ -1,6 +1,6 @@
 class ApiConstant{
   static const String baseUrl=
-      'https://maham-production.up.railway.app/api';
+      'https://maham-production-fc72.up.railway.app/api';
   static const String register='/user/register';
   static const String login='/user/login';
   static const String profile='/user/profile';

@@ -23,6 +23,7 @@ import 'package:mham/core/network/local.dart';
 import 'package:mham/views/details_product_screen/widget/card_reviews.dart';
 import 'package:mham/views/get_start_screen/get_start_screen.dart';
 import 'package:rating_summary/rating_summary.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 var comment = TextEditingController();
 
@@ -36,12 +37,12 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = AppLocalizations.of(context);
     var cubit = context.read<HomeCubit>();
     var font = Theme.of(context).textTheme;
     var color = Theme.of(context);
-    final locale = AppLocalizations.of(context);
     return WillPopScope(
-      onWillPop: ()async {
+      onWillPop: () async {
         cubit.resetQuantity();
         cubit.changeRate(value: 0);
         if (hideAddedToCart) {
@@ -65,7 +66,7 @@ class DetailsScreen extends StatelessWidget {
             listener: (context, state) {
               if (state is SuccessAddRateState) {
                 showMessageResponse(
-                    message: 'Add Rate Successfully',
+                    message: locale.addRateSuccess,
                     context: context,
                     success: true);
                 comment.clear();
@@ -75,7 +76,8 @@ class DetailsScreen extends StatelessWidget {
             builder: (context, state) {
               var cubit = context.read<HomeCubit>();
               return Scaffold(
-                bottomSheet: cubit.oneProductModel != null
+                bottomSheet: cubit.oneProductModel != null &&
+                        state is! LoadingGetProductDetailsState
                     ? !hideAddedToCart
                         ? Container(
                             color: color.hoverColor,
@@ -134,7 +136,8 @@ class DetailsScreen extends StatelessWidget {
                         color: color.primaryColor,
                       )),
                 ),
-                body: cubit.oneProductModel != null
+                body: cubit.oneProductModel != null &&
+                        state is! LoadingGetProductDetailsState
                     ? SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
                         child: SafeArea(
@@ -234,7 +237,7 @@ class DetailsScreen extends StatelessWidget {
                                     ),
                                     const Spacer(),
                                     Text(
-                                        '${cubit.oneProductModel!.product!.averageRate!.toInt()}/5'),
+                                        '${cubit.oneProductModel!.product!.averageRate == null ? 0 : cubit.oneProductModel!.product!.averageRate!.toInt()}/5'),
                                     SizedBox(
                                       width: 5.w,
                                     ),
@@ -923,7 +926,7 @@ class DetailsScreen extends StatelessWidget {
                                                       itemBuilder:
                                                           (context, index) =>
                                                               Text(
-                                                        cubit.modelsCar![index],
+                                                        cubit.modelsCar[index],
                                                         style: font.bodyMedium!
                                                             .copyWith(
                                                                 color: color
@@ -950,7 +953,7 @@ class DetailsScreen extends StatelessWidget {
                                   height: 20.h,
                                 ),
                                 Text(
-                                  'Product Ratings',
+                                  locale.productRatings,
                                   style: font.bodyMedium,
                                 ),
                                 SizedBox(
@@ -963,28 +966,67 @@ class DetailsScreen extends StatelessWidget {
                                       ? 1
                                       : cubit
                                           .oneProductModel!.product!.rateCount!,
-                                  average: cubit
-                                      .oneProductModel!.product!.averageRate!
-                                      .toDouble(),
+                                  average: cubit.oneProductModel!.product!
+                                              .averageRate ==
+                                          null
+                                      ? 0
+                                      : cubit.oneProductModel!.product!
+                                          .averageRate!
+                                          .toDouble(),
                                   averageStyle: font.bodyMedium!
                                       .copyWith(fontSize: 19.sp),
                                   showAverage: true,
                                   backgroundColor: Colors.grey.shade400,
-                                  counterFiveStars: cubit.oneProductModel!
-                                      .product!.ratePercentage!.fiveStar!
-                                      .toInt(),
-                                  counterFourStars: cubit.oneProductModel!
-                                      .product!.ratePercentage!.fourStar!
-                                      .toInt(),
-                                  counterThreeStars: cubit.oneProductModel!
-                                      .product!.ratePercentage!.threeStar!
-                                      .toInt(),
-                                  counterTwoStars: cubit.oneProductModel!
-                                      .product!.ratePercentage!.twoStar!
-                                      .toInt(),
-                                  counterOneStars: cubit.oneProductModel!
-                                      .product!.ratePercentage!.oneStar!
-                                      .toInt(),
+                                  counterFiveStars: cubit
+                                              .oneProductModel!
+                                              .product!
+                                              .ratePercentage!
+                                              .fiveStar ==
+                                          null
+                                      ? 0
+                                      : cubit.oneProductModel!.product!
+                                          .ratePercentage!.fiveStar!
+                                          .toInt(),
+                                  counterFourStars: cubit
+                                              .oneProductModel!
+                                              .product!
+                                              .ratePercentage!
+                                              .fourStar ==
+                                          null
+                                      ? 0
+                                      : cubit.oneProductModel!.product!
+                                          .ratePercentage!.fourStar!
+                                          .toInt(),
+                                  counterThreeStars: cubit
+                                              .oneProductModel!
+                                              .product!
+                                              .ratePercentage!
+                                              .threeStar ==
+                                          null
+                                      ? 0
+                                      : cubit.oneProductModel!.product!
+                                          .ratePercentage!.threeStar!
+                                          .toInt(),
+                                  counterTwoStars: cubit
+                                              .oneProductModel!
+                                              .product!
+                                              .ratePercentage!
+                                              .twoStar ==
+                                          null
+                                      ? 0
+                                      : cubit.oneProductModel!.product!
+                                          .ratePercentage!.twoStar!
+                                          .toInt(),
+                                  counterOneStars: cubit
+                                              .oneProductModel!
+                                              .product!
+                                              .ratePercentage!
+                                              .oneStar ==
+                                          null
+                                      ? 0
+                                      : cubit.oneProductModel!.product!
+                                          .ratePercentage!.oneStar!
+                                          .toInt(),
                                 ),
                                 SizedBox(
                                   height: 25.h,
@@ -992,14 +1034,14 @@ class DetailsScreen extends StatelessWidget {
                                 Row(
                                   children: [
                                     Text(
-                                      'Reviews',
+                                      locale.reviews,
                                       style: font.bodyMedium,
                                     ),
                                     SizedBox(
                                       width: 5.w,
                                     ),
                                     Text(
-                                      '(${cubit.oneProductModel!.product!.rateCount} reviews)',
+                                      '(${cubit.oneProductModel!.product!.rateCount} ${locale.reviews})',
                                       style: font.bodyMedium!.copyWith(
                                           fontSize: 13.sp,
                                           color: color.primaryColor
@@ -1009,7 +1051,7 @@ class DetailsScreen extends StatelessWidget {
                                     TextButton(
                                         onPressed: () {},
                                         child: Text(
-                                          'See All',
+                                          locale.seeAll,
                                           style: font.bodyMedium!.copyWith(
                                               fontSize: 13.sp,
                                               color: color.primaryColor),
@@ -1020,11 +1062,14 @@ class DetailsScreen extends StatelessWidget {
                                   height: 10.h,
                                 ),
                                 ListView.separated(
-                                  itemCount: cubit.oneProductModel!.product!.productRating!.length,
+                                  itemCount: cubit.oneProductModel!.product!
+                                      .productRating!.length,
                                   shrinkWrap: true,
                                   physics: NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) =>
-                                      BuildCardReviews(index: index,),
+                                      BuildCardReviews(
+                                    index: index,
+                                  ),
                                   separatorBuilder: (context, index) =>
                                       SizedBox(
                                     height: 15.h,
@@ -1034,7 +1079,7 @@ class DetailsScreen extends StatelessWidget {
                                   height: 20.h,
                                 ),
                                 Text(
-                                  'Add Rate',
+                                  locale.addRate,
                                   style: font.bodyMedium!
                                       .copyWith(fontSize: 15.sp),
                                 ),
@@ -1078,8 +1123,8 @@ class DetailsScreen extends StatelessWidget {
                                   height: 18.h,
                                 ),
                                 BuildTextFormField(
-                                    title: 'comment',
-                                    hint: 'Write Your Comment',
+                                    title: locale.comment,
+                                    hint: locale.writeComment,
                                     cubit: AuthenticationCubit.get(context),
                                     controller: comment,
                                     maxLines: 4,
@@ -1098,9 +1143,11 @@ class DetailsScreen extends StatelessWidget {
                                   children: [
                                     state is LoadingAddRateState
                                         ? Center(
-                                            child: CircularProgressIndicator(color: color.primaryColor,))
+                                            child: CircularProgressIndicator(
+                                            color: color.primaryColor,
+                                          ))
                                         : BuildDefaultButton(
-                                            text: 'Add Rate',
+                                            text: locale.addRate,
                                             width: 80.w,
                                             height: 22.h,
                                             borderRadius: 8.r,
@@ -1114,11 +1161,10 @@ class DetailsScreen extends StatelessWidget {
                                                         comment.text.isEmpty
                                                             ? null
                                                             : comment.text);
-
                                               } else {
                                                 showMessageResponse(
-                                                    message:
-                                                        'add at least one star for rating',
+                                                    message: locale
+                                                        .addAtLeastOneStar,
                                                     context: context,
                                                     success: false);
                                               }

@@ -47,7 +47,7 @@ class BuildTotalCardPrice extends StatelessWidget {
                     width: 5.w,
                   ),
                   Text(
-                    '($lenghtItems items)',
+                    '($lenghtItems ${locale.items})',
                     style: font.bodyMedium!.copyWith(
                         fontSize: 10.sp,
                         color: color.primaryColor

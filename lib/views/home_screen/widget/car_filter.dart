@@ -65,7 +65,7 @@ class BuildCarFilter extends StatelessWidget {
                 HomeCubit.get(context).selectCarModels(value: value);
                 HomeCubit.get(context).removeSelectionCarModels();
                 HomeCubit.get(context).getAllProduct(
-                  lang: 'en',
+
                   busniessId: CacheHelper.getData(key: AppConstant.businessId),
                   carId: HomeCubit.get(context).carController.selectedOptions.isEmpty
                       ? null
@@ -85,7 +85,7 @@ class BuildCarFilter extends StatelessWidget {
                 HomeCubit.get(context).selectCarYear(value: value);
                 HomeCubit.get(context).removeSelectionYearModels();
                 HomeCubit.get(context).getAllProduct(
-                  lang: 'en',
+
                   busniessId: CacheHelper.getData(key: AppConstant.businessId),
                   carModelId: HomeCubit.get(context).modelController.selectedOptions.isEmpty
                       ? null
@@ -106,7 +106,7 @@ class BuildCarFilter extends StatelessWidget {
               controller: HomeCubit.get(context).yearController,
               onOptionSelected: (value) {
                 HomeCubit.get(context).getAllProduct(
-                  lang: 'en',
+
                   busniessId: CacheHelper.getData(key: AppConstant.businessId),
                   availableYearId: HomeCubit.get(context).yearController.selectedOptions.isEmpty
                       ? null

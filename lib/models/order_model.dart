@@ -113,11 +113,12 @@ class CartProducts {
   String? updatedAt;
   Product? product;
   List<ReturnProduct>? returnProduct;
-
+  String ?status;
 
 
   CartProducts.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    status = json['status'];
     cartId = json['cart_id'];
     productId = json['product_id'];
     quantity = json['quantity'];
@@ -181,10 +182,11 @@ class Product {
   String? updatedAt;
   BusinessCategory? businessCategory;
   List<AvailableYears>? availableYears;
-
+  dynamic averageRate;
 
   Product.fromJson(Map<String, dynamic> json) {
     productsId = json['products_id'];
+    averageRate = json['averageRate'];
     traderId = json['trader_id'];
     description = json['description'];
     manufacturerPartNumber = json['manufacturer_part_number'];

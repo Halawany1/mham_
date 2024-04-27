@@ -2,7 +2,8 @@ class CartModel {
   Cart? cart;
 
   CartModel.fromJson(Map<String, dynamic> json) {
-    cart = json['cart'] != null ? new Cart.fromJson(json['cart']) : null;
+    cart = json['cart'] != null ?
+    Cart.fromJson(json['cart']) : null;
   }
 
 }
@@ -106,13 +107,15 @@ class Product {
   String? disabledAt;
   String? updatedAt;
   int? rateCount;
+
   List<AvailableYears>? availableYears;
   BusinessCategory? businessCategory;
   RatePercentage? ratePercentage;
-
+  String? status;
   Product.fromJson(Map<String, dynamic> json) {
     productsId = json['products_id'];
     traderId = json['trader_id'];
+    status = json['status'];
     rateCount = json['rateCount'];
     description = json['description'];
     manufacturerPartNumber = json['manufacturer_part_number'];

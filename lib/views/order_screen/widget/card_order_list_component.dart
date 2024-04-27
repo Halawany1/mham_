@@ -6,7 +6,9 @@ import 'package:mham/core/components/pop_up_sure_component.dart';
 import 'package:mham/core/components/small_button_component.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/core/helper/helper.dart';
+import 'package:mham/views/order_details_screen/order_details_screen.dart';
 import 'package:mham/views/order_screen/order_screen.dart';
+import 'package:mham/views/recent_purchases_screen/widget/return_order_popup.dart';
 
 class BuildCardOrderList extends StatelessWidget {
   const BuildCardOrderList({
@@ -17,6 +19,7 @@ class BuildCardOrderList extends StatelessWidget {
     required this.orderId,
     required this.createdAt,
     required this.status,
+    required this.returns,
      this.returnOrder=false,
   });
 
@@ -27,6 +30,7 @@ class BuildCardOrderList extends StatelessWidget {
   final int orderId;
   final int quantity;
   final bool returnOrder;
+  final List<Map<String, dynamic>> returns;
 
   @override
   Widget build(BuildContext context) {
@@ -102,28 +106,22 @@ class BuildCardOrderList extends StatelessWidget {
                             style: font.bodyMedium!.copyWith(fontSize: 12.sp),
                           ),
                         ),
-                        SizedBox(
+                          SizedBox(
                           width: 10.w,
                         ),
-                        BuildSmallButton(
+                          BuildSmallButton(
                           withIcon: false,
-                          edit: false,
                           width: 75.w,
                           hieght: 17.h,
-                          text: returnOrder?
-                          'Return Order'
-                          :locale.cancelOrder,
+                          text: locale.moreDetails,
                           onPressed: () {
-                          showDialog(context: context,
-                              builder: (context) {
-                                return confirmPopUp(context: context,
-                                    onPress: () {
-                                  cubit.cancelOrder(id: orderId);
-                                  Navigator.pop(context);
-                                    }, title:  locale.cancelOrder,
-                                    content:
-                                    locale.areYourSureToCancelOrder);
-                              },);
+                            Helper.push(
+                                context,
+                                OrderDetailsScreen(
+                                  returns: returns,
+                                  currentIndex: index,
+                                  totalPrice: totalPrice,
+                                ));
                           },
                         )
                       ],

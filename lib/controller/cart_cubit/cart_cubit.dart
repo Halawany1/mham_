@@ -19,8 +19,7 @@ class CartCubit extends Cubit<CartState> {
     emit(CartLoadingState());
     DioHelper.getData(
         url: ApiConstant.getCart,
-        token:token,
-        lang: 'en').
+        token:token,).
     then((value) {
       totalPrice=0.0;
           cartModel=CartModel.fromJson(value.data);
@@ -30,9 +29,12 @@ class CartCubit extends Cubit<CartState> {
           emit(CartSuccessState());
     }).catchError((error){
       if(error is DioError){
+
         String data=error.response!.data['message'][0];
+        print(data);
         emit(CartErrorState(data));
       }else{
+        print(error.toString());
         emit(CartErrorState(error.toString()));
       }
     });
@@ -43,7 +45,6 @@ class CartCubit extends Cubit<CartState> {
     DioHelper.deleteData(
         url: ApiConstant.deleteCart,
         token:token,
-        lang: 'en',
       query: {
         'cartProduct_id':id
       }
@@ -67,7 +68,6 @@ class CartCubit extends Cubit<CartState> {
     DioHelper.postData(
         url: ApiConstant.addToCart,
         token:token,
-        lang: 'en',
         data: {
           'product_id':id,
           'quantity':quantity
@@ -94,7 +94,6 @@ class CartCubit extends Cubit<CartState> {
     DioHelper.postData(
         url: ApiConstant.addToCart,
         token:token,
-        lang: 'en',
         data: {
           'product_id':id,
           'quantity':quantity

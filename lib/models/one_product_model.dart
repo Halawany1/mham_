@@ -55,16 +55,19 @@ class Product {
   Trader? trader;
   List<AvailableYears>? availableYears;
   List<ProductRating>? productRating;
-  int? averageRate;
+  dynamic averageRate;
   int? rateCount;
   RatePercentage? ratePercentage;
   bool? inCart;
   bool? inFavourite;
+  String? status;
 
 
   Product.fromJson(Map<String, dynamic> json) {
     productsId = json['products_id'];
     traderId = json['trader_id'];
+    averageRate = json['averageRate'];
+    status = json['status'];
     description = json['description'];
     manufacturerPartNumber = json['manufacturer_part_number'];
     brandName = json['brand_name'];
@@ -124,7 +127,6 @@ class Product {
         productRating!.add( ProductRating.fromJson(v));
       });
     }
-    averageRate = json['averageRate'];
     rateCount = json['rateCount'];
     ratePercentage = json['ratePercentage'] != null
         ?  RatePercentage.fromJson(json['ratePercentage'])

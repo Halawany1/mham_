@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
+import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/core/components/laoding_animation_component.dart';
 import 'package:mham/core/components/product_card_component.dart';
 import 'package:mham/core/components/search_form_filed_component.dart';
@@ -29,7 +30,7 @@ class SearchScreen extends StatelessWidget {
             appBar: AppBar(
               leading: InkWell(
                   onTap: () {
-                    cubit.getAllProduct(lang: 'en');
+                    cubit.getAllProduct();
                     Helper.pop(context);
                   },
                   child: Icon(Icons.arrow_back, color: color.primaryColor)),
@@ -38,7 +39,7 @@ class SearchScreen extends StatelessWidget {
                 width: 250.w,
                 onSave: (value) {
                   cubit.allProducts.clear();
-                  cubit.getAllProduct(lang: 'en',
+                  cubit.getAllProduct(
                   search: value
                   );
 

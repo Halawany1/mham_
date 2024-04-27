@@ -46,6 +46,7 @@ class CartScreen extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => CheckoutScreen(
+                                      totalPrice: cubit.totalPrice,
                                       products:
                                           cubit.cartModel!.cart!.cartProducts!,
                                     ),
@@ -65,7 +66,7 @@ class CartScreen extends StatelessWidget {
               ),
               leading: InkWell(
                   onTap: () {
-                    HomeCubit.get(context).getAllProduct(lang: 'en');
+                    HomeCubit.get(context).getAllProduct();
                     Helper.pop(context);
                   },
                   child: Icon(
@@ -109,15 +110,14 @@ class CartScreen extends StatelessWidget {
                                 itemBuilder: (context, index) => InkWell(
                                       onTap: () {
                                         HomeCubit.get(context).oneProductModel=null;
+                                        print(cubit
+                                            .cartModel!
+                                            .cart!
+                                            .cartProducts![index]
+                                            .product!
+                                            .productsId!);
                                         HomeCubit.get(context).getProductDetails(
                                             id: cubit
-                                                .cartModel!
-                                                .cart!
-                                                .cartProducts![index]
-                                                .product!
-                                                .productsId!);
-                                        HomeCubit.get(context).increaseReview(
-                                            cubit
                                                 .cartModel!
                                                 .cart!
                                                 .cartProducts![index]
@@ -166,7 +166,7 @@ class CartScreen extends StatelessWidget {
                                         borderRadius: 8.r,
                                         onPressed: () {
                                           HomeCubit.get(context)
-                                              .getAllProduct(lang: 'en');
+                                              .getAllProduct();
                                           Helper.pop(context);
                                         },
                                         backgorundColor: color.backgroundColor,

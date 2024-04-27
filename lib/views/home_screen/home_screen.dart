@@ -25,6 +25,7 @@ import 'package:mham/views/home_screen/widget/car_filter.dart';
 import 'package:mham/views/home_screen/widget/category.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/views/home_screen/widget/products_not_found.dart';
+import 'package:mham/views/notification_screen/notification_screen.dart';
 import 'package:mham/views/search_screen/search_screen.dart';
 import 'package:mham/views/see_all_screen/see_all_screen.dart';
 
@@ -36,7 +37,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (HomeCubit.get(context).productModel == null) {
-      HomeCubit.get(context).getAllProduct(lang: 'en');
+      HomeCubit.get(context).getAllProduct();
     }
 
     final locale = AppLocalizations.of(context);
@@ -47,7 +48,7 @@ class HomeScreen extends StatelessWidget {
         if (state is SuccessAddToCart) {
           showMessageResponse(
               message: locale.addedSuccess, context: context, success: true);
-          HomeCubit.get(context).getAllProduct(lang: 'en');
+          HomeCubit.get(context).getAllProduct();
         }
       },
       builder: (context, cartState) {
@@ -143,475 +144,474 @@ class HomeScreen extends StatelessWidget {
               body: cubit.productModel == null
                   ? Center(
                       child: BuildImageLoader(assetName: ImageConstant.logo))
-                  : SafeArea(
-                      child: Padding(
-                        padding: EdgeInsets.all(20.h),
-                        child: Center(
-                          child: SingleChildScrollView(
-                            physics: const BouncingScrollPhysics(),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    BuildSearchFormField(
-                                      onTap: () {
-                                        Helper.push(context, SearchScreen());
-                                      },
-                                      readOnly: true,
-                                    ),
-                                    SizedBox(
-                                      width: 10.w,
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        if(CacheHelper.getData(key: AppConstant.token) == null){
-                                          Helper.push(context, GetStartScreen());
-                                        }else{
-
-                                        }
-
-                                      },
-                                      child: Icon(
-                                        FontAwesomeIcons.bell,
-                                        color: color.primaryColor,
+                  : RefreshIndicator(
+                backgroundColor: color.backgroundColor,
+                color: color.primaryColor,
+                onRefresh: () async{
+                  HomeCubit.get(context).getAllProduct();
+                },
+                    child: SafeArea(
+                        child: Padding(
+                          padding: EdgeInsets.all(20.h),
+                          child: Center(
+                            child: SingleChildScrollView(
+                              physics: const BouncingScrollPhysics(),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      BuildSearchFormField(
+                                        onTap: () {
+                                          Helper.push(context, SearchScreen());
+                                        },
+                                        readOnly: true,
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 10.w,
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        if(CacheHelper.getData(key: AppConstant.token) != null){
-                                          CartCubit.get(context).getCart(
-                                              token: CacheHelper.getData(
-                                                  key: AppConstant.token));
-                                          Helper.push(context, CartScreen());
-                                        }else{
-                                          Helper.push(context, GetStartScreen());
-                                        }
-
-                                      },
-                                      child: Icon(
-                                        FontAwesomeIcons.shoppingCart,
-                                        color: ColorConstant.backgroundAuth,
+                                      SizedBox(
+                                        width: 10.w,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 10.h,
-                                ),
-                                CarouselSlider(
-                                    items: [
-                                      ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(12.r),
-                                        child: Image.asset(
-                                          ImageConstant.ads,
-                                          width: double.infinity,
-                                          height: 90.h,
+                                      InkWell(
+                                        onTap: () {
+                                          if(CacheHelper.getData(key: AppConstant.token) == null){
+                                            Helper.push(context, GetStartScreen());
+                                          }else{
+                                            Helper.push(context, NotificationScreen());
+                                          }
+
+                                        },
+                                        child: Icon(
+                                          FontAwesomeIcons.bell,
+                                          color: color.primaryColor,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          if(CacheHelper.getData(key: AppConstant.token) != null){
+                                            CartCubit.get(context).getCart(
+                                                token: CacheHelper.getData(
+                                                    key: AppConstant.token));
+                                            Helper.push(context, CartScreen());
+                                          }else{
+                                            Helper.push(context, GetStartScreen());
+                                          }
+
+                                        },
+                                        child: Icon(
+                                          FontAwesomeIcons.shoppingCart,
+                                          color: ColorConstant.backgroundAuth,
                                         ),
                                       ),
                                     ],
-                                    options: CarouselOptions(
-                                      viewportFraction: 0.8,
-                                      initialPage: 0,
-                                      enableInfiniteScroll: true,
-                                      reverse: false,
-                                      autoPlay: true,
-                                      autoPlayInterval: Duration(seconds: 3),
-                                      autoPlayAnimationDuration:
-                                          Duration(milliseconds: 800),
-                                      autoPlayCurve: Curves.fastOutSlowIn,
-                                      enlargeCenterPage: true,
-                                      enlargeFactor: 0.3,
-                                      scrollDirection: Axis.horizontal,
-                                    )),
-                                Text(
-                                  locale.whatAreYouLookingFor,
-                                  style: font.bodyMedium,
-                                ),
-                                SizedBox(
-                                  height: 15.h,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    BuildCategory(
-                                      image: ImageConstant.carParts,
-                                      text: locale.spareParts,
-                                      onTap: () {
-                                        CacheHelper.saveData(
-                                            key: AppConstant.businessId,
-                                            value: 1);
-                                        cubit.getAllProduct(
-                                          lang: 'en',
-                                          busniessId: 1,
-                                        );
-                                        Helper.push(
-                                            context,
-                                            SeeAllScreen(
-                                              title: locale.spareParts,
-                                            ));
-                                      },
-                                    ),
-                                    BuildCategory(
-                                      image: ImageConstant.tires,
-                                      text: locale.tiresAndWheels,
-                                      onTap: () {
-                                        CacheHelper.saveData(
-                                            key: AppConstant.businessId,
-                                            value: 4);
-                                        cubit.getAllProduct(
-                                          lang: 'en',
-                                          busniessId: 4,
-                                        );
-                                        Helper.push(
-                                            context,
-                                            SeeAllScreen(
-                                              title: locale.tiresAndWheels,
-                                            ));
-                                      },
-                                    ),
-                                    BuildCategory(
-                                      image: ImageConstant.batteries,
-                                      text: locale.batteries,
-                                      onTap: () {
-                                        CacheHelper.saveData(
-                                            key: AppConstant.businessId,
-                                            value: 5);
-                                        cubit.getAllProduct(
-                                          lang: 'en',
-                                          busniessId: 5,
-                                        );
-                                        Helper.push(
-                                            context,
-                                            SeeAllScreen(
-                                              title: locale.batteries,
-                                            ));
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 15.h,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    BuildCategory(
-                                      image: ImageConstant.motorOil,
-                                      text: locale.motorOil,
-                                      onTap: () {
-                                        CacheHelper.saveData(
-                                            key: AppConstant.businessId,
-                                            value: 3);
-                                        cubit.getAllProduct(
-                                          lang: 'en',
-                                          busniessId: 3,
-                                        );
-                                        Helper.push(
-                                            context,
-                                            SeeAllScreen(
-                                              title: locale.motorOil,
-                                            ));
-                                      },
-                                    ),
-                                    BuildCategory(
-                                      image: ImageConstant.rimCover,
-                                      text: locale.rimCover,
-                                      onTap: () {
-                                        CacheHelper.saveData(
-                                            key: AppConstant.businessId,
-                                            value: 9);
-                                        cubit.getAllProduct(
-                                          lang: 'en',
-                                          busniessId: 9,
-                                        );
-                                        Helper.push(
-                                            context,
-                                            SeeAllScreen(
-                                              title: locale.rimCover,
-                                            ));
-                                      },
-                                    ),
-                                    BuildCategory(
-                                      image: ImageConstant.accessories,
-                                      text: locale.accessories,
-                                      onTap: () {
-                                        CacheHelper.saveData(
-                                            key: AppConstant.businessId,
-                                            value: 2);
-                                        cubit.getAllProduct(
-                                          lang: 'en',
-                                          busniessId: 2,
-                                        );
-                                        Helper.push(
-                                            context,
-                                            SeeAllScreen(
-                                              title: locale.accessories,
-                                            ));
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 15.h,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    BuildCategory(
-                                      image: ImageConstant.rim,
-                                      text: locale.rim,
-                                      onTap: () {
-                                        CacheHelper.saveData(
-                                            key: AppConstant.businessId,
-                                            value: 8);
-                                        cubit.getAllProduct(
-                                          lang: 'en',
-                                          busniessId: 8,
-                                        );
-                                        Helper.push(
-                                            context,
-                                            SeeAllScreen(
-                                              title: locale.rim,
-                                            ));
-                                      },
-                                    ),
-                                    BuildCategory(
-                                      image: ImageConstant.sparkPlugs,
-                                      text: locale.sparkPlugs,
-                                      onTap: () {
-                                        CacheHelper.saveData(
-                                            key: AppConstant.businessId,
-                                            value: 6);
-                                        cubit.getAllProduct(
-                                          lang: 'en',
-                                          busniessId: 6,
-                                        );
-                                        Helper.push(
-                                            context,
-                                            SeeAllScreen(
-                                              title: locale.sparkPlugs,
-                                            ));
-                                      },
-                                    ),
-                                    BuildCategory(
-                                      image: ImageConstant.liquids,
-                                      text: locale.liquids,
-                                      onTap: () {
-                                        CacheHelper.saveData(
-                                            key: AppConstant.businessId,
-                                            value: 7);
-                                        cubit.getAllProduct(
-                                          lang: 'en',
-                                          busniessId: 7,
-                                        );
-                                        Helper.push(
-                                            context,
-                                            SeeAllScreen(
-                                              title: locale.liquids,
-                                            ));
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 30.h,
-                                ),
-                                BuildCarFilter(),
-                                SizedBox(
-                                  height: 20.h,
-                                ),
-                                BuildRowTextAndSeeAll(
-                                  text: locale.products,
-                                  empty: false,
-                                  onTap: () {
-                                    cubit.productModel = null;
-                                    Helper.push(
-                                        context,
-                                        SeeAllScreen(
-                                          title: locale.products,
-                                        ));
-                                  },
-                                ),
-                                SizedBox(
-                                  height: 20.h,
-                                ),
-                                state is LoadingGetAllProduct ||
-                                    cartState is CartLoadingState
-                                    ? Center(
-                                        child: CircularProgressIndicator(
-                                        color: color.primaryColor,
-                                      ))
-                                    : cubit.homeProducts.isEmpty
-                                        ? BuildNotFoundProduct()
-                                        : GridView.builder(
-                                            shrinkWrap: true,
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            itemCount:
-                                                cubit.homeProducts.length,
-                                            gridDelegate:
-                                                SliverGridDelegateWithFixedCrossAxisCount(
-                                                    crossAxisCount: 2,
-                                                    mainAxisSpacing: 10.h,
-                                                    crossAxisSpacing: 4.w,
-                                                    mainAxisExtent: 258.h),
-                                            itemBuilder: (context, index) =>
-                                                InkWell(
-                                              onTap: () {
-                                                cubit.oneProductModel=null;
-                                                cubit.getProductDetails(id:cubit
-                                                    .homeProducts[index]
-                                                    .productsId!);
-                                                cubit.increaseReview(cubit
-                                                    .homeProducts[index]
-                                                    .productsId!);
-                                                Helper.push(
-                                                    context,
-                                                    DetailsScreen(
-                                                    ));
-                                              },
-                                              child: BuildProductCard(
-                                                id: cubit.homeProducts[index]
-                                                    .productsId!,
-                                                inCart: cubit
-                                                        .homeProducts[index]
-                                                        .inCart ??
-                                                    false,
-                                                inFavorite: cubit
-                                                        .homeProducts[index]
-                                                        .inFavourite ??
-                                                    false,
-                                                isOffer: cubit
-                                                    .homeProducts[index]
-                                                    .isOffer!,
-                                                offerPrice: cubit
-                                                    .homeProducts[index]
-                                                    .offerPrice,
-                                                description: cubit
-                                                    .homeProducts[index]
-                                                    .businessCategory!
-                                                    .bcNameEn!,
-                                                type: cubit
-                                                    .homeProducts[index].type!,
-                                                rate: double.parse(cubit
-                                                    .homeProducts[index].averageRate
-                                                    .toString()),
-                                                review: cubit
-                                                    .homeProducts[index]
-                                                    .reviewCount,
-                                                price: cubit
-                                                    .homeProducts[index].price!,
-                                                title: cubit.homeProducts[index]
-                                                    .productsName!,
+                                  ),
+                                  SizedBox(
+                                    height: 10.h,
+                                  ),
+                                  CarouselSlider(
+                                      items: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(12.r),
+                                          child: Image.asset(
+                                            ImageConstant.ads,
+                                            width: double.infinity,
+                                            height: 90.h,
+                                          ),
+                                        ),
+                                      ],
+                                      options: CarouselOptions(
+                                        viewportFraction: 0.8,
+                                        initialPage: 0,
+                                        enableInfiniteScroll: true,
+                                        reverse: false,
+                                        autoPlay: true,
+                                        autoPlayInterval: Duration(seconds: 3),
+                                        autoPlayAnimationDuration:
+                                            Duration(milliseconds: 800),
+                                        autoPlayCurve: Curves.fastOutSlowIn,
+                                        enlargeCenterPage: true,
+                                        enlargeFactor: 0.3,
+                                        scrollDirection: Axis.horizontal,
+                                      )),
+                                  Text(
+                                    locale.whatAreYouLookingFor,
+                                    style: font.bodyMedium,
+                                  ),
+                                  SizedBox(
+                                    height: 15.h,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      BuildCategory(
+                                        image: ImageConstant.carParts,
+                                        text: locale.spareParts,
+                                        onTap: () {
+                                          CacheHelper.saveData(
+                                              key: AppConstant.businessId,
+                                              value: 1);
+                                          cubit.getAllProduct(
+                                            busniessId: 1,
+                                          );
+                                          Helper.push(
+                                              context,
+                                              SeeAllScreen(
+                                                title: locale.spareParts,
+                                              ));
+                                        },
+                                      ),
+                                      BuildCategory(
+                                        image: ImageConstant.tires,
+                                        text: locale.tiresAndWheels,
+                                        onTap: () {
+                                          CacheHelper.saveData(
+                                              key: AppConstant.businessId,
+                                              value: 4);
+                                          cubit.getAllProduct(
+                                            busniessId: 4,
+                                          );
+                                          Helper.push(
+                                              context,
+                                              SeeAllScreen(
+                                                title: locale.tiresAndWheels,
+                                              ));
+                                        },
+                                      ),
+                                      BuildCategory(
+                                        image: ImageConstant.batteries,
+                                        text: locale.batteries,
+                                        onTap: () {
+                                          CacheHelper.saveData(
+                                              key: AppConstant.businessId,
+                                              value: 5);
+                                          cubit.getAllProduct(
+
+                                            busniessId: 5,
+                                          );
+                                          Helper.push(
+                                              context,
+                                              SeeAllScreen(
+                                                title: locale.batteries,
+                                              ));
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 15.h,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      BuildCategory(
+                                        image: ImageConstant.motorOil,
+                                        text: locale.motorOil,
+                                        onTap: () {
+                                          CacheHelper.saveData(
+                                              key: AppConstant.businessId,
+                                              value: 3);
+                                          cubit.getAllProduct(
+                                            busniessId: 3,
+                                          );
+                                          Helper.push(
+                                              context,
+                                              SeeAllScreen(
+                                                title: locale.motorOil,
+                                              ));
+                                        },
+                                      ),
+                                      BuildCategory(
+                                        image: ImageConstant.rimCover,
+                                        text: locale.rimCover,
+                                        onTap: () {
+                                          CacheHelper.saveData(
+                                              key: AppConstant.businessId,
+                                              value: 9);
+                                          cubit.getAllProduct(
+                                            busniessId: 9,
+                                          );
+                                          Helper.push(
+                                              context,
+                                              SeeAllScreen(
+                                                title: locale.rimCover,
+                                              ));
+                                        },
+                                      ),
+                                      BuildCategory(
+                                        image: ImageConstant.accessories,
+                                        text: locale.accessories,
+                                        onTap: () {
+                                          CacheHelper.saveData(
+                                              key: AppConstant.businessId,
+                                              value: 2);
+                                          cubit.getAllProduct(
+                                            busniessId: 2,
+                                          );
+                                          Helper.push(
+                                              context,
+                                              SeeAllScreen(
+                                                title: locale.accessories,
+                                              ));
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 15.h,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      BuildCategory(
+                                        image: ImageConstant.rim,
+                                        text: locale.rim,
+                                        onTap: () {
+                                          CacheHelper.saveData(
+                                              key: AppConstant.businessId,
+                                              value: 8);
+                                          cubit.getAllProduct(
+                                            busniessId: 8,
+                                          );
+                                          Helper.push(
+                                              context,
+                                              SeeAllScreen(
+                                                title: locale.rim,
+                                              ));
+                                        },
+                                      ),
+                                      BuildCategory(
+                                        image: ImageConstant.sparkPlugs,
+                                        text: locale.sparkPlugs,
+                                        onTap: () {
+                                          CacheHelper.saveData(
+                                              key: AppConstant.businessId,
+                                              value: 6);
+                                          cubit.getAllProduct(
+                                            busniessId: 6,
+                                          );
+                                          Helper.push(
+                                              context,
+                                              SeeAllScreen(
+                                                title: locale.sparkPlugs,
+                                              ));
+                                        },
+                                      ),
+                                      BuildCategory(
+                                        image: ImageConstant.liquids,
+                                        text: locale.liquids,
+                                        onTap: () {
+                                          CacheHelper.saveData(
+                                              key: AppConstant.businessId,
+                                              value: 7);
+                                          cubit.getAllProduct(
+                                            busniessId: 7,
+                                          );
+                                          Helper.push(
+                                              context,
+                                              SeeAllScreen(
+                                                title: locale.liquids,
+                                              ));
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 30.h,
+                                  ),
+                                  BuildCarFilter(),
+                                  SizedBox(
+                                    height: 20.h,
+                                  ),
+                                  BuildRowTextAndSeeAll(
+                                    text: locale.products,
+                                    empty: false,
+                                    onTap: () {
+                                      cubit.productModel = null;
+                                      Helper.push(
+                                          context,
+                                          SeeAllScreen(
+                                            title: locale.products,
+                                          ));
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 20.h,
+                                  ),
+                                  state is LoadingGetAllProduct ||
+                                      cartState is CartLoadingState
+                                      ? Center(
+                                          child: CircularProgressIndicator(
+                                          color: color.primaryColor,
+                                        ))
+                                      : cubit.homeProducts.isEmpty
+                                          ? BuildNotFoundProduct()
+                                          : GridView.builder(
+                                              shrinkWrap: true,
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              itemCount:
+                                                  cubit.homeProducts.length,
+                                              gridDelegate:
+                                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                                      crossAxisCount: 2,
+                                                      mainAxisSpacing: 10.h,
+                                                      crossAxisSpacing: 4.w,
+                                                      mainAxisExtent: 258.h),
+                                              itemBuilder: (context, index) =>
+                                                  InkWell(
+                                                onTap: () {
+                                                  cubit.oneProductModel=null;
+                                                  cubit.getProductDetails(id:cubit
+                                                      .homeProducts[index]
+                                                      .productsId!);
+                                                  cubit.increaseReview(cubit
+                                                      .homeProducts[index]
+                                                      .productsId!);
+                                                  Helper.push(
+                                                      context,
+                                                      DetailsScreen(
+                                                      ));
+                                                },
+                                                child: BuildProductCard(
+                                                  id: cubit.homeProducts[index]
+                                                      .productsId!,
+                                                  inCart: cubit
+                                                          .homeProducts[index]
+                                                          .inCart ??
+                                                      false,
+                                                  inFavorite: cubit
+                                                          .homeProducts[index]
+                                                          .inFavourite ??
+                                                      false,
+                                                  isOffer: cubit
+                                                      .homeProducts[index]
+                                                      .isOffer!,
+                                                  offerPrice: cubit
+                                                      .homeProducts[index]
+                                                      .offerPrice,
+                                                  description: cubit
+                                                      .homeProducts[index]
+                                                      .businessCategory!
+                                                      .bcNameEn!,
+                                                  type: cubit
+                                                      .homeProducts[index].type!,
+                                                  rate: double.parse(cubit
+                                                      .homeProducts[index].averageRate
+                                                      .toString()),
+                                                  review: cubit
+                                                      .homeProducts[index]
+                                                      .reviewCount,
+                                                  price: cubit
+                                                      .homeProducts[index].price!,
+                                                  title: cubit.homeProducts[index]
+                                                      .productsName!,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                SizedBox(
-                                  height: 35.h,
-                                ),
-                                Text(
-                                  locale.findOutWhatFitsYourTypeOfCar,
-                                  style: font.bodyMedium,
-                                ),
-                                SizedBox(
-                                  height: 15.h,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    InkWell(
-                                        onTap: () {
-                                          cubit.changeTypeCarIndex(
-                                              value: cubit.index > 0
-                                                  ? cubit.index - 1
-                                                  : 4);
-                                          _carouselController
-                                              .jumpToPage(cubit.index);
-                                        },
-                                        child: Icon(Icons.arrow_back_ios)),
-                                    Container(
-                                      width: 250.w,
-                                      height: 57.h,
-                                      decoration: BoxDecoration(
-                                        color: color.cardColor,
-                                        borderRadius:
-                                            BorderRadius.circular(10.r),
-                                      ),
-                                      child: CarouselSlider(
-                                          carouselController:
-                                              _carouselController,
-                                          items: List.generate(5, (index) {
-                                            double width = cubit.index == index
-                                                ? 57.w
-                                                : 30.w;
-                                            double height = cubit.index == index
-                                                ? 57.w
-                                                : 30.w;
+                                  SizedBox(
+                                    height: 35.h,
+                                  ),
+                                  Text(
+                                    locale.findOutWhatFitsYourTypeOfCar,
+                                    style: font.bodyMedium,
+                                  ),
+                                  SizedBox(
+                                    height: 15.h,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      InkWell(
+                                          onTap: () {
+                                            cubit.changeTypeCarIndex(
+                                                value: cubit.index > 0
+                                                    ? cubit.index - 1
+                                                    : 4);
+                                            _carouselController
+                                                .jumpToPage(cubit.index);
+                                          },
+                                          child: Icon(Icons.arrow_back_ios)),
+                                      Container(
+                                        width: 250.w,
+                                        height: 57.h,
+                                        decoration: BoxDecoration(
+                                          color: color.cardColor,
+                                          borderRadius:
+                                              BorderRadius.circular(10.r),
+                                        ),
+                                        child: CarouselSlider(
+                                            carouselController:
+                                                _carouselController,
+                                            items: List.generate(5, (index) {
+                                              double width = cubit.index == index
+                                                  ? 57.w
+                                                  : 30.w;
+                                              double height = cubit.index == index
+                                                  ? 57.w
+                                                  : 30.w;
 
-                                            return InkWell(
-                                              onTap: () {
-                                                cubit.getAllProduct(lang: 'en',
-                                                carId: index + 1);
-                                                Helper.push(context,
-                                                    SeeAllScreen(title:''));
+                                              return InkWell(
+                                                onTap: () {
+                                                  cubit.getAllProduct(
+                                                  carId: index + 1);
+                                                  Helper.push(context,
+                                                      SeeAllScreen(title:''));
+                                                },
+                                                child: Image.asset(
+                                                  ImageConstant.cars(index),
+                                                  width: width,
+
+                                                  height: height,
+                                                ),
+                                              );
+                                            }),
+                                            options: CarouselOptions(
+                                              height: 57.h,
+                                              viewportFraction: 0.2,
+                                              initialPage: 0,
+                                              onPageChanged: (index, reason) {
+                                                cubit.changeTypeCarIndex(
+                                                    value: index);
                                               },
-                                              child: Image.asset(
-                                                ImageConstant.cars(index),
-                                                width: width,
-
-                                                height: height,
-                                              ),
-                                            );
-                                          }),
-                                          options: CarouselOptions(
-                                            height: 57.h,
-                                            viewportFraction: 0.2,
-                                            initialPage: 0,
-                                            onPageChanged: (index, reason) {
-                                              cubit.changeTypeCarIndex(
-                                                  value: index);
-                                            },
-                                            enableInfiniteScroll: true,
-                                            reverse: false,
-                                            autoPlayInterval:
-                                                Duration(seconds: 3),
-                                            autoPlayAnimationDuration:
-                                                Duration(milliseconds: 800),
-                                            autoPlayCurve: Curves.fastOutSlowIn,
-                                            enlargeCenterPage: true,
-                                            enlargeFactor: 0.2,
-                                            scrollDirection: Axis.horizontal,
-                                          )),
-                                    ),
-                                    InkWell(
-                                        onTap: () {
-                                          cubit.changeTypeCarIndex(
-                                              value: cubit.index == 4
-                                                  ? 0
-                                                  : cubit.index + 1);
-                                          _carouselController
-                                              .jumpToPage(cubit.index);
-                                        },
-                                        child: Icon(Icons.arrow_forward_ios))
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 35.h,
-                                ),
-                              ],
+                                              enableInfiniteScroll: true,
+                                              reverse: false,
+                                              autoPlayInterval:
+                                                  Duration(seconds: 3),
+                                              autoPlayAnimationDuration:
+                                                  Duration(milliseconds: 800),
+                                              autoPlayCurve: Curves.fastOutSlowIn,
+                                              enlargeCenterPage: true,
+                                              enlargeFactor: 0.2,
+                                              scrollDirection: Axis.horizontal,
+                                            )),
+                                      ),
+                                      InkWell(
+                                          onTap: () {
+                                            cubit.changeTypeCarIndex(
+                                                value: cubit.index == 4
+                                                    ? 0
+                                                    : cubit.index + 1);
+                                            _carouselController
+                                                .jumpToPage(cubit.index);
+                                          },
+                                          child: Icon(Icons.arrow_forward_ios))
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 35.h,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
+                  ),
             );
           },
         );

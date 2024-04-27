@@ -15,9 +15,12 @@ import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/layout/layout_screen.dart';
 import 'package:mham/views/edit_profile_screen/edit_profile_screen.dart';
+import 'package:mham/views/favourite_screen/favourite_screen.dart';
+import 'package:mham/views/notification_screen/notification_screen.dart';
 import 'package:mham/views/profile_screen/widget/card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/views/recent_purchases_screen/recent_purchases_screen.dart';
+import 'package:mham/views/returns_screen/returns_screen.dart';
 import 'package:mham/views/sign_up_screen/sign_up_screen.dart';
 import 'widget/language_dailog_selection_component.dart';
 
@@ -95,7 +98,9 @@ class ProfileScreen extends StatelessWidget {
                       BuildCards(
                         icon: FontAwesomeIcons.solidHeart,
                         text: locale.favorite,
-                        onTap: () {},
+                        onTap: () {
+                          Helper.push(context, FavouriteScreen());
+                        },
                       ),
                       SizedBox(
                         height: 10.h,
@@ -103,17 +108,21 @@ class ProfileScreen extends StatelessWidget {
                       BuildCards(
                         icon: FontAwesomeIcons.undo,
                         text: locale.returns,
-                        onTap: () {},
+                        onTap: () {
+                          HomeCubit.get(context).orderModel=null;
+                          HomeCubit.get(context).getAllOrders();
+                          Helper.push(context, ReturnsScreen());
+                        },
                       ),
                       SizedBox(
                         height: 10.h,
                       ),
                       BuildCards(
                         icon: FontAwesomeIcons.shoppingBag,
-                        text: 'Recent Purchases',
+                        text: locale.recentPurchases,
                         onTap: () {
                           HomeCubit.get(context).orderModel=null;
-                          HomeCubit.get(context).getAllOrders(lang: 'en');
+                          HomeCubit.get(context).getAllOrders();
                           Helper.push(context, RecentPurchasesScreen());
                         },
                       ),
@@ -123,7 +132,9 @@ class ProfileScreen extends StatelessWidget {
                       BuildCards(
                         icon: FontAwesomeIcons.bell,
                         text: locale.notifications,
-                        onTap: () {},
+                        onTap: () {
+                          Helper.push(context, NotificationScreen());
+                        },
                       ),
                       SizedBox(
                         height: 10.h,

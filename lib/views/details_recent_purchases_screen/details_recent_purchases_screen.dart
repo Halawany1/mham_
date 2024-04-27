@@ -12,38 +12,41 @@ import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/views/order_details_screen/widget/card_product_details.dart';
 
+import '../recent_purchases_screen/widget/return_order_popup.dart';
 
-class OrderDetailsScreen extends StatelessWidget {
-  const OrderDetailsScreen({
+class DetailsRecentPurchasesScreen extends StatelessWidget {
+  const DetailsRecentPurchasesScreen({
     super.key,
     required this.currentIndex,
     required this.totalPrice,
     required this.returns,
     this.hideNav = false,
     this.returnOrder = false,
-    this.hideCancelOrder = false,
+    this.hideReturnButton = false,
   });
 
   final int currentIndex;
   final double totalPrice;
   final bool hideNav;
   final bool returnOrder;
+  final bool hideReturnButton;
   final List<Map<String, dynamic>> returns;
-  final bool hideCancelOrder;
 
   @override
   Widget build(BuildContext context) {
+
     var color = Theme.of(context);
     var font = Theme.of(context).textTheme;
     final locale = AppLocalizations.of(context);
     var cubit = HomeCubit.get(context);
     List<StepperData> stepperData = [
       StepperData(
-          title: StepperText(locale.ordered, textStyle: font.bodyMedium),
+          title: StepperText(locale.ordered,
+              textStyle: font.bodyMedium),
           subtitle: StepperText(
             locale.orderPlaced +
                 Helper.trackingTimeFormat(
-                    cubit.allOrders[currentIndex].createdAt!),
+                    cubit.recentPurchases[currentIndex].createdAt!),
             textStyle: font.bodyMedium!.copyWith(
                 fontSize: 12.sp, color: color.primaryColor.withOpacity(0.7)),
           ),
@@ -57,49 +60,49 @@ class OrderDetailsScreen extends StatelessWidget {
           )),
       StepperData(
           title: StepperText(locale.processing, textStyle: font.bodyMedium),
-          subtitle: cubit.allOrders[currentIndex].deliveredAt != null &&
-                  cubit.allOrders[currentIndex].processingAt != null
-              ? StepperText(
-                  locale.orderPrepared +
-                      Helper.trackingTimeFormat(
-                          cubit.allOrders[currentIndex].processingAt!),
-                  textStyle: font.bodySmall!.copyWith(color: Colors.grey))
-              : null,
+          subtitle: cubit.recentPurchases[currentIndex].deliveredAt != null &&
+              cubit.recentPurchases[currentIndex].processingAt != null?
+          StepperText(
+              locale.orderPrepared +
+                  Helper.trackingTimeFormat(
+                      cubit.recentPurchases[currentIndex].processingAt!),
+              textStyle: font.bodySmall!.copyWith(color:
+              Colors.grey)):null,
           iconWidget: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                color: cubit.allOrders[currentIndex].deliveredAt != null ||
-                        cubit.allOrders[currentIndex].processingAt != null
+                color: cubit.recentPurchases[currentIndex].deliveredAt != null ||
+                    cubit.recentPurchases[currentIndex].processingAt != null
                     ? color.backgroundColor
                     : Colors.grey,
                 borderRadius: BorderRadius.all(Radius.circular(15.r))),
             child: Text('2',
                 style: font.bodyMedium!.copyWith(
-                    color: cubit.allOrders[currentIndex].deliveredAt != null
+                    color: cubit.recentPurchases[currentIndex].deliveredAt != null
                         ? ColorConstant.brown
                         : Colors.grey)),
           )),
       StepperData(
           title: StepperText(locale.shipped, textStyle: font.bodyMedium),
-          subtitle: cubit.allOrders[currentIndex].deliveredAt != null &&
-                  cubit.allOrders[currentIndex].shippedAt != null
-              ? StepperText(
-                  textStyle: font.bodySmall!.copyWith(color: Colors.grey),
-                  locale.deliverItem +
-                      Helper.trackingTimeFormat(
-                          cubit.allOrders[currentIndex].shippedAt!))
-              : null,
+          subtitle:  cubit.recentPurchases[currentIndex].deliveredAt != null &&
+              cubit.recentPurchases[currentIndex].shippedAt != null
+              ?StepperText(
+              textStyle: font.bodySmall!.copyWith(color: Colors.grey),
+              locale.deliverItem +
+                  Helper.trackingTimeFormat(
+                      cubit.recentPurchases[currentIndex].shippedAt!)):
+          null,
           iconWidget: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                color: cubit.allOrders[currentIndex].deliveredAt != null ||
-                        cubit.allOrders[currentIndex].shippedAt != null
+                color: cubit.recentPurchases[currentIndex].deliveredAt != null ||
+                    cubit.recentPurchases[currentIndex].shippedAt != null
                     ? color.backgroundColor
                     : Colors.grey,
                 borderRadius: BorderRadius.all(Radius.circular(15.r))),
             child: Text('3',
                 style: font.bodyMedium!.copyWith(
-                    color: cubit.allOrders[currentIndex].deliveredAt != null
+                    color: cubit.recentPurchases[currentIndex].deliveredAt != null
                         ? ColorConstant.brown
                         : Colors.grey)),
           )),
@@ -107,10 +110,10 @@ class OrderDetailsScreen extends StatelessWidget {
         iconWidget: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-              border: cubit.allOrders[currentIndex].deliveredAt != null
+              border: cubit.recentPurchases[currentIndex].deliveredAt != null
                   ? Border.all(color: color.primaryColor)
                   : null,
-              color: cubit.allOrders[currentIndex].deliveredAt != null
+              color: cubit.recentPurchases[currentIndex].deliveredAt != null
                   ? color.backgroundColor
                   : Colors.grey,
               borderRadius: BorderRadius.all(Radius.circular(15.r))),
@@ -132,20 +135,17 @@ class OrderDetailsScreen extends StatelessWidget {
       },
       child: BlocConsumer<HomeCubit, HomeState>(
         listener: (context, state) {
-          if (state is SuccessCancelProductState) {
-            cubit.cardProductDetails.clear();
-            cubit.trackingContainer = false;
-            if (hideNav) {
-              Navigator.pop(context);
-            } else {
-              Helper.pop(context);
-            }
-            cubit.getAllOrders();
+          if (state is SuccessReturnOrderState) {
+            showMessageResponse(
+                message: locale.orderReturnedSuccessfully,
+                context: context,
+                success: true);
           }
-          if (state is ErrorCancelProductState) {
+          if (state is ErrorReturnOrderState) {
             showMessageResponse(
                 message: state.error, context: context, success: false);
           }
+
         },
         builder: (context, state) {
           var cubit = context.read<HomeCubit>();
@@ -190,7 +190,7 @@ class OrderDetailsScreen extends StatelessWidget {
                             children: [
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     locale.orderDetails,
@@ -211,14 +211,14 @@ class OrderDetailsScreen extends StatelessWidget {
                                     children: [
                                       Text(
                                         Helper.formatDate(cubit
-                                            .allOrders[currentIndex]
+                                            .recentPurchases[currentIndex]
                                             .createdAt!),
                                         style: font.bodyMedium!.copyWith(
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Spacer(),
                                       Text(
-                                        cubit.allOrders[currentIndex].status
+                                        cubit.recentPurchases[currentIndex].status
                                             .toString(),
                                         style: font.bodyMedium!.copyWith(
                                             fontWeight: FontWeight.bold,
@@ -249,10 +249,10 @@ class OrderDetailsScreen extends StatelessWidget {
                                           border: Border.all(
                                               color: color.disabledColor),
                                           borderRadius:
-                                              BorderRadius.circular(5.r),
+                                          BorderRadius.circular(5.r),
                                         ),
                                         child: Text(
-                                          cubit.allOrders[currentIndex].carts!
+                                          cubit.recentPurchases[currentIndex].carts!
                                               .length
                                               .toString(),
                                         ),
@@ -315,7 +315,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                   width: double.infinity,
                                   child: Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         locale.trackYourOrder,
@@ -342,7 +342,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                     Text(
                                       locale.order +
                                           ' #' +
-                                          cubit.allOrders[currentIndex].orderId
+                                          cubit.recentPurchases[currentIndex].orderId
                                               .toString(),
                                       style: font.bodySmall!.copyWith(
                                           fontSize: 12.sp,
@@ -352,9 +352,9 @@ class OrderDetailsScreen extends StatelessWidget {
                                       height: 10.h,
                                     ),
                                     Text(
-                                      locale.orderDate +' '+
+                                      locale.orderDate + ' : ' +
                                           Helper.trackingTimeFormat(cubit
-                                              .allOrders[currentIndex].createdAt
+                                              .recentPurchases[currentIndex].createdAt
                                               .toString()),
                                       style: font.bodySmall!.copyWith(
                                           fontSize: 12.sp,
@@ -395,13 +395,13 @@ class OrderDetailsScreen extends StatelessWidget {
                         itemBuilder: (context, index) {
                           List<String> carModels = [];
                           if (cubit
-                                  .allOrders[currentIndex]
-                                  .carts![0]
-                                  .cartProducts![index]
-                                  .product!
-                                  .availableYears !=
+                              .recentPurchases[currentIndex]
+                              .carts![0]
+                              .cartProducts![index]
+                              .product!
+                              .availableYears !=
                               null) {
-                            cubit.allOrders[currentIndex].carts![0]
+                            cubit.recentPurchases[currentIndex].carts![0]
                                 .cartProducts![index].product!.availableYears!
                                 .forEach((element) {
                               carModels.add(element.carModel!.car!.carName! +
@@ -413,21 +413,21 @@ class OrderDetailsScreen extends StatelessWidget {
                           }
                           List<String> quantities = [];
 
-                          cubit.allOrders.forEach((element) {
+                          cubit.recentPurchases.forEach((element) {
                             cubit.cardProductDetails.add(false);
                           });
                           int returnQuantity = 0;
-                          cubit.allOrders[currentIndex].carts![0]
+                          cubit.recentPurchases[currentIndex].carts![0]
                               .cartProducts![index].returnProduct!
                               .forEach((element) {
                             returnQuantity += element.quantity!;
                           });
                           for (int i = 1;
-                              i <=
-                                  cubit.allOrders[currentIndex].carts![0]
-                                          .cartProducts![index].quantity! -
-                                      returnQuantity;
-                              i++) {
+                          i <=
+                              cubit.recentPurchases[currentIndex].carts![0]
+                                  .cartProducts![index].quantity! -
+                                  returnQuantity;
+                          i++) {
                             quantities.add(i.toString());
                           }
                           return BuildCardProductDetails(
@@ -440,41 +440,37 @@ class OrderDetailsScreen extends StatelessWidget {
                               returnProduct: returnOrder,
                               opened: cubit.cardProductDetails[index],
                               index: index,
-                              orders: cubit.allOrders[currentIndex]);
+                              orders: cubit.recentPurchases[currentIndex]);
                         },
                         separatorBuilder: (context, index) => SizedBox(
                           height: 20.h,
                         ),
-                        itemCount: cubit.allOrders[currentIndex].carts![0]
+                        itemCount: cubit.recentPurchases[currentIndex].carts![0]
                             .cartProducts!.length,
                       ),
                       SizedBox(
                         height: 20.h,
                       ),
-                      SizedBox(
-                        height: 20.h,
-                      ),
-                      state is LoadingCancelOrderState
-                          ? Center(
-                              child: CircularProgressIndicator(
-                              color: color.primaryColor,
-                            ))
-                          : BuildDefaultButton(
-                              text: locale.cancelOrder,
-                              width: 120.w,
-                              height: 26.h,
-                              borderRadius: 8.r,
-                              onPressed: () {
-                                if(!hideCancelOrder) {
-                                  cubit.cancelOrder(
-                                      id: cubit.allOrders[currentIndex].orderId!);
-                                }
+                      if(returnOrder)
+                        BuildDefaultButton(
+                            text: locale.returnOrder,
+                            borderRadius: 8.r,
+                            width: 110.w,
+                            height: 26.h,
+                            onPressed: () {
+                              if(hideReturnButton){
+                                showDialog(context: context,
+                                  builder: (context) {
+                                    return BuildReturnOrderPopUp(
+                                        returns: returns);
+                                  },);
+                              }
 
-                              },
-                              backgorundColor:hideCancelOrder?
-                              Colors.grey
-                              :color.backgroundColor,
-                              colorText: ColorConstant.brown)
+                            },
+                            backgorundColor:hideReturnButton?
+                                Colors.grey
+                                :color.backgroundColor,
+                            colorText: ColorConstant.brown)
                     ],
                   ),
                 ),

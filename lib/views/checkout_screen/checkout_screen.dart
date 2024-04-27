@@ -8,6 +8,8 @@ import 'package:mham/core/error/validation.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/models/cart_model.dart';
 import 'package:mham/views/checkout_screen/widget/forms.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 var addressController = TextEditingController();
 var locationController = TextEditingController();
@@ -20,10 +22,15 @@ var cvvController = TextEditingController();
 var formKey = GlobalKey<FormState>();
 
 class CheckoutScreen extends StatelessWidget {
-  const CheckoutScreen({super.key, this.products});
+  const CheckoutScreen({super.key, this.products,this.oneProductName,
+    this.price,
+    required this.totalPrice
+  });
 
   final List<CartProducts>? products;
-
+  final String ?oneProductName;
+  final double ?price;
+  final double totalPrice;
   @override
   Widget build(BuildContext context) {
     void clearAllData() {
@@ -39,6 +46,7 @@ class CheckoutScreen extends StatelessWidget {
 
     var font = Theme.of(context).textTheme;
     var color = Theme.of(context);
+    final locale = AppLocalizations.of(context);
     return WillPopScope(
       onWillPop: () async {
         if(products!=null){
@@ -82,7 +90,7 @@ class CheckoutScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Information',
+                      locale.info,
                       style: font.bodyLarge!.copyWith(fontSize: 22.sp),
                     ),
                     SizedBox(
@@ -101,12 +109,12 @@ class CheckoutScreen extends StatelessWidget {
                         children: [
                           BuildFormCheckout(
                             inputType: TextInputType.text,
-                            hint: 'Building number, Floor number, Flat number',
-                            title: 'Address Details',
+                            hint: locale.hintAddress,
+                            title: locale.addressDetails,
                             controller: addressController,
                             validator: (value) {
                               return Validation.validateField(
-                                  value, 'Address Details', context);
+                                  value, locale.addressDetails, context);
                             },
                           ),
                           SizedBox(
@@ -118,12 +126,12 @@ class CheckoutScreen extends StatelessWidget {
                               Icons.location_on_sharp,
                               color: color.primaryColor,
                             ),
-                            hint: 'Location',
-                            title: 'Location',
+                            hint: locale.location,
+                            title: locale.location,
                             controller: locationController,
                             validator: (value) {
                               return Validation.validateField(
-                                  value, 'Location', context);
+                                  value, locale.location, context);
                             },
                           ),
                           SizedBox(
@@ -132,11 +140,11 @@ class CheckoutScreen extends StatelessWidget {
                           BuildFormCheckout(
                             inputType: TextInputType.number,
                             hint: '1145465788',
-                            title: 'Mobile Number',
+                            title: locale.mobile,
                             controller: mobileController,
                             validator: (value) {
                               return Validation.validateField(
-                                  value, 'Mobile Number', context);
+                                  value, locale.mobile, context);
                             },
                           ),
                           SizedBox(
@@ -150,11 +158,11 @@ class CheckoutScreen extends StatelessWidget {
                                 child: BuildFormCheckout(
                                   inputType: TextInputType.text,
                                   hint: 'Akram',
-                                  title: 'First Name',
+                                  title:locale.firstName,
                                   controller: firstNameController,
                                   validator: (value) {
                                     return Validation.validateField(
-                                        value, 'First Name', context);
+                                        value, locale.firstName, context);
                                   },
                                 ),
                               ),
@@ -163,11 +171,11 @@ class CheckoutScreen extends StatelessWidget {
                                 child: BuildFormCheckout(
                                   inputType: TextInputType.text,
                                   hint: 'Ahmed',
-                                  title: 'Last Name',
+                                  title: locale.lastName,
                                   controller: lastNameController,
                                   validator: (value) {
                                     return Validation.validateField(
-                                        value, 'Last Name', context);
+                                        value, locale.lastName, context);
                                   },
                                 ),
                               ),
@@ -183,7 +191,7 @@ class CheckoutScreen extends StatelessWidget {
                       height: 20.h,
                     ),
                     Text(
-                      'Your Order',
+                      locale.yourOrder,
                       style: font.bodyLarge!.copyWith(fontSize: 22.sp),
                     ),
                     SizedBox(
@@ -203,11 +211,11 @@ class CheckoutScreen extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                'Shipment ',
+                                 locale.shipment,
                                 style: font.bodyMedium,
                               ),
                               Text(
-                                '(${products!.length} item)',
+                                '(${ products!=null?products!.length:1} ${locale.items})',
                                 style: font.bodyMedium!.copyWith(
                                     color: color.primaryColor.withOpacity(0.5),
                                     fontSize: 12.sp),
@@ -215,7 +223,8 @@ class CheckoutScreen extends StatelessWidget {
                             ],
                           ),
                           ListView.builder(
-                            itemCount: products!.length,
+                            itemCount: products!=null?
+                            products!.length:1,
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
@@ -238,16 +247,19 @@ class CheckoutScreen extends StatelessWidget {
                                         width: 150.w,
                                         child: Text(
                                           overflow: TextOverflow.ellipsis,
+                                          products!=null?
                                           products![index]
                                               .product!
-                                              .productsName!,
+                                              .productsName!:oneProductName!,
                                           style: font.bodyMedium!.copyWith(
                                             fontSize: 15.sp,
                                           ),
                                         ),
                                       ),
                                       Text(
-                                        products![index].product!.price!.toString(),
+                                        products!=null?
+                                        products![index].product!.price!.
+                                        toString():price.toString()+' '+locale.kd,
                                         style: font.bodyMedium!.copyWith(
                                             fontSize: 16.sp,
                                             fontWeight: FontWeight.w600,
@@ -267,7 +279,7 @@ class CheckoutScreen extends StatelessWidget {
                       height: 20.h,
                     ),
                     Text(
-                      'Payment',
+                      locale.payment,
                       style: font.bodyLarge!.copyWith(fontSize: 22.sp),
                     ),
                     SizedBox(
@@ -300,7 +312,7 @@ class CheckoutScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Credit Card',
+                                locale.credit,
                                 style: font.bodyMedium!
                                     .copyWith(fontWeight: FontWeight.w700),
                               ),
@@ -310,7 +322,7 @@ class CheckoutScreen extends StatelessWidget {
                             height: 15.h,
                           ),
                           Text(
-                            'Add Your Card',
+                            locale.addYourCard,
                             style: font.bodyLarge!.copyWith(fontSize: 19.sp),
                           ),
                           SizedBox(
@@ -320,11 +332,11 @@ class CheckoutScreen extends StatelessWidget {
                             inputType: TextInputType.number,
                             widthForm: 136.w,
                             hint: '**** **** **** ****',
-                            title: 'Card Number',
+                            title: locale.cardNumber,
                             controller: cardNumberController,
                             validator: (value) {
                               return Validation.validateField(
-                                  value, 'Card Number', context);
+                                  value, locale.cardNumber, context);
                             },
                           ),
                           SizedBox(
@@ -333,12 +345,12 @@ class CheckoutScreen extends StatelessWidget {
                           BuildFormCheckout(
                             inputType: TextInputType.text,
                             widthForm: 136.w,
-                            hint: 'Month  /  Year',
-                            title: 'Expiry Date',
+                            hint: locale.monthAndYear,
+                            title: locale.expiryDate,
                             controller: expiryDateController,
                             validator: (value) {
                               return Validation.validateField(
-                                  value, 'Expiry Date', context);
+                                  value, locale.expiryDate, context);
                             },
                           ),
                           SizedBox(
@@ -347,12 +359,12 @@ class CheckoutScreen extends StatelessWidget {
                           BuildFormCheckout(
                             inputType: TextInputType.number,
                             hint:
-                                'Enter the 3 digit code on the back of your card ',
-                            title: 'CVV',
+                                locale.enterThreeDigitCode,
+                            title: locale.cvv,
                             controller: cvvController,
                             validator: (value) {
                               return Validation.validateField(
-                                  value, 'CVV', context);
+                                  value, locale.cvv, context);
                             },
                           ),
                           SizedBox(
@@ -365,18 +377,18 @@ class CheckoutScreen extends StatelessWidget {
                       height: 15.h,
                     ),
                     BuildTotalCardPrice(
-                        lenghtItems: 3,
-                        totalPrice: 12213,
-                        totalPriceWithShippingFee: 123213),
+                        lenghtItems:products!=null?
+                        products!.length:1,
+                        totalPrice: totalPrice,
+                        totalPriceWithShippingFee: totalPrice+10),
                     SizedBox(
                       height: 20.h,
                     ),
                     BuildDefaultButton(
-                        text: 'Place Order',
+                        text: locale.placeOrder,
                         borderRadius: 10.r,
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
-                            print('3e4sa');
                           }
                         },
                         backgorundColor: color.backgroundColor,
