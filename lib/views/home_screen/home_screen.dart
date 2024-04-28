@@ -4,32 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mham/controller/cart_cubit/cart_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
-import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/core/components/laoding_animation_component.dart';
 import 'package:mham/core/components/product_card_component.dart';
 import 'package:mham/core/components/row_product_and_see_all_component.dart';
-import 'package:mham/core/components/search_form_filed_component.dart';
 import 'package:mham/core/components/snak_bar_component.dart';
-import 'package:mham/core/constent/app_constant.dart';
-import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/helper/helper.dart';
-import 'package:mham/core/network/local.dart';
-import 'package:mham/views/cart_screen/cart_screen.dart';
 import 'package:mham/views/details_product_screen/details_product_screen.dart';
-import 'package:mham/views/get_start_screen/get_start_screen.dart';
+import 'package:mham/views/home_screen/widget/all_categories.dart';
 import 'package:mham/views/home_screen/widget/car_filter.dart';
-import 'package:mham/views/home_screen/widget/category.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/views/home_screen/widget/products_not_found.dart';
-import 'package:mham/views/notification_screen/notification_screen.dart';
-import 'package:mham/views/search_screen/search_screen.dart';
+import 'package:mham/views/home_screen/widget/slider_car_type.dart';
+import 'package:mham/views/home_screen/widget/top_app_bar_and_slider.dart';
 import 'package:mham/views/see_all_screen/see_all_screen.dart';
 
-final CarouselController _carouselController = CarouselController();
+final CarouselController carouselController = CarouselController();
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -158,267 +150,15 @@ class HomeScreen extends StatelessWidget {
                               physics: const BouncingScrollPhysics(),
                               child: Column(
                                 children: [
-                                  Row(
-                                    children: [
-                                      BuildSearchFormField(
-                                        onTap: () {
-                                          Helper.push(context, SearchScreen());
-                                        },
-                                        readOnly: true,
-                                      ),
-                                      SizedBox(
-                                        width: 10.w,
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          if(CacheHelper.getData(key: AppConstant.token) == null){
-                                            Helper.push(context, GetStartScreen());
-                                          }else{
-                                            Helper.push(context, NotificationScreen());
-                                          }
-
-                                        },
-                                        child: Icon(
-                                          FontAwesomeIcons.bell,
-                                          color: color.primaryColor,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10.w,
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          if(CacheHelper.getData(key: AppConstant.token) != null){
-                                            CartCubit.get(context).getCart(
-                                                token: CacheHelper.getData(
-                                                    key: AppConstant.token));
-                                            Helper.push(context, CartScreen());
-                                          }else{
-                                            Helper.push(context, GetStartScreen());
-                                          }
-
-                                        },
-                                        child: Icon(
-                                          FontAwesomeIcons.shoppingCart,
-                                          color: ColorConstant.backgroundAuth,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10.h,
-                                  ),
-                                  CarouselSlider(
-                                      items: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(12.r),
-                                          child: Image.asset(
-                                            ImageConstant.ads,
-                                            width: double.infinity,
-                                            height: 90.h,
-                                          ),
-                                        ),
-                                      ],
-                                      options: CarouselOptions(
-                                        viewportFraction: 0.8,
-                                        initialPage: 0,
-                                        enableInfiniteScroll: true,
-                                        reverse: false,
-                                        autoPlay: true,
-                                        autoPlayInterval: Duration(seconds: 3),
-                                        autoPlayAnimationDuration:
-                                            Duration(milliseconds: 800),
-                                        autoPlayCurve: Curves.fastOutSlowIn,
-                                        enlargeCenterPage: true,
-                                        enlargeFactor: 0.3,
-                                        scrollDirection: Axis.horizontal,
-                                      )),
+                                  BuildTopAppBarAndSlider(),
                                   Text(
                                     locale.whatAreYouLookingFor,
                                     style: font.bodyMedium,
                                   ),
                                   SizedBox(
-                                    height: 15.h,
+                                    height: 20.h,
                                   ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      BuildCategory(
-                                        image: ImageConstant.carParts,
-                                        text: locale.spareParts,
-                                        onTap: () {
-                                          CacheHelper.saveData(
-                                              key: AppConstant.businessId,
-                                              value: 1);
-                                          cubit.getAllProduct(
-                                            busniessId: 1,
-                                          );
-                                          Helper.push(
-                                              context,
-                                              SeeAllScreen(
-                                                title: locale.spareParts,
-                                              ));
-                                        },
-                                      ),
-                                      BuildCategory(
-                                        image: ImageConstant.tires,
-                                        text: locale.tiresAndWheels,
-                                        onTap: () {
-                                          CacheHelper.saveData(
-                                              key: AppConstant.businessId,
-                                              value: 4);
-                                          cubit.getAllProduct(
-                                            busniessId: 4,
-                                          );
-                                          Helper.push(
-                                              context,
-                                              SeeAllScreen(
-                                                title: locale.tiresAndWheels,
-                                              ));
-                                        },
-                                      ),
-                                      BuildCategory(
-                                        image: ImageConstant.batteries,
-                                        text: locale.batteries,
-                                        onTap: () {
-                                          CacheHelper.saveData(
-                                              key: AppConstant.businessId,
-                                              value: 5);
-                                          cubit.getAllProduct(
-
-                                            busniessId: 5,
-                                          );
-                                          Helper.push(
-                                              context,
-                                              SeeAllScreen(
-                                                title: locale.batteries,
-                                              ));
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 15.h,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      BuildCategory(
-                                        image: ImageConstant.motorOil,
-                                        text: locale.motorOil,
-                                        onTap: () {
-                                          CacheHelper.saveData(
-                                              key: AppConstant.businessId,
-                                              value: 3);
-                                          cubit.getAllProduct(
-                                            busniessId: 3,
-                                          );
-                                          Helper.push(
-                                              context,
-                                              SeeAllScreen(
-                                                title: locale.motorOil,
-                                              ));
-                                        },
-                                      ),
-                                      BuildCategory(
-                                        image: ImageConstant.rimCover,
-                                        text: locale.rimCover,
-                                        onTap: () {
-                                          CacheHelper.saveData(
-                                              key: AppConstant.businessId,
-                                              value: 9);
-                                          cubit.getAllProduct(
-                                            busniessId: 9,
-                                          );
-                                          Helper.push(
-                                              context,
-                                              SeeAllScreen(
-                                                title: locale.rimCover,
-                                              ));
-                                        },
-                                      ),
-                                      BuildCategory(
-                                        image: ImageConstant.accessories,
-                                        text: locale.accessories,
-                                        onTap: () {
-                                          CacheHelper.saveData(
-                                              key: AppConstant.businessId,
-                                              value: 2);
-                                          cubit.getAllProduct(
-                                            busniessId: 2,
-                                          );
-                                          Helper.push(
-                                              context,
-                                              SeeAllScreen(
-                                                title: locale.accessories,
-                                              ));
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 15.h,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      BuildCategory(
-                                        image: ImageConstant.rim,
-                                        text: locale.rim,
-                                        onTap: () {
-                                          CacheHelper.saveData(
-                                              key: AppConstant.businessId,
-                                              value: 8);
-                                          cubit.getAllProduct(
-                                            busniessId: 8,
-                                          );
-                                          Helper.push(
-                                              context,
-                                              SeeAllScreen(
-                                                title: locale.rim,
-                                              ));
-                                        },
-                                      ),
-                                      BuildCategory(
-                                        image: ImageConstant.sparkPlugs,
-                                        text: locale.sparkPlugs,
-                                        onTap: () {
-                                          CacheHelper.saveData(
-                                              key: AppConstant.businessId,
-                                              value: 6);
-                                          cubit.getAllProduct(
-                                            busniessId: 6,
-                                          );
-                                          Helper.push(
-                                              context,
-                                              SeeAllScreen(
-                                                title: locale.sparkPlugs,
-                                              ));
-                                        },
-                                      ),
-                                      BuildCategory(
-                                        image: ImageConstant.liquids,
-                                        text: locale.liquids,
-                                        onTap: () {
-                                          CacheHelper.saveData(
-                                              key: AppConstant.businessId,
-                                              value: 7);
-                                          cubit.getAllProduct(
-                                            busniessId: 7,
-                                          );
-                                          Helper.push(
-                                              context,
-                                              SeeAllScreen(
-                                                title: locale.liquids,
-                                              ));
-                                        },
-                                      ),
-                                    ],
-                                  ),
+                                 BuildAllCategories(),
                                   SizedBox(
                                     height: 30.h,
                                   ),
@@ -522,86 +262,8 @@ class HomeScreen extends StatelessWidget {
                                   SizedBox(
                                     height: 15.h,
                                   ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      InkWell(
-                                          onTap: () {
-                                            cubit.changeTypeCarIndex(
-                                                value: cubit.index > 0
-                                                    ? cubit.index - 1
-                                                    : 4);
-                                            _carouselController
-                                                .jumpToPage(cubit.index);
-                                          },
-                                          child: Icon(Icons.arrow_back_ios)),
-                                      Container(
-                                        width: 250.w,
-                                        height: 57.h,
-                                        decoration: BoxDecoration(
-                                          color: color.cardColor,
-                                          borderRadius:
-                                              BorderRadius.circular(10.r),
-                                        ),
-                                        child: CarouselSlider(
-                                            carouselController:
-                                                _carouselController,
-                                            items: List.generate(5, (index) {
-                                              double width = cubit.index == index
-                                                  ? 57.w
-                                                  : 30.w;
-                                              double height = cubit.index == index
-                                                  ? 57.w
-                                                  : 30.w;
 
-                                              return InkWell(
-                                                onTap: () {
-                                                  cubit.getAllProduct(
-                                                  carId: index + 1);
-                                                  Helper.push(context,
-                                                      SeeAllScreen(title:''));
-                                                },
-                                                child: Image.asset(
-                                                  ImageConstant.cars(index),
-                                                  width: width,
-
-                                                  height: height,
-                                                ),
-                                              );
-                                            }),
-                                            options: CarouselOptions(
-                                              height: 57.h,
-                                              viewportFraction: 0.2,
-                                              initialPage: 0,
-                                              onPageChanged: (index, reason) {
-                                                cubit.changeTypeCarIndex(
-                                                    value: index);
-                                              },
-                                              enableInfiniteScroll: true,
-                                              reverse: false,
-                                              autoPlayInterval:
-                                                  Duration(seconds: 3),
-                                              autoPlayAnimationDuration:
-                                                  Duration(milliseconds: 800),
-                                              autoPlayCurve: Curves.fastOutSlowIn,
-                                              enlargeCenterPage: true,
-                                              enlargeFactor: 0.2,
-                                              scrollDirection: Axis.horizontal,
-                                            )),
-                                      ),
-                                      InkWell(
-                                          onTap: () {
-                                            cubit.changeTypeCarIndex(
-                                                value: cubit.index == 4
-                                                    ? 0
-                                                    : cubit.index + 1);
-                                            _carouselController
-                                                .jumpToPage(cubit.index);
-                                          },
-                                          child: Icon(Icons.arrow_forward_ios))
-                                    ],
-                                  ),
+                                  BuildSliderCarType(),
                                   SizedBox(
                                     height: 35.h,
                                   ),

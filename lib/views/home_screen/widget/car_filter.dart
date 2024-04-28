@@ -12,7 +12,6 @@ import 'package:mham/views/home_screen/widget/request_scrap.dart';
 class BuildCarFilter extends StatelessWidget {
   const BuildCarFilter({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     var color = Theme.of(context);

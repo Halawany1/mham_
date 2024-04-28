@@ -11,6 +11,8 @@ import 'package:mham/core/components/snak_bar_component.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/views/order_details_screen/widget/card_product_details.dart';
+import 'package:mham/views/order_details_screen/widget/order_details.dart';
+import 'package:mham/views/order_details_screen/widget/tracking_order.dart';
 
 
 class OrderDetailsScreen extends StatelessWidget {
@@ -177,208 +179,18 @@ class OrderDetailsScreen extends StatelessWidget {
                       SizedBox(
                         height: 12.h,
                       ),
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: color.backgroundColor),
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20.r),
-                                topRight: Radius.circular(20.r))),
-                        child: Padding(
-                          padding: EdgeInsets.all(12.h),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    locale.orderDetails,
-                                    style: font.bodyMedium!.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 20.sp),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Divider(),
-                                  SizedBox(
-                                    height: 10.h,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        Helper.formatDate(cubit
-                                            .allOrders[currentIndex]
-                                            .createdAt!),
-                                        style: font.bodyMedium!.copyWith(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Spacer(),
-                                      Text(
-                                        cubit.allOrders[currentIndex].status
-                                            .toString(),
-                                        style: font.bodyMedium!.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12.sp,
-                                            color: Colors.green),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 20.h,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        locale.quantity,
-                                        style: font.bodyMedium!.copyWith(
-                                          fontSize: 15.sp,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 40.w,
-                                      ),
-                                      Container(
-                                        alignment: Alignment.center,
-                                        width: 25.w,
-                                        height: 25.w,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: color.disabledColor),
-                                          borderRadius:
-                                              BorderRadius.circular(5.r),
-                                        ),
-                                        child: Text(
-                                          cubit.allOrders[currentIndex].carts!
-                                              .length
-                                              .toString(),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 18.h,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        locale.totalCost,
-                                        style: font.bodyMedium!.copyWith(
-                                          fontSize: 15.sp,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 20.w,
-                                      ),
-                                      FittedBox(
-                                        fit: BoxFit.contain,
-                                        child: Text(
-                                          totalPrice.toStringAsFixed(2) +
-                                              ' ${locale.kd}',
-                                          style: font.bodyMedium!.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 14.sp,
-                                              color: color.backgroundColor),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      BuildOrderDetails(currentIndex: currentIndex,
+                          lenght: cubit.allOrders[currentIndex].carts!.length,
+                          createdAt: cubit.allOrders[currentIndex].createdAt!,
+                          status: cubit.allOrders[currentIndex].status!,
+                          totalPrice: totalPrice),
                       SizedBox(
                         height: 20.h,
                       ),
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: color.backgroundColor),
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20.r),
-                                topRight: Radius.circular(20.r))),
-                        child: Padding(
-                          padding: EdgeInsets.all(12.h),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  cubit.openAndCloseTrackingContainer();
-                                },
-                                child: Container(
-                                  width: double.infinity,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        locale.trackYourOrder,
-                                        style: font.bodyLarge!
-                                            .copyWith(fontSize: 20.sp),
-                                      ),
-                                      Icon(
-                                        cubit.trackingContainer
-                                            ? Icons.keyboard_arrow_down_outlined
-                                            : Icons.keyboard_arrow_up,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              if (cubit.trackingContainer)
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      height: 5.h,
-                                    ),
-                                    Divider(),
-                                    Text(
-                                      locale.order +
-                                          ' #' +
-                                          cubit.allOrders[currentIndex].orderId
-                                              .toString(),
-                                      style: font.bodySmall!.copyWith(
-                                          fontSize: 12.sp,
-                                          color: color.primaryColor),
-                                    ),
-                                    SizedBox(
-                                      height: 10.h,
-                                    ),
-                                    Text(
-                                      locale.orderDate +' '+
-                                          Helper.trackingTimeFormat(cubit
-                                              .allOrders[currentIndex].createdAt
-                                              .toString()),
-                                      style: font.bodySmall!.copyWith(
-                                          fontSize: 12.sp,
-                                          color: color.primaryColor),
-                                    ),
-                                    SizedBox(
-                                      height: 10.h,
-                                    ),
-                                    AnotherStepper(
-                                      verticalGap: 15.h,
-                                      stepperList: stepperData,
-                                      activeIndex: 1,
-                                      stepperDirection: Axis.vertical,
-                                      iconWidth: 32.w,
-                                      // Height that will be applied to all the stepper icons
-                                      iconHeight: 30
-                                          .h, // Width that will be applied to all the stepper icons
-                                    )
-                                  ],
-                                )
-                            ],
-                          ),
-                        ),
-                      ),
+                      BuildTrackingOrder(currentIndex: currentIndex,
+                          createdAt: cubit.allOrders[currentIndex].createdAt!,
+                          orderId: cubit.allOrders[currentIndex].orderId!,
+                          stepperData: stepperData, totalPrice: totalPrice),
                       SizedBox(
                         height: 20.h,
                       ),

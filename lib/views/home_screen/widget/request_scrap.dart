@@ -4,7 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/core/components/text_form_field_component.dart';
+import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/error/validation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 var requestScrapController = TextEditingController();
 var formKey=GlobalKey<FormState>();
 class BuildRequestScrap extends StatelessWidget {
@@ -16,25 +18,27 @@ class BuildRequestScrap extends StatelessWidget {
         .of(context)
         .textTheme;
     var color = Theme.of(context);
+    var locale = AppLocalizations.of(context);
     return Form(
       key: formKey,
       child: AlertDialog(
         backgroundColor: color.scaffoldBackgroundColor,
-        title: Text('Request Scrap'),
+        title: Text(locale.requestScrap,style: font.bodyLarge,),
         content: SizedBox(
           width: 500.w,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              BuildTextFormField(title: 'Request Scrap',
-                hint: 'Enter Request Scrap',
+              BuildTextFormField(title: locale.requestScrap,
+                hint:  locale.enterRequestScrap,
                 maxLines: 5,
                contentPadding: true,
                 withBorder: true,
                 cubit: AuthenticationCubit.get(context),
                 controller: requestScrapController,
                 validator: (value) {
-                  return Validation.validateField(value, 'Request Scrap', context);
+                  return Validation.validateField(value,
+                      locale.requestScrap,context);
                 },
                 keyboardType: TextInputType.text,
                 maxLength: 100,),
@@ -48,7 +52,7 @@ class BuildRequestScrap extends StatelessWidget {
                       Navigator.pop(context); // Close the dialog
                     },
                     child: Text(
-                      'Close',
+                      locale.close,
                       style: font.bodyMedium!.copyWith(color: Colors.red),
                     ),
                   ),
@@ -65,8 +69,10 @@ class BuildRequestScrap extends StatelessWidget {
                       }
                     },
                     child: Text(
-                      'Send',
-                      style: font.bodyMedium,
+                      locale.send,
+                      style: font.bodyMedium!.copyWith(
+                        color: ColorConstant.brown
+                      ),
                     ),
                   ),
                 ],

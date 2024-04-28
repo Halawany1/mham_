@@ -188,6 +188,8 @@
   "createNewReturn":"ارجاع جديد",
   "noReturnRequested":"لا توجد طلبات الارجاع",
   "noRecentPurchasesYet":"لا توجد منتجات حديثة بعد",
-  "buyNow":"شراء الان"
+  "buyNow":"شراء الان",
+  "send":"ارسال",
+  "enterRequestScrap": "ادخل الطلب"
 
 }

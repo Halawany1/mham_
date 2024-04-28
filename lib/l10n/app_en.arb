@@ -187,6 +187,8 @@
   "createNewReturn":"Create A New Return",
   "noReturnRequested":"No Returns requested",
   "noRecentPurchasesYet":"No Recent Purchases yet",
-  "buyNow":"Buy Now"
+  "buyNow":"Buy Now",
+  "send":"Send",
+  "enterRequestScrap": "Enter your request scrap"
 
 }

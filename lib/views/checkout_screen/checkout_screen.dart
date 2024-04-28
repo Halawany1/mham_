@@ -7,8 +7,10 @@ import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/error/validation.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/models/cart_model.dart';
+import 'package:mham/views/checkout_screen/widget/credit_card_info.dart';
 import 'package:mham/views/checkout_screen/widget/forms.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mham/views/checkout_screen/widget/info_card.dart';
 
 
 var addressController = TextEditingController();
@@ -96,97 +98,7 @@ class CheckoutScreen extends StatelessWidget {
                     SizedBox(
                       height: 8.h,
                     ),
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(12.h),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.r),
-                          border: Border.all(
-                            color: color.primaryColor.withOpacity(0.1),
-                          )),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          BuildFormCheckout(
-                            inputType: TextInputType.text,
-                            hint: locale.hintAddress,
-                            title: locale.addressDetails,
-                            controller: addressController,
-                            validator: (value) {
-                              return Validation.validateField(
-                                  value, locale.addressDetails, context);
-                            },
-                          ),
-                          SizedBox(
-                            height: 15.h,
-                          ),
-                          BuildFormCheckout(
-                            inputType: TextInputType.text,
-                            suffixIcon: Icon(
-                              Icons.location_on_sharp,
-                              color: color.primaryColor,
-                            ),
-                            hint: locale.location,
-                            title: locale.location,
-                            controller: locationController,
-                            validator: (value) {
-                              return Validation.validateField(
-                                  value, locale.location, context);
-                            },
-                          ),
-                          SizedBox(
-                            height: 15.h,
-                          ),
-                          BuildFormCheckout(
-                            inputType: TextInputType.number,
-                            hint: '1145465788',
-                            title: locale.mobile,
-                            controller: mobileController,
-                            validator: (value) {
-                              return Validation.validateField(
-                                  value, locale.mobile, context);
-                            },
-                          ),
-                          SizedBox(
-                            height: 15.h,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: 120.w,
-                                child: BuildFormCheckout(
-                                  inputType: TextInputType.text,
-                                  hint: 'Akram',
-                                  title:locale.firstName,
-                                  controller: firstNameController,
-                                  validator: (value) {
-                                    return Validation.validateField(
-                                        value, locale.firstName, context);
-                                  },
-                                ),
-                              ),
-                              SizedBox(
-                                width: 120.w,
-                                child: BuildFormCheckout(
-                                  inputType: TextInputType.text,
-                                  hint: 'Ahmed',
-                                  title: locale.lastName,
-                                  controller: lastNameController,
-                                  validator: (value) {
-                                    return Validation.validateField(
-                                        value, locale.lastName, context);
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10.h,
-                          )
-                        ],
-                      ),
-                    ),
+                    BuildInformationCard(),
                     SizedBox(
                       height: 20.h,
                     ),
@@ -285,94 +197,8 @@ class CheckoutScreen extends StatelessWidget {
                     SizedBox(
                       height: 10.h,
                     ),
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(12.h),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.r),
-                          border: Border.all(
-                            color: color.primaryColor.withOpacity(0.1),
-                          )),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 15.h,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(ImageConstant.creditCard),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 5.h,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                locale.credit,
-                                style: font.bodyMedium!
-                                    .copyWith(fontWeight: FontWeight.w700),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 15.h,
-                          ),
-                          Text(
-                            locale.addYourCard,
-                            style: font.bodyLarge!.copyWith(fontSize: 19.sp),
-                          ),
-                          SizedBox(
-                            height: 10.h,
-                          ),
-                          BuildFormCheckout(
-                            inputType: TextInputType.number,
-                            widthForm: 136.w,
-                            hint: '**** **** **** ****',
-                            title: locale.cardNumber,
-                            controller: cardNumberController,
-                            validator: (value) {
-                              return Validation.validateField(
-                                  value, locale.cardNumber, context);
-                            },
-                          ),
-                          SizedBox(
-                            height: 15.h,
-                          ),
-                          BuildFormCheckout(
-                            inputType: TextInputType.text,
-                            widthForm: 136.w,
-                            hint: locale.monthAndYear,
-                            title: locale.expiryDate,
-                            controller: expiryDateController,
-                            validator: (value) {
-                              return Validation.validateField(
-                                  value, locale.expiryDate, context);
-                            },
-                          ),
-                          SizedBox(
-                            height: 15.h,
-                          ),
-                          BuildFormCheckout(
-                            inputType: TextInputType.number,
-                            hint:
-                                locale.enterThreeDigitCode,
-                            title: locale.cvv,
-                            controller: cvvController,
-                            validator: (value) {
-                              return Validation.validateField(
-                                  value, locale.cvv, context);
-                            },
-                          ),
-                          SizedBox(
-                            height: 15.h,
-                          ),
-                        ],
-                      ),
-                    ),
+
+                    BuildCreditCardInformation(),
                     SizedBox(
                       height: 15.h,
                     ),
