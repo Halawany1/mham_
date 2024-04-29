@@ -193,4 +193,10 @@ String ?countryId;
     });
   }
 
+  int currentIndexOtpVerification = 0;
+  void changeIndexOtpVerification(int index){
+    currentIndexOtpVerification = index;
+    emit(ChangeIndexOtpVerificationState());
+  }
+
 }

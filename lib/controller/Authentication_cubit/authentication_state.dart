@@ -15,6 +15,8 @@ class LoadingLoginUserState extends AuthenticationState {}
 
 class SuccessLoginUserState extends AuthenticationState {}
 
+class ChangeIndexOtpVerificationState extends AuthenticationState {}
+
 class ErrorLoginUserState extends AuthenticationState {
   final String error;
 

@@ -190,6 +190,17 @@
   "noRecentPurchasesYet":"لا توجد منتجات حديثة بعد",
   "buyNow":"شراء الان",
   "send":"ارسال",
-  "enterRequestScrap": "ادخل الطلب"
+  "enterRequestScrap": "ادخل الطلب",
+
+  "setNewPassword":"قم بتعيين كلمة مرور جديدة",
+  "createNewPassEnshure":"قم بإنشاء كلمة مرور جديدة وتأكد من أنها قوية",
+  "otpVerification":"OTP Verification",
+  "weWillSendOtp":"سوف نرسل لك OTP على هذا الرقم الجوال",
+  "enterOtp":"ادخل OTP",
+  "enterMobileNumber":"ادخل رقم الجوال",
+  "didntRecieveOtp":"لم تستلم OTP؟",
+  "resendOtp":"اعادة ارسال OTP",
+  "getOtp":"احصل على OTP",
+  "verify":"تحقق"
 
 }

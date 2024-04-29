@@ -14,6 +14,7 @@ import 'package:mham/core/error/validation.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/layout/layout_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mham/views/otp_screen/otp_screen.dart';
 import 'package:mham/views/sign_up_screen/sign_up_screen.dart';
 
 var _formKey = GlobalKey<FormState>();
@@ -110,7 +111,10 @@ class LoginScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder:
+                              (context) => OtpScreen(),));
+                            },
                             child: Text(
                               locale.forgotPassword,
                               style: font.bodyMedium!.copyWith(fontSize: 12.sp),
@@ -161,21 +165,7 @@ class LoginScreen extends StatelessWidget {
                         textLink: locale.signUp,
                       ),
                       SizedBox(
-                        height: 10.h,
-                      ),
-                      BuildTextAndLinkRow(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const LayoutScreen()));
-                          AuthenticationCubit.get(context).resetVisible();
-                        },
-                        text: locale.continueAs,
-                        textLink: locale.guest,
-                      ),
-                      SizedBox(
-                        height: 20.h,
+                        height: 30.h,
                       ),
                       Text(
                         locale.orContinueWith,

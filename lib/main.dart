@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) =>
-          HomeCubit(),
+          HomeCubit()..getCarModels(),
         ),
         BlocProvider(
           create: (context) => AuthenticationCubit(),

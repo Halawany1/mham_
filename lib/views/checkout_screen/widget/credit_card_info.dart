@@ -58,7 +58,7 @@ class BuildCreditCardInformation extends StatelessWidget {
           SizedBox(
             height: 10.h,
           ),
-          BuildFormCheckout(
+          BuildFormUnderLine(
             inputType: TextInputType.number,
             widthForm: 136.w,
             hint: '**** **** **** ****',
@@ -72,7 +72,7 @@ class BuildCreditCardInformation extends StatelessWidget {
           SizedBox(
             height: 15.h,
           ),
-          BuildFormCheckout(
+          BuildFormUnderLine(
             inputType: TextInputType.text,
             widthForm: 136.w,
             hint: locale.monthAndYear,
@@ -86,7 +86,7 @@ class BuildCreditCardInformation extends StatelessWidget {
           SizedBox(
             height: 15.h,
           ),
-          BuildFormCheckout(
+          BuildFormUnderLine(
             inputType: TextInputType.number,
             hint:
             locale.enterThreeDigitCode,

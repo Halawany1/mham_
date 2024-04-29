@@ -189,6 +189,17 @@
   "noRecentPurchasesYet":"No Recent Purchases yet",
   "buyNow":"Buy Now",
   "send":"Send",
-  "enterRequestScrap": "Enter your request scrap"
+  "enterRequestScrap": "Enter your request scrap",
+
+  "setNewPassword":"Set a new password",
+  "createNewPassEnshure":"Create a new password. Ensure it differs from Previous ones for security.",
+  "otpVerification":"OTP Verification",
+  "weWillSendOtp":"We will send you a one-time to this mobile number",
+  "enterOtp":"Enter the OTP send to",
+  "enterMobileNumber":"Enter Mobile Number",
+  "didntRecieveOtp":"Didn’t you receive the OTP?",
+  "resendOtp":"Resend OTP",
+  "getOtp":"Get OTP",
+  "verify":"verify"
 
 }

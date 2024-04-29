@@ -25,7 +25,7 @@ class BuildInformationCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          BuildFormCheckout(
+          BuildFormUnderLine(
             inputType: TextInputType.text,
             hint: locale.hintAddress,
             title: locale.addressDetails,
@@ -38,7 +38,7 @@ class BuildInformationCard extends StatelessWidget {
           SizedBox(
             height: 15.h,
           ),
-          BuildFormCheckout(
+          BuildFormUnderLine(
             inputType: TextInputType.text,
             suffixIcon: Icon(
               Icons.location_on_sharp,
@@ -55,7 +55,7 @@ class BuildInformationCard extends StatelessWidget {
           SizedBox(
             height: 15.h,
           ),
-          BuildFormCheckout(
+          BuildFormUnderLine(
             inputType: TextInputType.number,
             hint: '1145465788',
             title: locale.mobile,
@@ -73,7 +73,7 @@ class BuildInformationCard extends StatelessWidget {
             children: [
               SizedBox(
                 width: 120.w,
-                child: BuildFormCheckout(
+                child: BuildFormUnderLine(
                   inputType: TextInputType.text,
                   hint: 'Akram',
                   title:locale.firstName,
@@ -86,7 +86,7 @@ class BuildInformationCard extends StatelessWidget {
               ),
               SizedBox(
                 width: 120.w,
-                child: BuildFormCheckout(
+                child: BuildFormUnderLine(
                   inputType: TextInputType.text,
                   hint: 'Ahmed',
                   title: locale.lastName,
