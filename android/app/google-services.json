@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "707857059057",
+    "project_id": "mham-a2551",
+    "storage_bucket": "mham-a2551.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:707857059057:android:fdfad0f6387f0af50a6d50",
+        "android_client_info": {
+          "package_name": "com.Mham"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSbijFbso7PP86Xx68KbeBmlBevq_rwj8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:707857059057:android:ddb3280d8732429f0a6d50",
+        "android_client_info": {
+          "package_name": "com.example.mham"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSbijFbso7PP86Xx68KbeBmlBevq_rwj8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
