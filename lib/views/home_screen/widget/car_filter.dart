@@ -6,7 +6,9 @@ import 'package:mham/core/components/multi_selected_item_component.dart';
 import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/image_constant.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
+import 'package:mham/views/get_start_screen/get_start_screen.dart';
 import 'package:mham/views/home_screen/widget/request_scrap.dart';
 
 class BuildCarFilter extends StatelessWidget {
@@ -36,12 +38,17 @@ class BuildCarFilter extends StatelessWidget {
               fontSize: 8.sp,
 
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return BuildRequestScrap();
-                  },
-                );
+                if(CacheHelper.getData(key: AppConstant.token) == null) {
+                  Helper.push(context, GetStartScreen());
+                }else{
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return BuildRequestScrap();
+                    },
+                  );
+                }
+
               },
               backgorundColor: color.scaffoldBackgroundColor,
               colorText: color.primaryColor),

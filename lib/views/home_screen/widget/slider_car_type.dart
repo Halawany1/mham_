@@ -2,8 +2,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
+import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/helper/helper.dart';
+import 'package:mham/core/network/local.dart';
 import 'package:mham/views/home_screen/home_screen.dart';
 import 'package:mham/views/see_all_screen/see_all_screen.dart';
 
@@ -51,8 +53,9 @@ class BuildSliderCarType extends StatelessWidget {
                   onTap: () {
                     cubit.getAllProduct(
                         carId: index + 1);
+                    cubit.carController.clearAllSelection();
                     Helper.push(context,
-                        SeeAllScreen(title:''));
+                        SeeAllScreen(title:'',carType: true,));
                   },
                   child: Image.asset(
                     ImageConstant.cars(index),

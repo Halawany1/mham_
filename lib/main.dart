@@ -12,6 +12,7 @@ import 'package:mham/controller/cart_cubit/cart_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/controller/profile_cubit/profile_cubit.dart';
+import 'package:mham/core/components/show_toast.dart';
 import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/constent/image_constant.dart';
@@ -26,14 +27,31 @@ import 'package:mham/views/on_boarding_screen/on_boarding_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+Future<void> backgroundMessageHandler(RemoteMessage message) async {
+  ShowToast(message: 'on BackgroundMessage', state: ToastState.SUCCESS);
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheHelper.init();
   await DioHelper.init();
  //await CacheHelper.deleteAllData();
- //  await Firebase.initializeApp();
- //  var token = await FirebaseMessaging.instance.getToken();
- //  print(token);
+  await Firebase.initializeApp();
+  var token = await FirebaseMessaging.instance.getToken();
+  if(CacheHelper.getData(key:AppConstant.fcmToken)==null){
+    CacheHelper.saveData(key: AppConstant.fcmToken,
+        value: token);
+  }
+//  print(token);
+  FirebaseMessaging.onMessage.listen((event) {
+    ShowToast(message: 'on Message', state: ToastState.SUCCESS);
+  });
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    ShowToast(message: 'on Message Opened App', state: ToastState.SUCCESS);
+  });
+  FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
+
+  await ScreenUtil.ensureScreenSize();
 
   Bloc.observer = MyBlocObserver();
   SystemChrome.setPreferredOrientations([
@@ -50,7 +68,7 @@ void main() async {
   } else {
     widget = const LayoutScreen();
   }
-  print(CacheHelper.getData(key: AppConstant.token));
+ print(CacheHelper.getData(key: AppConstant.token));
   runApp(
     MyApp(
       widget: widget,

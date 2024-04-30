@@ -5,7 +5,9 @@ import 'package:meta/meta.dart';
 import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/views/home_screen/home_screen.dart';
+import 'package:mham/views/order_screen/order_screen.dart';
 import 'package:mham/views/profile_screen/profile_screen.dart';
+import 'package:mham/views/wallet_screen/wallet_screen.dart';
 part 'layout_state.dart';
 
 class LayoutCubit extends Cubit<LayoutState> {
@@ -15,11 +17,14 @@ class LayoutCubit extends Cubit<LayoutState> {
 
   List<Widget>screens=[
     HomeScreen(),
+    OrderScreen(),
+    WalletScreen(),
    ProfileScreen(),
   ];
   int index=0;
   void changeIndex(int value) {
-    index=value;
+
+      index=value;
     emit(LayoutChangeIndexState());
   }
 
@@ -38,9 +43,4 @@ class LayoutCubit extends Cubit<LayoutState> {
     emit(LayoutChangeThemeModeState());
   }
 
-  bool hideNav=false;
-  void changeHideNav(bool value) {
-    hideNav=value;
-    emit(LayoutChangeHideNavState());
-  }
 }

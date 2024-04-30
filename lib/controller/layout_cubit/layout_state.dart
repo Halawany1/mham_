@@ -12,4 +12,4 @@ class LayoutChangeLanguageState extends LayoutState {}
 
 class LayoutChangeThemeModeState extends LayoutState {}
 
-class LayoutChangeHideNavState extends LayoutState {}
+

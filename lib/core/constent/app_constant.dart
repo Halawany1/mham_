@@ -5,4 +5,5 @@ class   AppConstant {
   static String theme="theme";
   static String businessId="businessId";
   static String indexProduct="indexProduct";
+  static String fcmToken="fcmToken";
 }

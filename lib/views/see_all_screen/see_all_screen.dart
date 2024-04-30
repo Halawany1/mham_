@@ -17,9 +17,12 @@ import 'package:mham/views/home_screen/widget/car_filter.dart';
 import 'package:mham/views/home_screen/widget/products_not_found.dart';
 
 class SeeAllScreen extends StatelessWidget {
-  const SeeAllScreen({super.key, required this.title});
+  const SeeAllScreen({super.key,
+     this.carType=false,
+    required this.title});
 
   final String title;
+  final bool carType;
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +32,13 @@ class SeeAllScreen extends StatelessWidget {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         var cubit = context.read<HomeCubit>();
-
         return WillPopScope(
-          onWillPop: () async {
+          onWillPop: ()async {
             cubit.productModel = null;
-            CacheHelper.removeData(key: AppConstant.businessId);
+            CacheHelper.removeData(
+                key: AppConstant.businessId);
             Helper.pop(context);
+            cubit.getAllProduct();
             return true;
           },
           child: Scaffold(
@@ -80,6 +84,7 @@ class SeeAllScreen extends StatelessWidget {
                                   CacheHelper.removeData(
                                       key: AppConstant.businessId);
                                   Helper.pop(context);
+                                  cubit.getAllProduct();
                                 },
                                 child: Icon(
                                   LayoutCubit.get(context).lang == 'en'
@@ -111,12 +116,12 @@ class SeeAllScreen extends StatelessWidget {
                         if (CacheHelper.getData(key: AppConstant.businessId) ==
                                 1 ||
                             CacheHelper.getData(key: AppConstant.businessId) ==
-                                6)
+                                6||carType)
                           BuildCarFilter(),
                         if (CacheHelper.getData(key: AppConstant.businessId) ==
                                 1 ||
                             CacheHelper.getData(key: AppConstant.businessId) ==
-                                6)
+                                6||carType)
                           SizedBox(
                             height: 10.h,
                           ),
@@ -164,8 +169,7 @@ class SeeAllScreen extends StatelessWidget {
                                                 .productsId!);
                                         cubit.increaseReview(cubit
                                             .allProducts[index].productsId!);
-                                        LayoutCubit.get(context)
-                                            .changeHideNav(true);
+
                                         Helper.push(context, DetailsScreen());
                                       },
                                       child: BuildProductCard(

@@ -200,6 +200,12 @@
   "didntRecieveOtp":"Didn’t you receive the OTP?",
   "resendOtp":"Resend OTP",
   "getOtp":"Get OTP",
-  "verify":"verify"
+  "verify":"verify",
+  "startYourCarParts": "Start Your Car Spare Parts Buying Journey With Us",
+  "welcomeToOurSparePartsCategory": "Welcome to our \"Spare Parts\" category",
+  "startYourAutoPartsJourneyWithUs":
+  "Start your auto parts journey with us"
+
+
 
 }

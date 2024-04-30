@@ -20,18 +20,16 @@ class Helper {
     return formattedDateTime;
   }
   static void push(BuildContext context, Widget widget) {
-    LayoutCubit.get(context).changeHideNav(true);
     Navigator.push(context, MaterialPageRoute(builder:
         (context) => widget,));
   }
 
   static void pushReplacement(BuildContext context, Widget widget) {
-    LayoutCubit.get(context).changeHideNav(false);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder:
-        (context) => widget,));
+    Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder:
+        (context) => widget,),(route) => false,);
   }
   static void pop(BuildContext context) {
-    LayoutCubit.get(context).changeHideNav(false);
    Navigator.pop(context);
   }
 

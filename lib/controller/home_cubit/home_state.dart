@@ -136,3 +136,9 @@ class ErrorReturnOrderState extends HomeState {
 
   ErrorReturnOrderState(this.error);
 }
+class LoadingGetNotificationState extends HomeState {}
+
+class SuccessGetNotificationState extends HomeState {}
+
+class ErrorGetNotificationState extends HomeState {}
+

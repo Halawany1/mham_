@@ -201,6 +201,9 @@
   "didntRecieveOtp":"لم تستلم OTP؟",
   "resendOtp":"اعادة ارسال OTP",
   "getOtp":"احصل على OTP",
-  "verify":"تحقق"
-
+  "verify":"تحقق",
+  "startYourCarParts": "ابدأ بشراء قطع غيار السيارة معنا",
+  "welcomeToOurSparePartsCategory": "مرحبا بك في قسم القطع المفقودة",
+  "startYourAutoPartsJourneyWithUs":
+  "ابدأ مشروعك الاستضافة بشكل جزئي للمصانع السيارية"
 }

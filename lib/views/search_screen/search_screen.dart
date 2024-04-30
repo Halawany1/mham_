@@ -23,6 +23,7 @@ class SearchScreen extends StatelessWidget {
         var cubit = context.read<HomeCubit>();
         return WillPopScope(
           onWillPop: () async{
+            cubit.getAllProduct();
             Helper.pop(context);
             return true;
           },
@@ -79,8 +80,8 @@ class SearchScreen extends StatelessWidget {
                       },
                       child: BuildProductCard(
                         id: cubit.allProducts[index].productsId!,
-                        inFavorite: cubit.allProducts[index].inFavourite!,
-                        inCart: cubit.allProducts[index].inCart!,
+                        inFavorite: cubit.allProducts[index].inFavourite??false,
+                        inCart: cubit.allProducts[index].inCart??false,
                         isOffer: cubit.allProducts[index].isOffer!,
                         offerPrice: cubit.allProducts[index].offerPrice,
                         description: cubit

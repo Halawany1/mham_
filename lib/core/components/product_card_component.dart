@@ -14,7 +14,6 @@ import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
-import 'package:mham/models/product_model.dart';
 import 'package:mham/views/checkout_screen/checkout_screen.dart';
 import 'package:mham/views/get_start_screen/get_start_screen.dart';
 
@@ -226,11 +225,17 @@ class BuildProductCard extends StatelessWidget {
                 text: locale.buyNow,
                 width: 100.w,
                 onPressed: () {
-                  Helper.push(context, CheckoutScreen(
-                    totalPrice: double.parse(price.toString()),
-                    oneProductName: title,
-                    price: double.parse(price.toString()),
-                  ));
+                  if(CacheHelper.getData(key: AppConstant.token)==null){
+                    Helper.push(context, GetStartScreen());
+
+                  }else{
+                    Helper.push(context, CheckoutScreen(
+                      totalPrice: double.parse(price.toString()),
+                      oneProductName: title,
+                      price: double.parse(price.toString()),
+                    ));
+                  }
+
                 },),
             ),
           ],

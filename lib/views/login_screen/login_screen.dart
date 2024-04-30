@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
+import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/core/components/3rd_party_services_component.dart';
 import 'package:mham/core/components/material_button_component.dart';
@@ -11,6 +12,7 @@ import 'package:mham/core/components/text_and_link_row_component.dart';
 import 'package:mham/core/components/text_form_field_component.dart';
 import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/error/validation.dart';
+import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/layout/layout_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -39,9 +41,8 @@ class LoginScreen extends StatelessWidget {
           clearAllData();
           CacheHelper.saveData(
               key: AppConstant.token, value: cubit.userModel!.token);
-          LayoutCubit.get(context).changeHideNav(false);
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => LayoutScreen(),));
+          Helper.pushReplacement(context, LayoutScreen());
+          HomeCubit.get(context).getNotification();
         }
         if (state is ErrorLoginUserState) {
          showMessageResponse(message: state.error,

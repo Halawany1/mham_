@@ -186,8 +186,10 @@ class DetailsScreen extends StatelessWidget {
                                           fontWeight: FontWeight.bold,
                                           color: color.backgroundColor),
                                     ),
-                                    if (!cubit
-                                        .oneProductModel!.product!.inCart!)
+                                    if (cubit
+                                        .oneProductModel!.product!.inCart==false&&
+                                    cubit.oneProductModel!.product!.inCart!=null
+                                    )
                                       Row(
                                         children: [
                                           InkWell(
@@ -294,8 +296,8 @@ class DetailsScreen extends StatelessWidget {
                                     height: 15.h,
                                   ),
                                 ),
-
-                                BuildAddRate(),
+                                if(CacheHelper.getData(key: AppConstant.token)!=null)
+                                  BuildAddRate(),
                                 SizedBox(
                                   height: 90.h,
                                 ),

@@ -22,30 +22,28 @@ class BuildBottomSheet extends StatelessWidget {
       color: color.hoverColor,
       padding: EdgeInsets.all(15.h),
       child: BuildDefaultButton(
-          text: cubit.oneProductModel!.product!.inCart!
+          text: cubit.oneProductModel!.product!.inCart!=null&&
+              cubit.oneProductModel!.product!.inCart==true
               ? locale.addedToCart
               : locale.addToCart,
           borderRadius: 12.r,
           height: 32.h,
           onPressed: () {
-            if (!cubit
-                .oneProductModel!.product!.inCart!) {
-              if (CacheHelper.getData(
-                  key: AppConstant.token) ==
-                  null) {
-                Helper.push(context, GetStartScreen());
-              } else {
-                CartCubit.get(context).addToCart(
-                    token: CacheHelper.getData(
-                        key: AppConstant.token),
-                    id: cubit.oneProductModel!.product!
-                        .productsId!,
-                    quantity: cubit.quantity);
-              }
+
+            if (cubit.oneProductModel!.product!.inCart==null) {
+              Helper.push(context, GetStartScreen());
+            }else{
+              CartCubit.get(context).addToCart(
+                  token: CacheHelper.getData(
+                      key: AppConstant.token),
+                  id: cubit.oneProductModel!.product!
+                      .productsId!,
+                  quantity: cubit.quantity);
             }
           },
           backgorundColor:
-          cubit.oneProductModel!.product!.inCart!
+          cubit.oneProductModel!.product!.inCart!=null&&
+              cubit.oneProductModel!.product!.inCart==true
               ? Colors.grey
               : color.backgroundColor,
           colorText: color.primaryColor),

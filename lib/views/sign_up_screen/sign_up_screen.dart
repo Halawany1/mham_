@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
+import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/core/components/3rd_party_services_component.dart';
 import 'package:mham/core/components/drop_down_menu.dart';
@@ -14,6 +15,7 @@ import 'package:mham/core/components/text_form_field_component.dart';
 import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/error/validation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/layout/layout_screen.dart';
 
@@ -43,13 +45,11 @@ void clearAllData() {
       listener: (context, state) {
         var cubit=context.read<AuthenticationCubit>();
         if (state is SuccessRegisterUserState) {
-          print(cubit.userModel!.token);
           CacheHelper.saveData(
               key: AppConstant.token,
               value: cubit.userModel!.token);
-          LayoutCubit.get(context).changeHideNav(false);
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => LayoutScreen(),));
+          Helper.pushReplacement(context, LayoutScreen());
+          HomeCubit.get(context).getNotification();
         }
 
         if (state is ErrorRegisterUserState) {

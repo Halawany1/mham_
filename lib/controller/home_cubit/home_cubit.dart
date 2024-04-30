@@ -60,7 +60,7 @@ class HomeCubit extends Cubit<HomeState> {
         if (search != null) 'search': search,
         'pageSize': pageSize,
       },
-      token: CacheHelper.getData(key: AppConstant.token),
+     token: CacheHelper.getData(key: AppConstant.token),
     ).then((value) {
       favoriteProducts.clear();
       if (search != null || search == '') {
@@ -324,6 +324,7 @@ class HomeCubit extends Cubit<HomeState> {
       });
       emit(SuccessGetAllOrdersState());
     }).catchError((error) {
+      print(error.toString());
       emit(ErrorGetAllOrdersState(error.toString()));
     });
   }
@@ -449,7 +450,6 @@ class HomeCubit extends Cubit<HomeState> {
 
   void returnOrder({required List<Map<String,dynamic>> returns}) {
     emit(LoadingReturnOrderState());
-    print(returns);
     DioHelper.postData(
         url: ApiConstant.returnOrder,
         data: {
@@ -476,4 +476,19 @@ void changeQuantityValue({required String value}) {
   emit(ChangeQuantityState());
 }
 
+void getNotification() {
+  emit(LoadingGetNotificationState());
+ DioHelper.getData(
+   token: CacheHelper.getData(key: AppConstant.token),
+     url: ApiConstant.notifications)
+     .then((value) {
+       emit(SuccessGetNotificationState());
+ }).catchError((error){
+   if(error is DioError){
+     print(error.response!.data);
+   }
+   print(error.toString());
+   emit(ErrorGetNotificationState());
+ });
+}
 }

@@ -52,7 +52,8 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     DioHelper.postData(url: ApiConstant.login,
         data: {
           "phonenumber": phone,
-          "password": password
+          "password": password,
+          "fcmToken": CacheHelper.getData(key: AppConstant.fcmToken),
         }
     ).then((value) {
       userModel = UserModel.fromJson(value.data);
@@ -177,7 +178,8 @@ String ?countryId;
           "password":password,
           "phonenumber" : phone,
           "country" :countryId,
-          "confirmPassword" : confirmPassword
+          "confirmPassword" : confirmPassword,
+          "fcmToken": CacheHelper.getData(key: AppConstant.fcmToken),
         }
     ).then((value) {
       userModel = UserModel.fromJson(value.data);

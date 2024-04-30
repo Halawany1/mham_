@@ -225,7 +225,7 @@ class Car {
 }
 
 class ProductRating {
-  int? ratingNum;
+  dynamic ratingNum;
   String? review;
   User? user;
 
@@ -250,11 +250,11 @@ class User {
 }
 
 class RatePercentage {
-  int? oneStar;
-  int? twoStar;
-  int? threeStar;
-  int? fourStar;
-  int? fiveStar;
+  dynamic oneStar;
+  dynamic twoStar;
+  dynamic threeStar;
+  dynamic fourStar;
+  dynamic fiveStar;
 
 
   RatePercentage.fromJson(Map<String, dynamic> json) {

@@ -49,8 +49,9 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   smooth_page_indicator: ^1.1.0
   flutter_rating_bar: ^4.0.1
-  persistent_bottom_nav_bar: ^5.0.2
+  salomon_bottom_bar: ^3.3.2
   multi_dropdown: ^2.1.4
+  fluttertoast: ^8.2.5
   carousel_slider: ^4.2.1
   another_stepper: ^1.2.2
   rating_summary: ^1.0.2+1

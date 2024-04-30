@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
+import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/core/components/3rd_party_services_component.dart';
 import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/constent/color_constant.dart';
@@ -18,7 +20,14 @@ class GetStartScreen extends StatelessWidget {
         .of(context)
         .textTheme;
     final locale = AppLocalizations.of(context);
+void clearAllData() {
+  phoneController.clear();
+  passwordController.clear();
+  userNameController.clear();
+  AuthenticationCubit.get(context).countryId=null;
+  confirmPasswordController.clear();
 
+}
     return WillPopScope(
       onWillPop: () async{
         Helper.pop(context);
@@ -58,6 +67,7 @@ class GetStartScreen extends StatelessWidget {
                   ),
                   BuildDefaultButton(text: locale.signIn,
                       onPressed: () {
+                        clearAllData();
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) => LoginScreen(),));
                       },
@@ -66,6 +76,7 @@ class GetStartScreen extends StatelessWidget {
                   SizedBox(height: 20.h,),
                   BuildDefaultButton(text:locale.signUp,
                       onPressed: () {
+                        clearAllData();
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) => SignUpScreen(),));
                       },

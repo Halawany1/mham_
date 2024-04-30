@@ -4,21 +4,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mham/controller/cart_cubit/cart_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/core/components/laoding_animation_component.dart';
 import 'package:mham/core/components/product_card_component.dart';
 import 'package:mham/core/components/row_product_and_see_all_component.dart';
+import 'package:mham/core/components/search_form_filed_component.dart';
 import 'package:mham/core/components/snak_bar_component.dart';
+import 'package:mham/core/constent/app_constant.dart';
+import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/helper/helper.dart';
+import 'package:mham/core/network/local.dart';
+import 'package:mham/views/cart_screen/cart_screen.dart';
 import 'package:mham/views/details_product_screen/details_product_screen.dart';
+import 'package:mham/views/get_start_screen/get_start_screen.dart';
 import 'package:mham/views/home_screen/widget/all_categories.dart';
 import 'package:mham/views/home_screen/widget/car_filter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/views/home_screen/widget/products_not_found.dart';
 import 'package:mham/views/home_screen/widget/slider_car_type.dart';
 import 'package:mham/views/home_screen/widget/top_app_bar_and_slider.dart';
+import 'package:mham/views/notification_screen/notification_screen.dart';
+import 'package:mham/views/search_screen/search_screen.dart';
 import 'package:mham/views/see_all_screen/see_all_screen.dart';
 
 final CarouselController carouselController = CarouselController();
@@ -53,14 +62,16 @@ class HomeScreen extends StatelessWidget {
                   var color = Theme.of(context);
                   return AlertDialog(
                     backgroundColor: color.cardColor,
-                    title: Text(locale.requestScrap),
+                    title: Text(locale.requestScrap,style: font.bodyLarge!.copyWith(
+                      fontSize: 20.sp
+                    ),),
                     content: Container(
                       height: 220.h,
                       decoration: BoxDecoration(
-                        color: Color(0xFFE4E4E4),
-                        borderRadius: BorderRadius.circular(10),
+                        color: color.primaryColor.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(10.r),
                       ),
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(10.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -114,11 +125,17 @@ class HomeScreen extends StatelessWidget {
                               SizedBox(
                                 width: 5.w,
                               ),
-                              Text(
-                                '+965 1234 5678',
-                                style: font.bodyMedium!.copyWith(
-                                    fontSize: 15.sp,
-                                    fontWeight: FontWeight.bold),
+                              SizedBox(
+                                width: 120.w,
+                                child: FittedBox(
+                                  fit: BoxFit.contain,
+                                  child: Text(
+                                    '+965 1234 5678',
+                                    style: font.bodyMedium!.copyWith(
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -129,10 +146,62 @@ class HomeScreen extends StatelessWidget {
                 },
               );
             }
+            if(state is ErrorAddScrapState){
+              showMessageResponse(message: state.error,
+                  context: context, success: false);
+            }
           },
           builder: (context, state) {
             var cubit = context.read<HomeCubit>();
             return Scaffold(
+              appBar: AppBar(
+                surfaceTintColor: Colors.transparent,
+                actions: [
+                  Padding(
+                    padding:  EdgeInsets.only(right: 15.w,top: 10.h),
+                    child: InkWell(
+                      onTap: () {
+                        if (CacheHelper.getData(key: AppConstant.token) == null) {
+                          Helper.push(context, GetStartScreen());
+                        } else {
+                          Helper.push(context, NotificationScreen());
+                        }
+                      },
+                      child: Icon(
+                        FontAwesomeIcons.bell,
+                        color: color.primaryColor,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:  EdgeInsets.only(right: 20.w,top: 10.h),
+                    child: InkWell(
+                      onTap: () {
+                        if (CacheHelper.getData(key: AppConstant.token) != null) {
+                          CartCubit.get(context).getCart(
+                              token: CacheHelper.getData(key: AppConstant.token));
+                          Helper.push(context, CartScreen());
+                        } else {
+                          Helper.push(context, GetStartScreen());
+                        }
+                      },
+                      child: Icon(
+                        FontAwesomeIcons.shoppingCart,
+                        color: ColorConstant.backgroundAuth,
+                      ),
+                    ),
+                  ),
+                ],
+                title:  Padding(
+                  padding:  EdgeInsets.only(top: 10.h),
+                  child: BuildSearchFormField(
+                    onTap: () {
+                      Helper.push(context, SearchScreen());
+                    },
+                    readOnly: true,
+                  ),
+                ),
+              ),
               body: cubit.productModel == null
                   ? Center(
                       child: BuildImageLoader(assetName: ImageConstant.logo))
@@ -150,7 +219,7 @@ class HomeScreen extends StatelessWidget {
                               physics: const BouncingScrollPhysics(),
                               child: Column(
                                 children: [
-                                  BuildTopAppBarAndSlider(),
+                                  BuildAds(),
                                   Text(
                                     locale.whatAreYouLookingFor,
                                     style: font.bodyMedium,
@@ -170,7 +239,6 @@ class HomeScreen extends StatelessWidget {
                                     text: locale.products,
                                     empty: false,
                                     onTap: () {
-                                      cubit.productModel = null;
                                       Helper.push(
                                           context,
                                           SeeAllScreen(
@@ -265,7 +333,7 @@ class HomeScreen extends StatelessWidget {
 
                                   BuildSliderCarType(),
                                   SizedBox(
-                                    height: 35.h,
+                                    height: 20.h,
                                   ),
                                 ],
                               ),
