@@ -4,12 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:mham/core/constent/api_constant.dart';
 import 'package:mham/core/constent/app_constant.dart';
+import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/core/network/remote.dart';
 import 'package:mham/models/car_model.dart';
+import 'package:mham/models/notification_model.dart';
 import 'package:mham/models/one_product_model.dart';
 import 'package:mham/models/order_model.dart';
 import 'package:mham/models/product_model.dart';
+import 'package:mham/models/product_rating_model.dart';
 import 'package:mham/models/request_scrap_model.dart';
 import 'package:mham/models/return_order_model.dart';
 
@@ -25,7 +28,8 @@ class HomeCubit extends Cubit<HomeState> {
   ProductModel? productModel;
   List<Products> homeProducts = [];
   List<Products> allProducts = [];
-  List<Products>favoriteProducts = [];
+  List<Products> favoriteProducts = [];
+
   void getAllProduct({
     int page = 1,
     int pageSize = 5,
@@ -36,58 +40,62 @@ class HomeCubit extends Cubit<HomeState> {
     int? availableYearId,
     int? busniessId,
     String? search,
-  }) {
-    if (page == 1) {
-      homeProducts.clear();
-      allProducts.clear();
-    }
-    if (search != null || search == '') {
-      allProducts.clear();
-    }
-    if (page == 1) {
-      emit(LoadingGetAllProduct());
-    }
-    DioHelper.getData(
-      url: ApiConstant.product,
-      query: {
-        'page': page,
-        if (busniessId != null) 'busCat_id': busniessId,
-        if (carId != null) 'car_id': carId,
-        if (carModelId != null) 'carModel_id': carModelId,
-        if (availableYearId != null) 'availableYears_id': availableYearId,
-        if (price != null && price != 0.0) 'price': price,
-        if (type != null) 'type': type,
-        if (search != null) 'search': search,
-        'pageSize': pageSize,
-      },
-     token: CacheHelper.getData(key: AppConstant.token),
-    ).then((value) {
-      favoriteProducts.clear();
-      if (search != null || search == '') {
-        allProducts.clear();
-      }
+  })async {
+    if(await Helper.hasConnection()){
       if (page == 1) {
         homeProducts.clear();
         allProducts.clear();
       }
-      productModel = ProductModel.fromJson(value.data);
-      if (homeProducts.isEmpty) {
-        productModel!.products!.forEach((element) {
-          homeProducts.add(element);
-        });
+      if (search != null || search == '') {
+        allProducts.clear();
       }
-      productModel!.products!.forEach((element) {
-        allProducts.add(element);
-        if(element.inFavourite!){
-          favoriteProducts.add(element);
+      if (page == 1) {
+        emit(LoadingGetAllProduct());
+      }
+      DioHelper.getData(
+        url: ApiConstant.product,
+        query: {
+          'page': page,
+          if (busniessId != null) 'busCat_id': busniessId,
+          if (carId != null) 'car_id': carId,
+          if (carModelId != null) 'carModel_id': carModelId,
+          if (availableYearId != null) 'availableYears_id': availableYearId,
+          if (price != null && price != 0.0) 'price': price,
+          if (type != null) 'type': type,
+          if (search != null) 'search': search,
+          'pageSize': pageSize,
+        },
+        token: CacheHelper.getData(key: AppConstant.token),
+      ).then((value) {
+        favoriteProducts.clear();
+        if (search != null || search == '') {
+          allProducts.clear();
         }
-      });
+        if (page == 1) {
+          homeProducts.clear();
+          allProducts.clear();
+        }
+        productModel = ProductModel.fromJson(value.data);
+        if (homeProducts.isEmpty) {
+          productModel!.products!.forEach((element) {
+            homeProducts.add(element);
+          });
+        }
+        productModel!.products!.forEach((element) {
+          allProducts.add(element);
+          if (element.inFavourite!) {
+            favoriteProducts.add(element);
+          }
+        });
 
-      emit(SuccessGetAllProduct());
-    }).catchError((error) {
-      print(error.toString());
-      emit(ErrorGetAllProduct(error.toString()));
-    });
+        emit(SuccessGetAllProduct());
+      }).catchError((error) {
+        print(error.toString());
+        emit(ErrorGetAllProduct(error.toString()));
+      });
+    }else{
+      emit(NoInternetHomeState());
+    }
   }
 
   List<ValueItem> carType = [];
@@ -98,33 +106,38 @@ class HomeCubit extends Cubit<HomeState> {
   List<ValueItem> selectedCarModels = [];
   CarCategoryModel? carModel;
 
-  void getCarModels() {
-    carType.clear();
-    selectedCarType.clear();
-    carModels.clear();
-    selectedCarModels.clear();
-    selectedCarYears.clear();
-    carYears.clear();
-    DioHelper.getData(url: ApiConstant.carModelsAvailable, )
-        .then((value) {
+  void getCarModels() async{
+    if( await Helper.hasConnection()){
       carType.clear();
       selectedCarType.clear();
       carModels.clear();
       selectedCarModels.clear();
-      carModel = CarCategoryModel.fromJson(value.data);
-      carModel!.models!.forEach((element) {
-        if (!carType.any((item) => item.value == element.carModel!.carId)) {
-          carType.add(ValueItem(
-            label: element.carModel!.car!.carName!,
-            value: element.carModel!.carId,
-          ));
-        }
+      selectedCarYears.clear();
+      carYears.clear();
+      DioHelper.getData(
+        url: ApiConstant.carModelsAvailable,
+      ).then((value) {
+        carType.clear();
+        selectedCarType.clear();
+        carModels.clear();
+        selectedCarModels.clear();
+        carModel = CarCategoryModel.fromJson(value.data);
+        carModel!.models!.forEach((element) {
+          if (!carType.any((item) => item.value == element.carModel!.carId)) {
+            carType.add(ValueItem(
+              label: element.carModel!.car!.carName!,
+              value: element.carModel!.carId,
+            ));
+          }
+        });
+        carController.setOptions(carType);
+        emit(SuccessGetCarModelsState());
+      }).catchError((error) {
+        emit(ErrorGetCarModelsState(error));
       });
-      carController.setOptions(carType);
-      emit(SuccessGetCarModelsState());
-    }).catchError((error) {
-      emit(ErrorGetCarModelsState(error));
-    });
+    }else{
+      emit(NoInternetHomeState());
+    }
   }
 
   var carController = MultiSelectController();
@@ -219,17 +232,21 @@ class HomeCubit extends Cubit<HomeState> {
     emit(ChangeQuantityState());
   }
 
-  void increaseReview(int id) {
-    DioHelper.getData(
-            url: ApiConstant.increaseReview + id.toString(), )
-        .then((value) {
-      emit(IncreaseReviewState());
-    }).catchError((error) {
-      if (error is DioError) {
-        print(error.response!.data);
-      }
-      emit(ErrorIncreaseReviewState(error));
-    });
+  void increaseReview(int id) async{
+   if( await Helper.hasConnection()){
+     DioHelper.getData(
+       url: ApiConstant.increaseReview + id.toString(),
+     ).then((value) {
+       emit(IncreaseReviewState());
+     }).catchError((error) {
+       if (error is DioError) {
+         print(error.response!.data);
+       }
+       emit(ErrorIncreaseReviewState(error));
+     });
+   }else{
+     emit(NoInternetHomeState());
+   }
   }
 
   int index = 0;
@@ -241,92 +258,102 @@ class HomeCubit extends Cubit<HomeState> {
 
   RequestScrapModel? requestScrapModel;
 
-  void addScrap({required String description}) {
+  void addScrap({required String description}) async{
+    if(await Helper.hasConnection()){
     emit(LoadingAddScrapState());
     DioHelper.postData(
-            url: ApiConstant.addScrap,
-            data: {'description': description},
-            token: CacheHelper.getData(key: AppConstant.token),
-            )
-        .then((value) {
-      requestScrapModel = RequestScrapModel.fromJson(value.data);
-      emit(SuccessAddScrapState(requestScrapModel!));
+    url: ApiConstant.addScrap,
+    data: {'description': description},
+    token: CacheHelper.getData(key: AppConstant.token),
+    ).then((value) {
+    requestScrapModel = RequestScrapModel.fromJson(value.data);
+    emit(SuccessAddScrapState(requestScrapModel!));
     }).catchError((error) {
-      if (error is DioError) {
-        print(error.response!.data);
-        String data = error.response!.data['message'][0];
-        emit(ErrorAddScrapState(data));
-      } else {
-        emit(ErrorAddScrapState(error));
-      }
+    if (error is DioError) {
+    print(error.response!.data);
+    String data = error.response!.data['message'][0];
+    emit(ErrorAddScrapState(data));
+    } else {
+    emit(ErrorAddScrapState(error));
+    }
     });
+    }else{
+      emit(NoInternetHomeState());
+    }
   }
 
   void addAndRemoveFavorite({
     required int id,
     int? busniessId,
-  }) {
-    emit(LoadingAddAndRemoveFavoriteState());
-    DioHelper.postData(
-            url: ApiConstant.addAndRemoveFavorite + id.toString(),
-            token: CacheHelper.getData(key: AppConstant.token),
-            )
-        .then((value) {
-      emit(SuccessAddAndRemoveFavoriteState());
-      getAllProduct(
-
-        busniessId: busniessId,
-      );
-    }).catchError((error) {
-      if (error is DioError) {
-        print(error.response!.data);
-      } else {
-        emit(ErrorAddAndRemoveFavoriteState(error));
-      }
-    });
+  }) async{
+   if(await Helper.hasConnection()){
+     emit(LoadingAddAndRemoveFavoriteState());
+     DioHelper.postData(
+       url: ApiConstant.addAndRemoveFavorite + id.toString(),
+       token: CacheHelper.getData(key: AppConstant.token),
+     ).then((value) {
+       emit(SuccessAddAndRemoveFavoriteState());
+       getAllProduct(
+         busniessId: busniessId,
+       );
+     }).catchError((error) {
+       if (error is DioError) {
+         print(error.response!.data);
+       } else {
+         emit(ErrorAddAndRemoveFavoriteState(error));
+       }
+     });
+   }else{
+     emit(NoInternetHomeState());
+   }
   }
 
   OrderModel? orderModel;
   List<Orders> allOrders = [];
   List<Orders> recentPurchases = [];
   List<Orders> returnsOrder = [];
+
   void getAllOrders() async {
-    allOrders.clear();
-    emit(LoadingGetAllOrdersState());
-    DioHelper.getData(
-      url: ApiConstant.orders,
-      token: CacheHelper.getData(key: AppConstant.token),
-    ).then((value) {
+    if(await Helper.hasConnection()){
       allOrders.clear();
-      recentPurchases.clear();
-      returnsOrder.clear();
-      orderModel = OrderModel.fromJson(value.data);
-      orderModel!.orders!.forEach((element) {
-        allOrders.add(element);
-      });
-      orderModel!.orders!.forEach((element) {
-        if (element.status == 'Delivered') {
-          recentPurchases.add(element);
-        }
-      });
-      recentPurchases.forEach((element) {
-        bool flag=false;
-        element.carts!.forEach((element) {
-          element.cartProducts!.forEach((element) {
-            if(!element.returnProduct!.isEmpty){
-              flag=true;
-            }
-          });
+      emit(LoadingGetAllOrdersState());
+      DioHelper.getData(
+        url: ApiConstant.orders,
+        token: CacheHelper.getData(key: AppConstant.token),
+      ).then((value) {
+        allOrders.clear();
+        recentPurchases.clear();
+        returnsOrder.clear();
+        orderModel = OrderModel.fromJson(value.data);
+        orderModel!.orders!.forEach((element) {
+          allOrders.add(element);
         });
-        if(!flag){
-          returnsOrder.add(element);
-        }
+        orderModel!.orders!.forEach((element) {
+          if (element.status == 'Delivered') {
+            recentPurchases.add(element);
+          }
+        });
+        recentPurchases.forEach((element) {
+          bool flag = false;
+          element.carts!.forEach((element) {
+            element.cartProducts!.forEach((element) {
+              if (!element.returnProduct!.isEmpty) {
+                flag = true;
+              }
+            });
+          });
+          if (!flag) {
+            returnsOrder.add(element);
+          }
+        });
+        emit(SuccessGetAllOrdersState());
+      }).catchError((error) {
+        print(error.toString());
+        emit(ErrorGetAllOrdersState(error.toString()));
       });
-      emit(SuccessGetAllOrdersState());
-    }).catchError((error) {
-      print(error.toString());
-      emit(ErrorGetAllOrdersState(error.toString()));
-    });
+    }else{
+      emit(NoInternetHomeState());
+    }
   }
 
   List<bool> cardProductDetails = [];
@@ -346,43 +373,50 @@ class HomeCubit extends Cubit<HomeState> {
   void cancelProduct({
     required int orderId,
     required int productId,
-  }) {
-    emit(LoadingCancelProductState());
-    DioHelper.putData(
-            url: ApiConstant.cancelProduct,
-            data: {'order_id': orderId, 'cartProduct_id': productId},
-            token: CacheHelper.getData(key: AppConstant.token),
-            )
-        .then((value) {
-      emit(SuccessCancelProductState());
-    }).catchError((error) {
-      if (error is DioError) {
-        print(error.response!.data);
-        emit(ErrorCancelProductState(error.response!.data['message'][0]));
-      } else {
-        emit(ErrorCancelProductState(error));
-      }
-    });
+  }) async{
+    if(await Helper.hasConnection()){
+      emit(LoadingCancelProductState());
+      DioHelper.putData(
+        url: ApiConstant.cancelProduct,
+        data: {'order_id': orderId, 'cartProduct_id': productId},
+        token: CacheHelper.getData(key: AppConstant.token),
+      ).then((value) {
+        emit(SuccessCancelProductState());
+      }).catchError((error) {
+        if (error is DioError) {
+          print(error.response!.data);
+          emit(ErrorCancelProductState(error.response!.data['message'][0]));
+        } else {
+          emit(ErrorCancelProductState(error));
+        }
+      });
+    }else{
+      emit(NoInternetHomeState());
+    }
   }
 
-  void cancelOrder({required int id}) {
-    emit(LoadingCancelOrderState());
-    DioHelper.putData(
-            url: ApiConstant.cancelOrder,
-            data: {'order_id': id},
-            token: CacheHelper.getData(key: AppConstant.token),
-            )
-        .then((value) {
-      emit(SuccessCancelOrderState());
-      getAllOrders();
-    }).catchError((error) {
-      if (error is DioError) {
-        print(error.response!.data);
-        emit(ErrorCancelOrderState(error.response!.data['message'][0]));
-      } else {
-        emit(ErrorCancelOrderState(error));
-      }
-    });
+  void cancelOrder({required int id}) async{
+ if(await Helper.hasConnection()){
+   emit(LoadingCancelOrderState());
+   DioHelper.putData(
+     url: ApiConstant.cancelOrder,
+     data: {'order_id': id},
+     token: CacheHelper.getData(key: AppConstant.token),
+   ).then((value) {
+     emit(SuccessCancelOrderState());
+     getAllOrders();
+   }).catchError((error) {
+     if (error is DioError) {
+       print(error.response!.data);
+       emit(ErrorCancelOrderState(error.response!.data['message'][0]));
+     } else {
+       emit(ErrorCancelOrderState(error));
+     }
+   });
+ }else{
+
+   emit(NoInternetHomeState());
+ }
   }
 
   int rate = 0;
@@ -392,103 +426,148 @@ class HomeCubit extends Cubit<HomeState> {
     emit(ChangeRateState());
   }
 
-  void addRate({required int id, String? comment, required int rate}) {
+  void addRate({required int id, String? comment, required int rate})async {
+  if(await Helper.hasConnection()){
     emit(LoadingAddRateState());
     DioHelper.postData(
-            url: ApiConstant.addRate + id.toString(),
-            data: {
-              "rateData": {
-                "rate": rate,
-                if (comment != null) "comment": comment //optinal
-              }
-            },
-            token: CacheHelper.getData(key: AppConstant.token),
-            )
-        .then((value) {
-      emit(SuccessAddRateState());
-      getProductDetails(id: id);
+    url: ApiConstant.addRate + id.toString(),
+    data: {
+    "rateData": {
+    "rate": rate,
+    if (comment != null) "comment": comment //optinal
+    }
+    },
+    token: CacheHelper.getData(key: AppConstant.token),
+    ).then((value) {
+    emit(SuccessAddRateState());
+    getProductDetails(id: id);
     }).catchError((error) {
-      if (error is DioError) {
-        print(error.response!.data);
-        emit(ErrorAddRateState(error.response!.data['message'][0]));
-      } else {
-        emit(ErrorAddRateState(error));
-      }
+    if (error is DioError) {
+    print(error.response!.data);
+    emit(ErrorAddRateState(error.response!.data['message'][0]));
+    } else {
+    emit(ErrorAddRateState(error));
+    }
     });
+  }else{
+    emit(NoInternetHomeState());
+    }
   }
 
   List<String> modelsCar = [];
   OneProductModel? oneProductModel;
 
-  void getProductDetails({required int id}) {
-    emit(LoadingGetProductDetailsState());
-    DioHelper.getData(
-            url: ApiConstant.productDetails + id.toString(),
-            token: CacheHelper.getData(key: AppConstant.token),
-            )
-        .then((value) {
-      modelsCar.clear();
-      oneProductModel = OneProductModel.fromJson(value.data);
-      oneProductModel!.product!.availableYears!.forEach((element) {
-        modelsCar.add(element.carModel!.car!.carName! +
-            ' ' +
-            element.carModel!.modelName! +
-            ' ' +
-            element.availableYear.toString());
-      });
-      emit(SuccessGetProductDetailsState());
-    }).catchError((error) {
-      if (error is DioError) {
-        print(error.response!.data);
-        emit(ErrorGetProductDetailsState(error.response!.data['message']));
-      } else {
-        print(error.toString());
-        emit(ErrorGetProductDetailsState(error.toString()));
-      }
-    });
-  }
-
-  void returnOrder({required List<Map<String,dynamic>> returns}) {
-    emit(LoadingReturnOrderState());
-    DioHelper.postData(
-        url: ApiConstant.returnOrder,
-        data: {
-          "returnData": returns
-        },
+  void getProductDetails({required int id}) async {
+    if (await Helper.hasConnection()) {
+      emit(LoadingGetProductDetailsState());
+      DioHelper.getData(
+        url: ApiConstant.productDetails + id.toString(),
         token: CacheHelper.getData(key: AppConstant.token),
-        )
-        .then((value) {
-      emit(SuccessReturnOrderState());
-    }).catchError((error) {
-      if (error is DioError) {
-        emit(ErrorReturnOrderState(error.response!.data['message'][0]));
-      } else {
-        print(error.toString());
-        emit(ErrorReturnOrderState(error));
-      }
-    });
+      ).then((value) {
+        modelsCar.clear();
+        oneProductModel = OneProductModel.fromJson(value.data);
+        oneProductModel!.product!.availableYears!.forEach((element) {
+          modelsCar.add(element.carModel!.car!.carName! +
+              ' ' +
+              element.carModel!.modelName! +
+              ' ' +
+              element.availableYear.toString());
+        });
+        emit(SuccessGetProductDetailsState());
+      }).catchError((error) {
+        if (error is DioError) {
+          print(error.response!.data);
+          emit(ErrorGetProductDetailsState(error.response!.data['message']));
+        } else {
+          print(error.toString());
+          emit(ErrorGetProductDetailsState(error.toString()));
+        }
+      });
+    } else {
+      emit(NoInternetHomeState());
+    }
   }
 
-  String ?quantityValue;
+  void returnOrder({required List<Map<String, dynamic>> returns}) async {
+    if (await Helper.hasConnection()) {
+      emit(LoadingReturnOrderState());
+      DioHelper.postData(
+        url: ApiConstant.returnOrder,
+        data: {"returnData": returns},
+        token: CacheHelper.getData(key: AppConstant.token),
+      ).then((value) {
+        emit(SuccessReturnOrderState());
+      }).catchError((error) {
+        if (error is DioError) {
+          emit(ErrorReturnOrderState(error.response!.data['message'][0]));
+        } else {
+          print(error.toString());
+          emit(ErrorReturnOrderState(error));
+        }
+      });
+    } else {
+      emit(NoInternetHomeState());
+    }
+  }
 
-void changeQuantityValue({required String value}) {
-  quantityValue = value;
-  emit(ChangeQuantityState());
-}
+  String? quantityValue;
 
-void getNotification() {
-  emit(LoadingGetNotificationState());
- DioHelper.getData(
-   token: CacheHelper.getData(key: AppConstant.token),
-     url: ApiConstant.notifications)
-     .then((value) {
-       emit(SuccessGetNotificationState());
- }).catchError((error){
-   if(error is DioError){
-     print(error.response!.data);
-   }
-   print(error.toString());
-   emit(ErrorGetNotificationState());
- });
-}
+  void changeQuantityValue({required String value}) {
+    quantityValue = value;
+    emit(ChangeQuantityState());
+  }
+
+  NotificationModel? notificationModel;
+
+  void getNotification() async {
+    if (await Helper.hasConnection()) {
+      emit(LoadingGetNotificationState());
+      DioHelper.getData(
+              token: CacheHelper.getData(key: AppConstant.token),
+              url: ApiConstant.notifications)
+          .then((value) {
+        notificationModel = NotificationModel.fromJson(value.data);
+        emit(SuccessGetNotificationState());
+      }).catchError((error) {
+        emit(ErrorGetNotificationState());
+      });
+    } else {
+      emit(NoInternetHomeState());
+    }
+  }
+
+  ProductRatingModel? productRatingModel;
+  List<Rating> productRating = [];
+  int currentPage = 1;
+
+  void increaseCurrentPage() {
+    currentPage++;
+    emit(IncreaseCurrentPageState());
+  }
+
+  void getProductRating({required int id, int page = 1, int limit = 10}) async {
+    if (page == 1) {
+      productRating.clear();
+      currentPage = 1;
+    }
+    if (await Helper.hasConnection()) {
+      emit(LoadingGetProductRatingState());
+      DioHelper.getData(
+              token: CacheHelper.getData(key: AppConstant.token),
+              query: {"page": page, "limit": limit, "product-id": id},
+              url: ApiConstant.productRating)
+          .then((value) {
+        productRatingModel = ProductRatingModel.fromJson(value.data);
+        productRatingModel!.products!.forEach((element) {
+          productRating.add(element);
+        });
+        emit(SuccessGetProductRatingState());
+        increaseCurrentPage();
+      }).catchError((error) {
+        emit(ErrorGetProductRatingState());
+      });
+    } else {
+      emit(NoInternetHomeState());
+    }
+  }
 }

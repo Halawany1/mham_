@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mham/controller/home_cubit/home_cubit.dart';
+import 'package:mham/core/helper/helper.dart';
 
 class BuildCardNotification extends StatelessWidget {
-  const BuildCardNotification({super.key});
+  const BuildCardNotification({super.key, required this.index});
+
+  final int index;
 
   @override
   Widget build(BuildContext context) {
     var font = Theme.of(context).textTheme;
     var color = Theme.of(context);
+    var cubit = HomeCubit.get(context);
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(8.h),
@@ -18,7 +23,9 @@ class BuildCardNotification extends StatelessWidget {
       ),
       child: Row(
         children: [
-          SizedBox(width: 5.w,),
+          SizedBox(
+            width: 5.w,
+          ),
           CircleAvatar(
             radius: 30.r,
             backgroundColor: color.primaryColor,
@@ -28,30 +35,59 @@ class BuildCardNotification extends StatelessWidget {
               color: color.backgroundColor,
             ),
           ),
-          SizedBox(width: 20.w,),
+          SizedBox(
+            width: 20.w,
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(
+                width: 210.w,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 165.w,
+                      child: Text(
+                        cubit.notificationModel!.notifications![index].title!,
+                        style: font.bodyLarge!
+                            .copyWith(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Icon(
+                      FontAwesomeIcons.remove,
+                      color: color.primaryColor.withOpacity(0.8),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(height: 10.h,),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
                     width: 185.w,
-                    child: Text('200 KD have been added to your wallet. Check it right now.',
-                      style: font.bodyMedium!.copyWith(
-                          fontSize: 15.sp
-                      ),),
+                    child: Text(
+                      cubit.notificationModel!.notifications![index].body!,
+                      style: font.bodyMedium!.copyWith(fontSize: 15.sp),
+                    ),
                   ),
-                  Icon(FontAwesomeIcons.remove,
-                    color: color.primaryColor.withOpacity(0.8),)
                 ],
               ),
-              SizedBox(height: 5.h,),
-              Text('15 minutes ago',style: font.bodyMedium!.copyWith(
-                fontSize: 12.sp,
-                color: color.primaryColor.withOpacity(0.6),
-              ),)
-            ],)
+              SizedBox(
+                height: 5.h,
+              ),
+              Text(
+                Helper.formatDate(
+                    cubit.notificationModel!.notifications![index].createdAt!),
+                style: font.bodyMedium!.copyWith(
+                  fontSize: 12.sp,
+                  color: color.primaryColor.withOpacity(0.6),
+                ),
+              )
+            ],
+          )
         ],
       ),
     );

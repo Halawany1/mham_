@@ -8,6 +8,7 @@ class ApiConstant{
   static const String cancelOrder='/orders/cancelOrder';
   static const String cancelProduct='/orders/cancelProduct';
   static const String updateProfile='/user/updateProfile';
+  static const String productRating='/product-ratings';
   static const String product='/products/getAll/';
   static const String carModelsAvailable='/carModelsAvailable';
   static const String getCart='/cart/getCart';

@@ -9,11 +9,8 @@ import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/views/details_recent_purchases_screen/details_recent_purchases_screen.dart';
-import 'package:mham/views/order_details_screen/order_details_screen.dart';
 import 'package:mham/views/order_screen/widget/card_order_list_component.dart';
 import 'package:mham/views/recent_purchases_screen/recent_purchases_screen.dart';
-
-import '../order_details_screen/widget/card_product_details.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ReturnsScreen extends StatelessWidget {
@@ -33,6 +30,10 @@ class ReturnsScreen extends StatelessWidget {
               message: locale.orderReturnedSuccessfully,
               context: context,
               success: true);
+        }
+        if(state is NoInternetHomeState){
+          showMessageResponse(message: locale.noInternetConnection,
+              context: context, success: false);
         }
         if (state is ErrorReturnOrderState) {
           showMessageResponse(

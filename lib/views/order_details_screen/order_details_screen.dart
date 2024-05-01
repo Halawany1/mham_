@@ -134,6 +134,10 @@ class OrderDetailsScreen extends StatelessWidget {
       },
       child: BlocConsumer<HomeCubit, HomeState>(
         listener: (context, state) {
+          if(state is NoInternetHomeState){
+            showMessageResponse(message: locale.noInternetConnection,
+                context: context, success: false);
+          }
           if (state is SuccessCancelProductState) {
             cubit.cardProductDetails.clear();
             cubit.trackingContainer = false;

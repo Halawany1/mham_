@@ -32,6 +32,10 @@ class EditProfileScreen extends StatelessWidget {
 
     return BlocConsumer<AuthenticationCubit, AuthenticationState>(
       listener: (context, state) {
+        if(state is NoInternetProfileState){
+          showMessageResponse(message: locale.noInternetConnection,
+              context: context, success: false);
+        }
         if (state is SuccessGetCountriesState) {
           AuthenticationCubit.get(context).countryId =
           LayoutCubit.get(context).lang=='en'?

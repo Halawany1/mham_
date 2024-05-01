@@ -6,6 +6,7 @@ sealed class ProfileState {}
 final class ProfileInitial extends ProfileState {}
 
 class LoadingProfileState extends ProfileState {}
+class NoInternetProfileState extends ProfileState {}
 
 class SuccessProfileState extends ProfileState {}
 class ErrorProfileState extends ProfileState {

@@ -36,6 +36,10 @@ class LoginScreen extends StatelessWidget {
 
     return BlocConsumer<AuthenticationCubit, AuthenticationState>(
       listener: (context, state) {
+        if(state is NoInternetAuthState){
+          showMessageResponse(message: locale.noInternetConnection,
+              context: context, success: false);
+        }
         var cubit = context.read<AuthenticationCubit>();
         if (state is SuccessLoginUserState) {
           clearAllData();

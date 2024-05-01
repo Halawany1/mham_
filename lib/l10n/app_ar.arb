@@ -205,5 +205,6 @@
   "startYourCarParts": "ابدأ بشراء قطع غيار السيارة معنا",
   "welcomeToOurSparePartsCategory": "مرحبا بك في قسم القطع المفقودة",
   "startYourAutoPartsJourneyWithUs":
-  "ابدأ مشروعك الاستضافة بشكل جزئي للمصانع السيارية"
+  "ابدأ مشروعك الاستضافة بشكل جزئي للمصانع السيارية",
+  "noInternetConnection": "لا يوجد اتصال بالانترنت"
 }

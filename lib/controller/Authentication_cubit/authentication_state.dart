@@ -14,6 +14,7 @@ class ChangeRememberCheckState extends AuthenticationState {}
 class LoadingLoginUserState extends AuthenticationState {}
 
 class SuccessLoginUserState extends AuthenticationState {}
+class NoInternetAuthState extends AuthenticationState {}
 
 class ChangeIndexOtpVerificationState extends AuthenticationState {}
 

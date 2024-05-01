@@ -10,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
 import 'package:mham/controller/cart_cubit/cart_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
+import 'package:mham/controller/internet_cubit/internet_cubit.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/controller/profile_cubit/profile_cubit.dart';
 import 'package:mham/core/components/show_toast.dart';
@@ -91,7 +92,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) =>
-          HomeCubit()..getCarModels(),
+          HomeCubit()..getCarModels()..getNotification(),
         ),
         BlocProvider(
           create: (context) => AuthenticationCubit(),
@@ -102,6 +103,10 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) =>
           CartCubit()
+        ),
+        BlocProvider(
+          create: (context) =>
+          InternetCubit()..checkConnectivity()
         ),
       ],
       child: ScreenUtilInit(

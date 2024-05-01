@@ -20,6 +20,7 @@ import 'package:mham/core/constent/image_constant.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
+import 'package:mham/views/all_reviews_screen/all_reviews_screen.dart';
 import 'package:mham/views/details_product_screen/widget/add_rate.dart';
 import 'package:mham/views/details_product_screen/widget/all_images_with_select.dart';
 import 'package:mham/views/details_product_screen/widget/all_product_details.dart';
@@ -77,6 +78,10 @@ class DetailsScreen extends StatelessWidget {
                 comment.clear();
                 cubit.changeRate(value: 0);
               }
+              if(state is NoInternetHomeState){
+                showMessageResponse(message: locale.noInternetConnection,
+                    context: context, success: false);
+              }
             },
             builder: (context, state) {
               var cubit = context.read<HomeCubit>();
@@ -84,7 +89,7 @@ class DetailsScreen extends StatelessWidget {
                 bottomSheet: cubit.oneProductModel != null &&
                         state is! LoadingGetProductDetailsState
                     ? !hideAddedToCart
-                        ?BuildBottomSheet()
+                        ? BuildBottomSheet()
                         : null
                     : null,
                 appBar: AppBar(
@@ -120,7 +125,7 @@ class DetailsScreen extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                               BuildImageWithSelectImages(),
+                                BuildImageWithSelectImages(),
                                 SizedBox(
                                   height: 20.h,
                                 ),
@@ -186,10 +191,12 @@ class DetailsScreen extends StatelessWidget {
                                           fontWeight: FontWeight.bold,
                                           color: color.backgroundColor),
                                     ),
-                                    if (cubit
-                                        .oneProductModel!.product!.inCart==false&&
-                                    cubit.oneProductModel!.product!.inCart!=null
-                                    )
+                                    if (cubit.oneProductModel!.product!
+                                                .inCart ==
+                                            false &&
+                                        cubit.oneProductModel!.product!
+                                                .inCart !=
+                                            null)
                                       Row(
                                         children: [
                                           InkWell(
@@ -233,9 +240,7 @@ class DetailsScreen extends StatelessWidget {
                                 SizedBox(
                                   height: 20.h,
                                 ),
-
                                 BuildAllProductDetails(),
-
                                 SizedBox(
                                   height: 20.h,
                                 ),
@@ -250,41 +255,45 @@ class DetailsScreen extends StatelessWidget {
                                 SizedBox(
                                   height: 25.h,
                                 ),
-                                if(cubit.oneProductModel!.product!.rateCount!=0)
-                                Row(
-                                  children: [
-                                    Text(
-                                      locale.reviews,
-                                      style: font.bodyMedium,
-                                    ),
-                                    SizedBox(
-                                      width: 5.w,
-                                    ),
-                                    Text(
-                                      '(${cubit.oneProductModel!.product!.rateCount} ${locale.reviews})',
-                                      style: font.bodyMedium!.copyWith(
-                                          fontSize: 13.sp,
-                                          color: color.primaryColor
-                                              .withOpacity(0.5)),
-                                    ),
-                                    Spacer(),
-                                    TextButton(
-                                        onPressed: () {},
-                                        child: Text(
-                                          locale.seeAll,
-                                          style: font.bodyMedium!.copyWith(
-                                              fontSize: 13.sp,
-                                              color: color.primaryColor),
-                                        ))
-                                  ],
-                                ),
-                                if(cubit.oneProductModel!.product!.rateCount!=0)
-                                SizedBox(
-                                  height: 10.h,
-                                ),
+                                if (cubit.oneProductModel!.product!.rateCount !=
+                                    0)
+                                  Row(
+                                    children: [
+                                      Text(
+                                        locale.reviews,
+                                        style: font.bodyMedium,
+                                      ),
+                                      SizedBox(
+                                        width: 5.w,
+                                      ),
+                                      Text(
+                                        '(${cubit.oneProductModel!.product!.rateCount} ${locale.reviews})',
+                                        style: font.bodyMedium!.copyWith(
+                                            fontSize: 13.sp,
+                                            color: color.primaryColor
+                                                .withOpacity(0.5)),
+                                      ),
+                                      Spacer(),
+                                      TextButton(
+                                          onPressed: () {
+
+                                            Helper.push(context, AllReviewsScreen(productId: cubit.oneProductModel!.product!.productsId!));
+                                          },
+                                          child: Text(
+                                            locale.seeAll,
+                                            style: font.bodyMedium!.copyWith(
+                                                fontSize: 13.sp,
+                                                color: color.primaryColor),
+                                          ))
+                                    ],
+                                  ),
+                                if (cubit.oneProductModel!.product!.rateCount !=
+                                    0)
+                                  SizedBox(
+                                    height: 10.h,
+                                  ),
                                 ListView.separated(
-                                  itemCount: cubit.oneProductModel!.product!
-                                      .productRating!.length,
+                                  itemCount: cubit.productRating.length,
                                   shrinkWrap: true,
                                   physics: NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) =>
@@ -296,7 +305,9 @@ class DetailsScreen extends StatelessWidget {
                                     height: 15.h,
                                   ),
                                 ),
-                                if(CacheHelper.getData(key: AppConstant.token)!=null)
+                                if (CacheHelper.getData(
+                                        key: AppConstant.token) !=
+                                    null)
                                   BuildAddRate(),
                                 SizedBox(
                                   height: 90.h,

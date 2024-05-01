@@ -34,6 +34,10 @@ class OrderScreen extends StatelessWidget {
               context: context,
               success: true);
         }
+        if(state is NoInternetHomeState){
+          showMessageResponse(message: locale.noInternetConnection,
+              context: context, success: false);
+        }
         if (state is ErrorCancelOrderState) {
           showMessageResponse(
               message: state.error, context: context, success: false);

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:mham/core/constent/api_constant.dart';
 import 'package:mham/core/constent/app_constant.dart';
+import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/core/network/remote.dart';
 import 'package:mham/models/countries_model.dart';
@@ -47,25 +48,30 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     required String phone,
     required String password,
     required String lang
-  }) {
-    emit(LoadingLoginUserState());
-    DioHelper.postData(url: ApiConstant.login,
-        data: {
-          "phonenumber": phone,
-          "password": password,
-          "fcmToken": CacheHelper.getData(key: AppConstant.fcmToken),
+  }) async{
+    if(await Helper.hasConnection()) {
+      emit(LoadingLoginUserState());
+      DioHelper.postData(url: ApiConstant.login,
+          data: {
+            "phonenumber": phone,
+            "password": password,
+            "fcmToken": CacheHelper.getData(key: AppConstant.fcmToken),
+          }
+      ).then((value) {
+        userModel = UserModel.fromJson(value.data);
+        emit(SuccessLoginUserState());
+      }).catchError((error) {
+        if (error is DioError) {
+          errorUserModel = ErrorUserModel.fromJson(error.response!.data);
+          emit(ErrorLoginUserState(errorUserModel!.message!.first));
+        } else {
+          emit(ErrorLoginUserState(error.toString()));
         }
-    ).then((value) {
-      userModel = UserModel.fromJson(value.data);
-      emit(SuccessLoginUserState());
-    }).catchError((error) {
-      if (error is DioError) {
-        errorUserModel = ErrorUserModel.fromJson(error.response!.data);
-        emit(ErrorLoginUserState(errorUserModel!.message!.first));
-      } else {
-        emit(ErrorLoginUserState(error.toString()));
-      }
-    });
+      });
+    }else{
+      emit(NoInternetAuthState());
+    }
+
   }
 
   ErrorUserModel ?errorUserModel;
@@ -77,30 +83,35 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
   Map<String,int>countriesId ={};
 
-  void getCountries() {
-    emit(LoadingGetCountriesState());
-    DioHelper.getData(url:
-    '/countries',).then((value) {
-      countriesId.clear();
-      countriesList.clear();
-      countriesModel = CountriesModel.fromJson(value.data);
-      countriesModel!.countries!.forEach((element) {
-        if(CacheHelper.getData(key: AppConstant.lang)=='en'||
-            CacheHelper.getData(key: AppConstant.lang)==null
-        ){
-          countriesId[element.countryNameEn!] = element.countryId!;
-          countriesList.add(element.countryNameEn!);
-        }else{
-          countriesId[element.countryNameAr!] = element.countryId!;
-          countriesList.add(element.countryNameAr!);
-        }
+  void getCountries() async{
+    if(await Helper.hasConnection()){
+      emit(LoadingGetCountriesState());
+      DioHelper.getData(url:
+      '/countries',).then((value) {
+        countriesId.clear();
+        countriesList.clear();
+        countriesModel = CountriesModel.fromJson(value.data);
+        countriesModel!.countries!.forEach((element) {
+          if(CacheHelper.getData(key: AppConstant.lang)=='en'||
+              CacheHelper.getData(key: AppConstant.lang)==null
+          ){
+            countriesId[element.countryNameEn!] = element.countryId!;
+            countriesList.add(element.countryNameEn!);
+          }else{
+            countriesId[element.countryNameAr!] = element.countryId!;
+            countriesList.add(element.countryNameAr!);
+          }
 
 
+        });
+        emit(SuccessGetCountriesState());
+      }).catchError((error) {
+        emit(ErrorGetCountriesState(error.toString()));
       });
-      emit(SuccessGetCountriesState());
-    }).catchError((error) {
-      emit(ErrorGetCountriesState(error.toString()));
-    });
+    }else{
+      emit(NoInternetAuthState());
+    }
+
   }
 String ?countryId;
   CountryId ?selectedCountry;
@@ -170,29 +181,35 @@ String ?countryId;
     required int countryId,
     required String confirmPassword,
     required String lang
-  }) {
-    emit(LoadingRegisterUserState());
-    DioHelper.postData(url: ApiConstant.register,
-        data: {
-          "username": userName,
-          "password":password,
-          "phonenumber" : phone,
-          "country" :countryId,
-          "confirmPassword" : confirmPassword,
-          "fcmToken": CacheHelper.getData(key: AppConstant.fcmToken),
+  }) async{
+
+    if(await Helper.hasConnection()){
+      emit(LoadingRegisterUserState());
+      DioHelper.postData(url: ApiConstant.register,
+          data: {
+            "username": userName,
+            "password":password,
+            "phonenumber" : phone,
+            "country" :countryId,
+            "confirmPassword" : confirmPassword,
+            "fcmToken": CacheHelper.getData(key: AppConstant.fcmToken),
+          }
+      ).then((value) {
+        userModel = UserModel.fromJson(value.data);
+        emit(SuccessRegisterUserState());
+      }).catchError((error) {
+        if (error is DioError) {
+          print(error.response!.data);
+          errorUserModel = ErrorUserModel.fromJson(error.response!.data);
+          emit(ErrorRegisterUserState(errorUserModel!.message!.first));
+        } else {
+          emit(ErrorRegisterUserState(error.toString()));
         }
-    ).then((value) {
-      userModel = UserModel.fromJson(value.data);
-      emit(SuccessRegisterUserState());
-    }).catchError((error) {
-      if (error is DioError) {
-        print(error.response!.data);
-        errorUserModel = ErrorUserModel.fromJson(error.response!.data);
-        emit(ErrorRegisterUserState(errorUserModel!.message!.first));
-      } else {
-        emit(ErrorRegisterUserState(error.toString()));
-      }
-    });
+      });
+    }else{
+      emit(NoInternetAuthState());
+    }
+
   }
 
   int currentIndexOtpVerification = 0;

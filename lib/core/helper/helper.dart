@@ -1,4 +1,6 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 
@@ -31,6 +33,18 @@ class Helper {
   }
   static void pop(BuildContext context) {
    Navigator.pop(context);
+  }
+
+  static Future<bool> hasConnection() async {
+    var isDeviceConnected = await InternetConnectionChecker().hasConnection;
+    var connectionResult = await Connectivity().checkConnectivity();
+    if (connectionResult == ConnectivityResult.mobile ||
+        connectionResult == ConnectivityResult.wifi) {
+      isDeviceConnected = true;
+    } else {
+      isDeviceConnected = false;
+    }
+    return isDeviceConnected;
   }
 
 

@@ -24,7 +24,7 @@ class BuildCardReviews extends StatelessWidget {
             radius: 28.r,
             backgroundColor: color.primaryColor,
             child: Text(
-              cubit.oneProductModel!.product!.productRating![index].user!.userName![0],
+              cubit.productRating[index].user!.userName![0],
               style: font.bodyLarge!
                   .copyWith(color: color.cardColor),
             ),
@@ -46,16 +46,16 @@ class BuildCardReviews extends StatelessWidget {
                       child: FittedBox(
                         fit: BoxFit.contain,
                         child: Text(
-                          cubit.oneProductModel!.product!.productRating![index].user!.userName!,
+                          cubit.productRating[index].user!.userName!,
                           style: font.bodyMedium,
                         ),
                       ),
                     ),
                     RatingBar.builder(
                       ignoreGestures: true,
-                      initialRating: cubit.oneProductModel!.product!.productRating![index].ratingNum!
+                      initialRating: cubit.productRating[index].ratingNum!
                           .toDouble(),
-                      minRating: cubit.oneProductModel!.product!.productRating![index].ratingNum!
+                      minRating: cubit.productRating[index].ratingNum!
                           .toDouble(),
                       direction: Axis.horizontal,
                       allowHalfRating: true,
@@ -77,7 +77,7 @@ class BuildCardReviews extends StatelessWidget {
                   height: 5.h,
                 ),
                 Text(
-                  cubit.oneProductModel!.product!.productRating!
+                  cubit.productRating
                   [index].review??'No Review',
                   style: font.bodyMedium!
                       .copyWith(fontSize: 12.sp),
