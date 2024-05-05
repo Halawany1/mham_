@@ -77,6 +77,7 @@ void clearAllData() {
                   BuildDefaultButton(text:locale.signUp,
                       onPressed: () {
                         clearAllData();
+                        AuthenticationCubit.get(context).getCountries();
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) => SignUpScreen(),));
                       },

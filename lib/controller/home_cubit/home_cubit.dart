@@ -19,7 +19,7 @@ import 'package:mham/models/return_order_model.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 
 part 'home_state.dart';
-
+enum RadioButtonValue { all, original, copy }
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
 
@@ -518,15 +518,29 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   NotificationModel? notificationModel;
-
-  void getNotification() async {
+  List<Notifications>notifications=[];
+  void getNotification({int page=1,int pageSize=10}) async {
     if (await Helper.hasConnection()) {
+      print(page);
+      if(page==1){
+        notifications.clear();
+      }
       emit(LoadingGetNotificationState());
       DioHelper.getData(
-              token: CacheHelper.getData(key: AppConstant.token),
+        query: {
+          "page":page,
+          "pageSize":pageSize
+        },
+          token: CacheHelper.getData(key: AppConstant.token),
               url: ApiConstant.notifications)
           .then((value) {
+        if(page==1){
+          notifications.clear();
+        }
         notificationModel = NotificationModel.fromJson(value.data);
+        notificationModel!.notifications!.forEach((element) {
+          notifications.add(element);
+        });
         emit(SuccessGetNotificationState());
       }).catchError((error) {
         emit(ErrorGetNotificationState());
@@ -536,6 +550,24 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+  void updateNotification() async {
+    if (await Helper.hasConnection()) {
+      emit(LoadingUpdateNotificationState());
+      DioHelper.patchData(
+        data: {
+          "isReaded": true
+        },
+          token: CacheHelper.getData(key: AppConstant.token),
+          url: ApiConstant.notifications)
+          .then((value) {
+        emit(SuccessUpdateNotificationState());
+      }).catchError((error) {
+        emit(ErrorUpdateNotificationState());
+      });
+    } else {
+      emit(NoInternetHomeState());
+    }
+  }
   ProductRatingModel? productRatingModel;
   List<Rating> productRating = [];
   int currentPage = 1;
@@ -570,4 +602,20 @@ class HomeCubit extends Cubit<HomeState> {
       emit(NoInternetHomeState());
     }
   }
+
+  RadioButtonValue? selectValue;
+  void changeType(RadioButtonValue value) {
+    selectValue = value;
+    emit(ChangeTypeState());
+  }
+
+  double price = 0;
+
+  void changePrice(double value) {
+    price = value;
+    emit(ChangePriceState());
+  }
+
+
+
 }

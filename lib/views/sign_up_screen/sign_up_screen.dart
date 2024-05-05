@@ -192,7 +192,7 @@ void clearAllData() {
                           height: 35.h,
                         ),
                         state is LoadingRegisterUserState
-                            ? Center(child: CircularProgressIndicator())
+                            ? Center(child: CircularProgressIndicator(color: color.primaryColor,))
                             : BuildDefaultButton(
                           colorText: color.cardColor,
                           backgorundColor: color.primaryColor,

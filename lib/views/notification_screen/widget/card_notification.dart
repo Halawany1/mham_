@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
@@ -18,7 +20,8 @@ class BuildCardNotification extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(8.h),
       decoration: BoxDecoration(
-        color: color.primaryColor.withOpacity(0.2),
+        color: color.primaryColor
+            .withOpacity(cubit.notifications[index].isReaded! ? 0.12 : 0.2),
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: Row(
@@ -26,14 +29,24 @@ class BuildCardNotification extends StatelessWidget {
           SizedBox(
             width: 5.w,
           ),
-          CircleAvatar(
-            radius: 30.r,
-            backgroundColor: color.primaryColor,
-            child: Icon(
-              size: 40.sp,
-              Icons.wallet,
-              color: color.backgroundColor,
-            ),
+          Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              CircleAvatar(
+                radius: 30.r,
+                backgroundColor: color.primaryColor,
+                child: Icon(
+                  size: 35.sp,
+                  FontAwesomeIcons.bell,
+                  color: color.backgroundColor,
+                ),
+              ),
+              if (!cubit.notifications[index].isReaded!)
+                CircleAvatar(
+                  radius: 8.r,
+                  backgroundColor: color.backgroundColor,
+                )
+            ],
           ),
           SizedBox(
             width: 20.w,
@@ -50,26 +63,25 @@ class BuildCardNotification extends StatelessWidget {
                     SizedBox(
                       width: 165.w,
                       child: Text(
-                        cubit.notificationModel!.notifications![index].title!,
-                        style: font.bodyLarge!
-                            .copyWith(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                        cubit.notifications[index].title!,
+                        style: font.bodyLarge!.copyWith(
+                            fontSize: 18.sp, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    Icon(
-                      FontAwesomeIcons.remove,
-                      color: color.primaryColor.withOpacity(0.8),
-                    )
+
                   ],
                 ),
               ),
-              SizedBox(height: 10.h,),
+              SizedBox(
+                height: 10.h,
+              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
                     width: 185.w,
                     child: Text(
-                      cubit.notificationModel!.notifications![index].body!,
+                      cubit.notifications[index].body!,
                       style: font.bodyMedium!.copyWith(fontSize: 15.sp),
                     ),
                   ),
@@ -79,8 +91,7 @@ class BuildCardNotification extends StatelessWidget {
                 height: 5.h,
               ),
               Text(
-                Helper.formatDate(
-                    cubit.notificationModel!.notifications![index].createdAt!),
+                Helper.formatTimeString(cubit.notifications[index].createdAt!),
                 style: font.bodyMedium!.copyWith(
                   fontSize: 12.sp,
                   color: color.primaryColor.withOpacity(0.6),

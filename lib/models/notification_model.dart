@@ -1,7 +1,19 @@
 class NotificationModel {
+  int? unreadedCount;
+  int? totalPages;
+  int? page;
+  int? pageSize;
+  int? pageCount;
   List<Notifications>? notifications;
 
+
+
   NotificationModel.fromJson(Map<String, dynamic> json) {
+    unreadedCount = json['unreadedCount'];
+    totalPages = json['totalPages'];
+    page = json['page'];
+    pageSize = json['pageSize'];
+    pageCount = json['pageCount'];
     if (json['notifications'] != null) {
       notifications = <Notifications>[];
       json['notifications'].forEach((v) {
@@ -10,6 +22,7 @@ class NotificationModel {
     }
   }
 
+
 }
 
 class Notifications {
@@ -17,10 +30,11 @@ class Notifications {
   String? title;
   String? body;
   String? createdAt;
+  bool? isReaded;
+  String? expiresAt;
   int? userId;
-  Null? traderId;
-  Null? driverId;
   User? user;
+
 
 
   Notifications.fromJson(Map<String, dynamic> json) {
@@ -28,9 +42,9 @@ class Notifications {
     title = json['title'];
     body = json['body'];
     createdAt = json['createdAt'];
+    isReaded = json['isReaded'];
+    expiresAt = json['expires_at'];
     userId = json['userId'];
-    traderId = json['traderId'];
-    driverId = json['driverId'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
   }
 
@@ -44,7 +58,6 @@ class User {
   String? password;
   int? countryId;
   String? role;
-  String? fcmToken;
 
 
 
@@ -55,7 +68,7 @@ class User {
     password = json['password'];
     countryId = json['country_id'];
     role = json['role'];
-    fcmToken = json['fcmToken'];
   }
+
 
 }

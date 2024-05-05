@@ -21,14 +21,10 @@ class LayoutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
     var color = Theme.of(context);
-    var font = Theme
-        .of(context)
-        .textTheme;
 
 
     return BlocBuilder<InternetCubit, InternetState>(
       builder: (context, internetState) {
-        var internet = context.read<InternetCubit>();
         return BlocBuilder<LayoutCubit, LayoutState>(
           builder: (context, state) {
             var cubit = context.read<LayoutCubit>();
@@ -69,9 +65,8 @@ class LayoutScreen extends StatelessWidget {
                       title: Text(locale.wallet),
                       selectedColor: color.backgroundColor.withOpacity(0.9),
                     ),
-
                     SalomonBottomBarItem(
-                      icon: Icon(FontAwesomeIcons.user, size: 18.r,),
+                      icon: Icon(FontAwesomeIcons.solidUser, size: 18.r,),
                       title: Text(locale.profile),
                       selectedColor: color.backgroundColor.withOpacity(0.9),
                     ),

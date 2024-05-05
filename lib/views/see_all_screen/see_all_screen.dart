@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,6 +16,7 @@ import 'package:mham/core/network/local.dart';
 import 'package:mham/views/details_product_screen/details_product_screen.dart';
 import 'package:mham/views/home_screen/widget/car_filter.dart';
 import 'package:mham/views/home_screen/widget/products_not_found.dart';
+import 'package:mham/views/see_all_screen/widget/filter.dart';
 
 class SeeAllScreen extends StatelessWidget {
   const SeeAllScreen({super.key,
@@ -96,7 +98,7 @@ class SeeAllScreen extends StatelessWidget {
                               width: 20.w,
                             ),
                             BuildSearchFormField(
-                              width: 248.w,
+                              width: 230.w,
                               onSave: (value) {
                                 cubit.productModel = null;
                                 cubit.allProducts.clear();
@@ -126,12 +128,21 @@ class SeeAllScreen extends StatelessWidget {
                             height: 10.h,
                           ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               title,
                               style: font.bodyMedium,
                             ),
+                            GestureDetector(
+                              onTap: () {
+                                filterPopUp(context);
+                              },
+                              child: Icon(
+                                FontAwesomeIcons.filter,
+                                color: color.primaryColor,
+                              ),
+                            )
                           ],
                         ),
                         SizedBox(

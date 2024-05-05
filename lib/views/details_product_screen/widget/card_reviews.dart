@@ -43,12 +43,9 @@ class BuildCardReviews extends StatelessWidget {
                   children: [
                     SizedBox(
                       width: 150.w,
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: Text(
-                          cubit.productRating[index].user!.userName!,
-                          style: font.bodyMedium,
-                        ),
+                      child: Text(
+                        cubit.productRating[index].user!.userName!,
+                        style: font.bodyMedium,
                       ),
                     ),
                     RatingBar.builder(

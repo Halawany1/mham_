@@ -3,11 +3,13 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mham/controller/cart_cubit/cart_cubit.dart';
+import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/core/components/small_button_component.dart';
 import 'package:mham/core/components/small_container_for_type_component.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/network/local.dart';
+import 'package:mham/views/details_product_screen/details_product_screen.dart';
 
 class BuildCartCardProduct extends StatelessWidget {
   const BuildCartCardProduct({super.key, required this.index});
@@ -26,8 +28,7 @@ class BuildCartCardProduct extends StatelessWidget {
       color: color.scaffoldBackgroundColor,
       child: Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.r),
-            color: color.cardColor),
+            borderRadius: BorderRadius.circular(15.r), color: color.cardColor),
         width: double.infinity,
         height: 100.h,
         child: Directionality(
@@ -50,8 +51,8 @@ class BuildCartCardProduct extends StatelessWidget {
                     width: 60.w,
                     height: 16.h,
                     child: BuildContainerType(
-                        type: cubit.cartModel!.cart!.cartProducts![index].product!
-                            .type!)),
+                        type: cubit.cartModel!.cart!.cartProducts![index]
+                            .product!.type!)),
               ),
               Positioned(
                 top: 4.h,
@@ -97,18 +98,16 @@ class BuildCartCardProduct extends StatelessWidget {
                 left: 110.w,
                 child: RatingBar.builder(
                   ignoreGestures: true,
-                  initialRating: double.parse(cubit
-                      .cartModel!.cart!.cartProducts![index].
-                  product!.averageRate!
+                  initialRating: double.parse(cubit.cartModel!.cart!
+                      .cartProducts![index].product!.averageRate!
                       .toString()),
                   minRating: 0,
                   direction: Axis.horizontal,
                   unratedColor: color.highlightColor.withOpacity(0.7),
                   allowHalfRating: true,
                   itemCount: 5,
-                  maxRating: double.parse(cubit
-                      .cartModel!.cart!.cartProducts![index].
-                  product!.averageRate!
+                  maxRating: double.parse(cubit.cartModel!.cart!
+                      .cartProducts![index].product!.averageRate!
                       .toString()),
                   itemSize: 12.sp,
                   itemBuilder: (context, _) => const Icon(
@@ -124,17 +123,22 @@ class BuildCartCardProduct extends StatelessWidget {
                 right: 12.w,
                 child: Row(
                   children: [
-                    InkWell(onTap: () {
-                      if(cubit.cartModel!.cart!.cartProducts![index].quantity!>1){
-                        cubit.updateCart(
-                            token: CacheHelper.getData(
-                                key: AppConstant.token),
-                            id: cubit.cartModel!.cart!.cartProducts![index].product!.productsId!,
-                            quantity: cubit.cartModel!.cart!.
-                            cartProducts![index].quantity!-1);
-                      }
-
-                    }, child: Icon(FontAwesomeIcons.minus)),
+                    InkWell(
+                        onTap: () {
+                          if (cubit.cartModel!.cart!.cartProducts![index]
+                                  .quantity! >
+                              1) {
+                            cubit.updateCart(
+                                token:
+                                    CacheHelper.getData(key: AppConstant.token),
+                                id: cubit.cartModel!.cart!.cartProducts![index]
+                                    .product!.productsId!,
+                                quantity: cubit.cartModel!.cart!
+                                        .cartProducts![index].quantity! -
+                                    1);
+                          }
+                        },
+                        child: Icon(FontAwesomeIcons.minus)),
                     SizedBox(
                       width: 5.w,
                     ),
@@ -155,21 +159,21 @@ class BuildCartCardProduct extends StatelessWidget {
                     SizedBox(
                       width: 5.w,
                     ),
-                    InkWell(onTap: () {
-                      cubit.updateCart(token: CacheHelper.getData(
-                          key: AppConstant.token),
-                          id: cubit.cartModel!.cart!.cartProducts![index].product!.productsId!,
-                          quantity: cubit.cartModel!.cart!.cartProducts![index].quantity!+1);
-                    }, child: Icon(FontAwesomeIcons.add)),
+                    InkWell(
+                        onTap: () {
+                          cubit.updateCart(
+                              token:
+                                  CacheHelper.getData(key: AppConstant.token),
+                              id: cubit.cartModel!.cart!.cartProducts![index]
+                                  .product!.productsId!,
+                              quantity: cubit.cartModel!.cart!
+                                      .cartProducts![index].quantity! +
+                                  1);
+                        },
+                        child: Icon(FontAwesomeIcons.add)),
                   ],
                 ),
               ),
-              Positioned(
-                  top: 6.h,
-                  right: 5.w,
-                  child: Image.asset(
-                    'assets/images/hundia.png',
-                  )),
               Positioned(
                 top: 65.h,
                 right: 5.w,
@@ -185,7 +189,8 @@ class BuildCartCardProduct extends StatelessWidget {
                       onPressed: () {
                         cubit.deleteCart(
                             token: CacheHelper.getData(key: AppConstant.token),
-                            id: cubit.cartModel!.cart!.cartProducts![index].id!);
+                            id: cubit
+                                .cartModel!.cart!.cartProducts![index].id!);
                       },
                     ),
                     SizedBox(
@@ -196,7 +201,19 @@ class BuildCartCardProduct extends StatelessWidget {
                       width: 70.w,
                       hieght: 16.h,
                       withIcon: false,
-                      onPressed: () {},
+                      onPressed: () {
+                        HomeCubit.get(context).oneProductModel = null;
+                        print(cubit.cartModel!.cart!.cartProducts![index]
+                            .product!.productsId!);
+                        HomeCubit.get(context).getProductDetails(
+                            id: cubit.cartModel!.cart!.cartProducts![index]
+                                .product!.productsId!);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailsScreen(),
+                            ));
+                      },
                     )
                   ],
                 ),

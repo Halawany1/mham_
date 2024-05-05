@@ -71,6 +71,8 @@ class DetailsScreen extends StatelessWidget {
           return BlocConsumer<HomeCubit, HomeState>(
             listener: (context, state) {
               if (state is SuccessAddRateState) {
+                cubit.getProductRating(id: cubit.oneProductModel!
+                    .product!.productsId!);
                 showMessageResponse(
                     message: locale.addRateSuccess,
                     context: context,

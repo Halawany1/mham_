@@ -7,6 +7,7 @@ import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/controller/profile_cubit/profile_cubit.dart';
 import 'package:mham/core/components/laoding_animation_component.dart';
+import 'package:mham/core/components/pop_up_sure_component.dart';
 import 'package:mham/core/components/snak_bar_component.dart';
 import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/image_constant.dart';
@@ -184,12 +185,20 @@ class ProfileScreen extends StatelessWidget {
                             .get(context)
                             .theme,
                         onTap: () {
-                          userNameController.clear();
-                          phoneController.clear();
-                          passwordController.clear();
-                          CacheHelper.removeData(key: AppConstant.token);
-                          LayoutCubit.get(context).changeTheme(true);
-                          LayoutCubit.get(context).changeIndex(0);
+                          showDialog(
+                            builder: (context) =>  confirmPopUp(context: context,
+                                onPress: () {
+                                  userNameController.clear();
+                                  phoneController.clear();
+                                  passwordController.clear();
+                                  CacheHelper.removeData(key: AppConstant.token);
+                                  LayoutCubit.get(context).changeTheme(true);
+                                  LayoutCubit.get(context).changeIndex(0);
+                                  Navigator.pop(context);
+                                }, title: locale.logout,
+                                content: locale.areYouSureToLogout),
+                            context: context
+                          );
                         },
                       ),
                       SizedBox(

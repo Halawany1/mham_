@@ -4,7 +4,7 @@ class ApiConstant{
   static const String register='/user/register';
   static const String login='/user/login';
   static const String profile='/user/profile';
-  static const String notifications='/notifications/user';
+  static const String notifications='/notifications';
   static const String cancelOrder='/orders/cancelOrder';
   static const String cancelProduct='/orders/cancelProduct';
   static const String updateProfile='/user/updateProfile';

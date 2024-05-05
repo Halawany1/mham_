@@ -206,5 +206,6 @@
   "welcomeToOurSparePartsCategory": "مرحبا بك في قسم القطع المفقودة",
   "startYourAutoPartsJourneyWithUs":
   "ابدأ مشروعك الاستضافة بشكل جزئي للمصانع السيارية",
-  "noInternetConnection": "لا يوجد اتصال بالانترنت"
+  "noInternetConnection": "لا يوجد اتصال بالانترنت",
+  "areYouSureToLogout": "هل انت متاكد من تسجيل الخروج؟"
 }

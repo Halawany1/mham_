@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
-import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/core/components/laoding_animation_component.dart';
 import 'package:mham/core/components/snak_bar_component.dart';
 import 'package:mham/core/constent/image_constant.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/views/order_details_screen/order_details_screen.dart';
 import 'package:mham/views/order_details_screen/widget/card_product_details.dart';
+import 'package:mham/views/order_screen/widget/empty_order.dart';
 import 'widget/card_order_list_component.dart';
 
 class OrderScreen extends StatelessWidget {
@@ -128,22 +128,7 @@ class OrderScreen extends StatelessWidget {
                                   height: 10.h,
                                 ),
                             itemCount: cubit.allOrders.length) :
-                        Padding(
-                          padding: EdgeInsets.only(top: 120.h),
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(ImageConstant.cart),
-                                SizedBox(height: 20.h),
-                                Text(locale.noOrdersFound,
-                                  style:
-                                  font.bodyMedium!.
-                                  copyWith(fontSize: 22.sp),),
-                              ],
-                            ),
-                          ),
-                        ),
+                       BuildEmptyOrder(),
                         SizedBox(
                           height: 20.h,
                         ),

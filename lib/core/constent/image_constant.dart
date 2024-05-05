@@ -6,6 +6,7 @@ class ImageConstant{
   static String ads="assets/images/ads.png";
   static String carParts="assets/images/carParts.png";
   static String otp="assets/images/otp.png";
+  static String noNotification="assets/images/noNotification.png";
   static String batteries="assets/images/batteries.png";
   static String accessories="assets/images/accessories.png";
   static String motorOil="assets/images/motorOil.png";

@@ -41,9 +41,8 @@ class _ImageLoaderState extends State<BuildImageLoader>
       },
       child: Image.asset(
         widget.assetName,
-        width: 70.w,
+        width: 80.w,
         height: 70.h,
-        fit: BoxFit.cover,
         // You can customize other properties as needed
       ),
     );

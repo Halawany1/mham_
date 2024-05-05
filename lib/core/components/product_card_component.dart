@@ -110,6 +110,7 @@ class BuildProductCard extends StatelessWidget {
             Positioned(
               top: 90.h,
               left: 8.w,
+              right: Helper.isArabic(title)? 8.w : null,
               child: SizedBox(
                 width: 90.w,
                 child: Text(

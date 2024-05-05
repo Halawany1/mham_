@@ -13,6 +13,7 @@ import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/views/cart_screen/widget/card_cart_product.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mham/views/cart_screen/widget/cart_empty.dart';
 import 'package:mham/views/checkout_screen/checkout_screen.dart';
 import 'package:mham/views/details_product_screen/details_product_screen.dart';
 
@@ -141,39 +142,10 @@ class CartScreen extends StatelessWidget {
                                 itemCount: cubit
                                     .cartModel!.cart!.cartProducts!.length),
                           if (cubit.cartModel!.cart!.cartProducts!.length == 0)
-                            Center(
-                              child: Padding(
-                                padding: EdgeInsets.only(top: 50.h),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(ImageConstant.cart),
-                                    SizedBox(
-                                      height: 10.h,
-                                    ),
-                                    Text(
-                                      locale.cartEmpty,
-                                      style: font.bodyMedium!
-                                          .copyWith(fontSize: 16.sp),
-                                    ),
-                                    SizedBox(
-                                      height: 15.h,
-                                    ),
-                                    BuildDefaultButton(
-                                        text: locale.startShopping,
-                                        width: 120.w,
-                                        height: 28.h,
-                                        borderRadius: 8.r,
-                                        onPressed: () {
-                                          HomeCubit.get(context)
-                                              .getAllProduct();
-                                          Helper.pop(context);
-                                        },
-                                        backgorundColor: color.backgroundColor,
-                                        colorText: color.primaryColor)
-                                  ],
-                                ),
-                              ),
+                            Padding(
+                              padding:
+                              EdgeInsets.only(top: 50.h),
+                              child: BuildCartEmpty(),
                             ),
                           SizedBox(
                             height: 20.h,

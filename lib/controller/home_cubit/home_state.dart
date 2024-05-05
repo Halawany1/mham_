@@ -142,6 +142,11 @@ class SuccessGetNotificationState extends HomeState {}
 
 class NoInternetHomeState extends HomeState {}
 
+
+class ChangeTypeState extends HomeState {}
+
+class ChangePriceState extends HomeState {}
+
 class ErrorGetNotificationState extends HomeState {}
 
 class LoadingGetProductRatingState extends HomeState {}
@@ -154,3 +159,8 @@ class IncreaseCurrentPageState extends HomeState {}
 
 
 
+class LoadingUpdateNotificationState extends HomeState {}
+
+class SuccessUpdateNotificationState extends HomeState {}
+
+class ErrorUpdateNotificationState extends HomeState {}

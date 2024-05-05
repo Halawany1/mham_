@@ -14,9 +14,11 @@ import 'package:mham/controller/internet_cubit/internet_cubit.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/controller/profile_cubit/profile_cubit.dart';
 import 'package:mham/core/components/show_toast.dart';
+import 'package:mham/core/constent/api_constant.dart';
 import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/constent/image_constant.dart';
+import 'package:mham/core/helper/notifications.dart';
 import 'package:mham/core/network/bloc_observer.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/core/network/remote.dart';
@@ -29,26 +31,45 @@ import 'package:page_transition/page_transition.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> backgroundMessageHandler(RemoteMessage message) async {
-  ShowToast(message: 'on BackgroundMessage', state: ToastState.SUCCESS);
+  String title = message.notification!.title ?? 'Default Title';
+  String value = message.notification!.body ?? 'Default Value';
+  LocalNotificationService().showNotificationAndroid(title, value);
+  // ShowToast(message: 'on BackgroundMessage', state: ToastState.SUCCESS);
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheHelper.init();
   await DioHelper.init();
- //await CacheHelper.deleteAllData();
+  //await CacheHelper.deleteAllData();
+  await LocalNotificationService().init();
   await Firebase.initializeApp();
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  await messaging.requestPermission(
+    alert: true,
+    announcement: true,
+    badge: true,
+    carPlay: true,
+    criticalAlert: true,
+    provisional: true,
+    sound: true,
+  );
   var token = await FirebaseMessaging.instance.getToken();
-  if(CacheHelper.getData(key:AppConstant.fcmToken)==null){
-    CacheHelper.saveData(key: AppConstant.fcmToken,
-        value: token);
+  if (CacheHelper.getData(key: AppConstant.fcmToken) == null) {
+    CacheHelper.saveData(key: AppConstant.fcmToken, value: token);
   }
 //  print(token);
-  FirebaseMessaging.onMessage.listen((event) {
-    ShowToast(message: 'on Message', state: ToastState.SUCCESS);
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    String title = message.notification!.title ?? 'Default Title';
+    String value = message.notification!.body ?? 'Default Value';
+    LocalNotificationService().showNotificationAndroid(title, value);
+    //ShowToast(message: 'on Message', state: ToastState.SUCCESS);
   });
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    ShowToast(message: 'on Message Opened App', state: ToastState.SUCCESS);
+    String title = message.notification!.title ?? 'Default Title';
+    String value = message.notification!.body ?? 'Default Value';
+    LocalNotificationService().showNotificationAndroid(title, value);
+    // ShowToast(message: 'on Message', state: ToastState.SUCCESS);
   });
   FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
 
@@ -69,7 +90,7 @@ void main() async {
   } else {
     widget = const LayoutScreen();
   }
- print(CacheHelper.getData(key: AppConstant.token));
+  print(CacheHelper.getData(key: AppConstant.token));
   runApp(
     MyApp(
       widget: widget,
@@ -86,13 +107,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-
         BlocProvider(
           create: (context) => LayoutCubit(),
         ),
         BlocProvider(
-          create: (context) =>
-          HomeCubit()..getCarModels()..getNotification(),
+          create: (context) => HomeCubit()
+            ..getCarModels()
+            ..getNotification(),
         ),
         BlocProvider(
           create: (context) => AuthenticationCubit(),
@@ -100,14 +121,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => ProfileCubit()..getProfile(),
         ),
-        BlocProvider(
-          create: (context) =>
-          CartCubit()
-        ),
-        BlocProvider(
-          create: (context) =>
-          InternetCubit()..checkConnectivity()
-        ),
+        BlocProvider(create: (context) => CartCubit()),
+        BlocProvider(create: (context) => InternetCubit()..checkConnectivity()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 690),
@@ -118,7 +133,7 @@ class MyApp extends StatelessWidget {
             builder: (context, state) {
               var cubit = context.read<LayoutCubit>();
               return MaterialApp(
-                theme: cubit.theme?lightTheme():darkTheme(),
+                theme: cubit.theme ? lightTheme() : darkTheme(),
                 locale: Locale(cubit.lang),
                 localizationsDelegates: const [
                   AppLocalizations.delegate,
