@@ -119,7 +119,7 @@ class BuildCartCardProduct extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: 50.h,
+                top: 42.h,
                 right: 12.w,
                 child: Row(
                   children: [
@@ -132,7 +132,7 @@ class BuildCartCardProduct extends StatelessWidget {
                                 token:
                                     CacheHelper.getData(key: AppConstant.token),
                                 id: cubit.cartModel!.cart!.cartProducts![index]
-                                    .product!.productsId!,
+                                    .id!,
                                 quantity: cubit.cartModel!.cart!
                                         .cartProducts![index].quantity! -
                                     1);
@@ -165,7 +165,7 @@ class BuildCartCardProduct extends StatelessWidget {
                               token:
                                   CacheHelper.getData(key: AppConstant.token),
                               id: cubit.cartModel!.cart!.cartProducts![index]
-                                  .product!.productsId!,
+                                  .id!,
                               quantity: cubit.cartModel!.cart!
                                       .cartProducts![index].quantity! +
                                   1);

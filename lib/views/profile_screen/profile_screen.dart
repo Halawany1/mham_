@@ -43,7 +43,7 @@ class ProfileScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = context.read<ProfileCubit>();
         return Scaffold(
-          body: cubit.userModel != null
+          body: cubit.driverModel != null
               ? SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: SafeArea(
@@ -87,8 +87,8 @@ class ProfileScreen extends StatelessWidget {
                           cubit.userModel!.user!.userName!;
                           phoneController.text = cubit.userModel!.user!.mobile!;
 
-                          Helper.push(context,
-                              EditProfileScreen());
+                          Helper.push(context: context,widget:
+                              EditProfileScreen(driver: false,),withAnimate: true);
                         },
                       ),
                       SizedBox(
@@ -98,7 +98,8 @@ class ProfileScreen extends StatelessWidget {
                         icon: FontAwesomeIcons.solidHeart,
                         text: locale.favorite,
                         onTap: () {
-                          Helper.push(context, FavouriteScreen());
+                          Helper.push(context: context,widget:
+                          FavouriteScreen(),withAnimate: true);
                         },
                       ),
                       SizedBox(
@@ -110,7 +111,8 @@ class ProfileScreen extends StatelessWidget {
                         onTap: () {
                           HomeCubit.get(context).orderModel=null;
                           HomeCubit.get(context).getAllOrders();
-                          Helper.push(context, ReturnsScreen());
+                          Helper.push(context: context,widget:
+                          ReturnsScreen(),withAnimate: true);
                         },
                       ),
                       SizedBox(
@@ -122,7 +124,8 @@ class ProfileScreen extends StatelessWidget {
                         onTap: () {
                           HomeCubit.get(context).orderModel=null;
                           HomeCubit.get(context).getAllOrders();
-                          Helper.push(context, RecentPurchasesScreen());
+                          Helper.push(context: context,widget:
+                          RecentPurchasesScreen());
                         },
                       ),
                       SizedBox(
@@ -132,7 +135,8 @@ class ProfileScreen extends StatelessWidget {
                         icon: FontAwesomeIcons.bell,
                         text: locale.notifications,
                         onTap: () {
-                          Helper.push(context, NotificationScreen());
+                          Helper.push(context: context,widget:
+                          NotificationScreen(),withAnimate: true);
                         },
                       ),
                       SizedBox(

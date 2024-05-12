@@ -180,8 +180,9 @@ class SeeAllScreen extends StatelessWidget {
                                                 .productsId!);
                                         cubit.increaseReview(cubit
                                             .allProducts[index].productsId!);
-
-                                        Helper.push(context, DetailsScreen());
+                                        Helper.push(context: context,widget:
+                                        DetailsScreen(
+                                        ),);
                                       },
                                       child: BuildProductCard(
                                         id: cubit

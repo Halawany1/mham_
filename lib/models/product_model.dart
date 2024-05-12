@@ -1,3 +1,5 @@
+import 'package:mham/models/one_product_model.dart';
+
 class ProductModel {
   List<Products>? products;
   int? totalPages;
@@ -24,7 +26,7 @@ class Products {
   String? description;
   String? manufacturerPartNumber;
   String? brandName;
-  List<Address>? address;
+  //List<Address>? address;
   String? productsImg;
   String? madeIn;
   dynamic price;
@@ -32,7 +34,6 @@ class Products {
   dynamic offerPrice;
   String? offerStartDate;
   String? offerEndDate;
-  dynamic averageRate;
   int? reviewCount;
   String? type;
   bool? isBestSeller;
@@ -40,9 +41,9 @@ class Products {
   bool? assemblyKit;
   String? productLine;
   String? frontOrRear;
-  int? tyreSpeedRate;
+  String? tyreSpeedRate;
   int? maximumTyreLoad;
-  int? tyreEngraving;
+  String? tyreEngraving;
   int? rimDiameter;
   int? tyreHeight;
   int? tyreWidth;
@@ -54,12 +55,9 @@ class Products {
   int? liter;
   String? color;
   int? numberSparkPulgs;
-  int? rateCount;
   String? createdAt;
   int? businessCategoriesId;
   bool? enabled;
-  bool? inCart;
-  bool? inFavourite;
   String? productsName;
   String? warranty;
   String? disabledAt;
@@ -67,8 +65,14 @@ class Products {
   BusinessCategory? businessCategory;
   Trader? trader;
   List<AvailableYears>? availableYears;
+  List<ProductRating>? productRating;
+  dynamic averageRate;
+  int? rateCount;
   RatePercentage? ratePercentage;
+  bool ?inCart;
+  bool ?inFavourite;
   String ?status;
+
   Products.fromJson(Map<String, dynamic> json) {
     productsId = json['products_id'];
     traderId = json['trader_id'];
@@ -77,12 +81,12 @@ class Products {
     description = json['description'];
     manufacturerPartNumber = json['manufacturer_part_number'];
     brandName = json['brand_name'];
-    if (json['address'] != null) {
-      address = <Address>[];
-      json['address'].forEach((v) {
-        address!.add( Address.fromJson(v));
-      });
-    }
+    // if (json['address'] != null) {
+    //   address = <Address>[];
+    //   json['address'].forEach((v) {
+    //     address!.add( Address.fromJson(v));
+    //   });
+    // }
     productsImg = json['products_img'];
     madeIn = json['madeIn'];
     ratePercentage = json['ratePercentage'] != null
@@ -128,7 +132,7 @@ class Products {
         ?  BusinessCategory.fromJson(json['businessCategory'])
         : null;
     trader =
-    json['trader'] != null ?  Trader.fromJson(json['trader']) : null;
+    json['driver'] != null ?  Trader.fromJson(json['driver']) : null;
     if (json['availableYears'] != null) {
       availableYears = <AvailableYears>[];
       json['availableYears'].forEach((v) {

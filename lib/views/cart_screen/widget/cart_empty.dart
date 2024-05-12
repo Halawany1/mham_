@@ -32,12 +32,13 @@ class BuildCartEmpty extends StatelessWidget {
                   .copyWith(fontSize: 16.sp),
             ),
             SizedBox(
-              height: 15.h,
+              height: 20.h,
             ),
             BuildDefaultButton(
                 text: locale.startShopping,
                 width: 120.w,
-                height: 28.h,
+                height: 26.h,
+                fontSize: 12.sp,
                 borderRadius: 8.r,
                 onPressed: () {
                   HomeCubit.get(context)

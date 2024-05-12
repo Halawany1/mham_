@@ -84,7 +84,7 @@ class BuildProductCard extends StatelessWidget {
                 child: InkWell(
                   onTap: () {
                     if(CacheHelper.getData(key: AppConstant.token)==null){
-                      Helper.push(context, GetStartScreen());
+                      Helper.push(context: context,widget: GetStartScreen());
                     }else{
                       HomeCubit.get(context).addAndRemoveFavorite(
                           busniessId:
@@ -204,7 +204,7 @@ class BuildProductCard extends StatelessWidget {
                 onPressed: () {
                   if(!inCart){
                     if(CacheHelper.getData(key: AppConstant.token)==null){
-                      Helper.push(context, GetStartScreen());
+                      Helper.push(context: context,widget: GetStartScreen());
                     }else{
                       CartCubit.get(context).addToCart(token: CacheHelper.getData(key: AppConstant.token),
                           id: id, quantity: 1);
@@ -227,14 +227,16 @@ class BuildProductCard extends StatelessWidget {
                 width: 100.w,
                 onPressed: () {
                   if(CacheHelper.getData(key: AppConstant.token)==null){
-                    Helper.push(context, GetStartScreen());
+                    Helper.push(context: context,widget: GetStartScreen());
 
                   }else{
-                    Helper.push(context, CheckoutScreen(
+                    Helper.push(context: context, widget: CheckoutScreen(
                       totalPrice: double.parse(price.toString()),
                       oneProductName: title,
                       price: double.parse(price.toString()),
-                    ));
+                    ),
+                      withAnimate: true
+                    );
                   }
 
                 },),

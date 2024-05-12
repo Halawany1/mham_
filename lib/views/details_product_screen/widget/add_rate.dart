@@ -102,6 +102,7 @@ class BuildAddRate extends StatelessWidget {
                   text: locale.addRate,
                   width: 80.w,
                   height: 22.h,
+                  fontSize: 12.sp,
                   borderRadius: 8.r,
                   onPressed: () {
                     if (cubit.rate != 0) {

@@ -206,8 +206,17 @@
   "startYourAutoPartsJourneyWithUs":
   "Start your auto parts journey with us",
   "noInternetConnection": "No Internet Connection",
-  "areYouSureToLogout": "Are you sure to logout?"
+  "areYouSureToLogout": "Are you sure to logout?",
+  "address": "Address (Optional)",
+  "asDriver": "As Driver",
+  "asClient": "As Client",
+  "enterAddress": "Enter Your Address",
 
 
-
+  "timeLine":"TimeLine",
+  "assignOrder":"Assigned Orders",
+  "history":"History",
+  "niceToSeeYouAgain":"Nice To See You Again",
+  "hi": "Hi",
+  "customerLocation": "Customer Location"
 }

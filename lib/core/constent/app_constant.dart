@@ -6,4 +6,5 @@ class   AppConstant {
   static String businessId="businessId";
   static String indexProduct="indexProduct";
   static String fcmToken="fcmToken";
+  static String driver="driver";
 }

@@ -76,8 +76,7 @@ class ReturnsScreen extends StatelessWidget {
                             List<Map<String, dynamic>> returnData = [];
                             int returnQuantity = 0;
                             int productQuantity = 0;
-                            cubit.recentPurchases[index].carts![0]
-                                .cartProducts!
+                            cubit.recentPurchases[index].orderItems!
                                 .forEach((element) {
                               totalPrice += element.product!.price! *
                                   element.quantity!;
@@ -88,9 +87,9 @@ class ReturnsScreen extends StatelessWidget {
                                 "quantity": element.quantity
                               });
                               productQuantity += element.quantity!;
-                              element.returnProduct!.forEach((element) {
-                                returnQuantity += element.quantity!;
-                              });
+                              // element.returnProduct!.forEach((element) {
+                              //   returnQuantity += element.quantity!;
+                              // });
                             });
                             bool hideReturnButton = false;
                             if (productQuantity == returnQuantity) {
@@ -99,17 +98,17 @@ class ReturnsScreen extends StatelessWidget {
 
                             return InkWell(
                                 onTap: () {
-                                  Helper.push(
-                                      context,
-                                      DetailsRecentPurchasesScreen(
-                                        hideReturnButton:
-                                        hideReturnButton,
-                                        returns: returnData,
-                                        currentIndex: index,
-                                        returnOrder: true,
-                                        hideNav: true,
-                                        totalPrice: totalPrice,
-                                      ));
+                                  Helper.push(context: context,widget:
+                                  DetailsRecentPurchasesScreen(
+                                    hideReturnButton:
+                                    hideReturnButton,
+                                    returns: returnData,
+                                    currentIndex: index,
+                                    returnOrder: true,
+                                    hideNav: true,
+                                    totalPrice: totalPrice,
+                                  ),withAnimate: true
+                                  );
                                 },
                                 child: BuildCardOrderList(
                                     returns: returnData,
@@ -122,7 +121,7 @@ class ReturnsScreen extends StatelessWidget {
                                         .returnsOrder[index]
                                         .createdAt!,
                                     orderId: cubit
-                                        .returnsOrder[index].orderId!,
+                                        .returnsOrder[index].id!,
                                     totalPrice: totalPrice,
                                     index: index));
                           },
@@ -157,9 +156,11 @@ class ReturnsScreen extends StatelessWidget {
                                   width: 150.w,
                                   height: 30.h,
                                   borderRadius: 8.r,
+                                  fontSize: 13.sp,
                                   text: locale.createNewReturn,
                                   onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(
+                                    Navigator.push(context,
+                                        MaterialPageRoute(
                                       builder: (context) =>
                                           RecentPurchasesScreen(hideNav: false,),));
                                   },

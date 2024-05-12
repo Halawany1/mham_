@@ -19,7 +19,9 @@ import 'package:mham/models/return_order_model.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 
 part 'home_state.dart';
+
 enum RadioButtonValue { all, original, copy }
+
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
 
@@ -40,8 +42,8 @@ class HomeCubit extends Cubit<HomeState> {
     int? availableYearId,
     int? busniessId,
     String? search,
-  })async {
-    if(await Helper.hasConnection()){
+  }) async {
+    if (await Helper.hasConnection()) {
       if (page == 1) {
         homeProducts.clear();
         allProducts.clear();
@@ -81,19 +83,23 @@ class HomeCubit extends Cubit<HomeState> {
             homeProducts.add(element);
           });
         }
+
         productModel!.products!.forEach((element) {
           allProducts.add(element);
-          if (element.inFavourite!) {
-            favoriteProducts.add(element);
-          }
+          // if (element.inFavourite!) {
+          //   favoriteProducts.add(element);
+          // }
         });
 
         emit(SuccessGetAllProduct());
       }).catchError((error) {
         print(error.toString());
+        if(error is DioError){
+          print(error.response!.data);
+        }
         emit(ErrorGetAllProduct(error.toString()));
       });
-    }else{
+    } else {
       emit(NoInternetHomeState());
     }
   }
@@ -106,8 +112,8 @@ class HomeCubit extends Cubit<HomeState> {
   List<ValueItem> selectedCarModels = [];
   CarCategoryModel? carModel;
 
-  void getCarModels() async{
-    if( await Helper.hasConnection()){
+  void getCarModels() async {
+    if (await Helper.hasConnection()) {
       carType.clear();
       selectedCarType.clear();
       carModels.clear();
@@ -135,7 +141,7 @@ class HomeCubit extends Cubit<HomeState> {
       }).catchError((error) {
         emit(ErrorGetCarModelsState(error));
       });
-    }else{
+    } else {
       emit(NoInternetHomeState());
     }
   }
@@ -232,21 +238,21 @@ class HomeCubit extends Cubit<HomeState> {
     emit(ChangeQuantityState());
   }
 
-  void increaseReview(int id) async{
-   if( await Helper.hasConnection()){
-     DioHelper.getData(
-       url: ApiConstant.increaseReview + id.toString(),
-     ).then((value) {
-       emit(IncreaseReviewState());
-     }).catchError((error) {
-       if (error is DioError) {
-         print(error.response!.data);
-       }
-       emit(ErrorIncreaseReviewState(error));
-     });
-   }else{
-     emit(NoInternetHomeState());
-   }
+  void increaseReview(int id) async {
+    if (await Helper.hasConnection()) {
+      DioHelper.getData(
+        url: ApiConstant.increaseReview + id.toString(),
+      ).then((value) {
+        emit(IncreaseReviewState());
+      }).catchError((error) {
+        if (error is DioError) {
+          print(error.response!.data);
+        }
+        emit(ErrorIncreaseReviewState(error));
+      });
+    } else {
+      emit(NoInternetHomeState());
+    }
   }
 
   int index = 0;
@@ -258,26 +264,26 @@ class HomeCubit extends Cubit<HomeState> {
 
   RequestScrapModel? requestScrapModel;
 
-  void addScrap({required String description}) async{
-    if(await Helper.hasConnection()){
-    emit(LoadingAddScrapState());
-    DioHelper.postData(
-    url: ApiConstant.addScrap,
-    data: {'description': description},
-    token: CacheHelper.getData(key: AppConstant.token),
-    ).then((value) {
-    requestScrapModel = RequestScrapModel.fromJson(value.data);
-    emit(SuccessAddScrapState(requestScrapModel!));
-    }).catchError((error) {
-    if (error is DioError) {
-    print(error.response!.data);
-    String data = error.response!.data['message'][0];
-    emit(ErrorAddScrapState(data));
+  void addScrap({required String description}) async {
+    if (await Helper.hasConnection()) {
+      emit(LoadingAddScrapState());
+      DioHelper.postData(
+        url: ApiConstant.addScrap,
+        data: {'description': description},
+        token: CacheHelper.getData(key: AppConstant.token),
+      ).then((value) {
+        requestScrapModel = RequestScrapModel.fromJson(value.data);
+        emit(SuccessAddScrapState(requestScrapModel!));
+      }).catchError((error) {
+        if (error is DioError) {
+          print(error.response!.data);
+          String data = error.response!.data['message'][0];
+          emit(ErrorAddScrapState(data));
+        } else {
+          emit(ErrorAddScrapState(error));
+        }
+      });
     } else {
-    emit(ErrorAddScrapState(error));
-    }
-    });
-    }else{
       emit(NoInternetHomeState());
     }
   }
@@ -285,27 +291,27 @@ class HomeCubit extends Cubit<HomeState> {
   void addAndRemoveFavorite({
     required int id,
     int? busniessId,
-  }) async{
-   if(await Helper.hasConnection()){
-     emit(LoadingAddAndRemoveFavoriteState());
-     DioHelper.postData(
-       url: ApiConstant.addAndRemoveFavorite + id.toString(),
-       token: CacheHelper.getData(key: AppConstant.token),
-     ).then((value) {
-       emit(SuccessAddAndRemoveFavoriteState());
-       getAllProduct(
-         busniessId: busniessId,
-       );
-     }).catchError((error) {
-       if (error is DioError) {
-         print(error.response!.data);
-       } else {
-         emit(ErrorAddAndRemoveFavoriteState(error));
-       }
-     });
-   }else{
-     emit(NoInternetHomeState());
-   }
+  }) async {
+    if (await Helper.hasConnection()) {
+      emit(LoadingAddAndRemoveFavoriteState());
+      DioHelper.postData(
+        url: ApiConstant.addAndRemoveFavorite + id.toString(),
+        token: CacheHelper.getData(key: AppConstant.token),
+      ).then((value) {
+        emit(SuccessAddAndRemoveFavoriteState());
+        getAllProduct(
+          busniessId: busniessId,
+        );
+      }).catchError((error) {
+        if (error is DioError) {
+          print(error.response!.data);
+        } else {
+          emit(ErrorAddAndRemoveFavoriteState(error));
+        }
+      });
+    } else {
+      emit(NoInternetHomeState());
+    }
   }
 
   OrderModel? orderModel;
@@ -314,11 +320,11 @@ class HomeCubit extends Cubit<HomeState> {
   List<Orders> returnsOrder = [];
 
   void getAllOrders() async {
-    if(await Helper.hasConnection()){
+    if (await Helper.hasConnection()) {
       allOrders.clear();
       emit(LoadingGetAllOrdersState());
       DioHelper.getData(
-        url: ApiConstant.orders,
+        url:ApiConstant.orders,
         token: CacheHelper.getData(key: AppConstant.token),
       ).then((value) {
         allOrders.clear();
@@ -333,25 +339,23 @@ class HomeCubit extends Cubit<HomeState> {
             recentPurchases.add(element);
           }
         });
-        recentPurchases.forEach((element) {
-          bool flag = false;
-          element.carts!.forEach((element) {
-            element.cartProducts!.forEach((element) {
-              if (!element.returnProduct!.isEmpty) {
-                flag = true;
-              }
-            });
-          });
-          if (!flag) {
-            returnsOrder.add(element);
-          }
-        });
+        // recentPurchases.forEach((element) {
+        //   bool flag = false;
+        //   element.orderItems!.forEach((element) {
+        //     if (!element.returnProduct!.isEmpty) {
+        //       flag = true;
+        //     }
+        //   });
+        //   if (!flag) {
+        //     returnsOrder.add(element);
+        //   }
+        // });
         emit(SuccessGetAllOrdersState());
       }).catchError((error) {
         print(error.toString());
         emit(ErrorGetAllOrdersState(error.toString()));
       });
-    }else{
+    } else {
       emit(NoInternetHomeState());
     }
   }
@@ -373,8 +377,8 @@ class HomeCubit extends Cubit<HomeState> {
   void cancelProduct({
     required int orderId,
     required int productId,
-  }) async{
-    if(await Helper.hasConnection()){
+  }) async {
+    if (await Helper.hasConnection()) {
       emit(LoadingCancelProductState());
       DioHelper.putData(
         url: ApiConstant.cancelProduct,
@@ -390,33 +394,32 @@ class HomeCubit extends Cubit<HomeState> {
           emit(ErrorCancelProductState(error));
         }
       });
-    }else{
+    } else {
       emit(NoInternetHomeState());
     }
   }
 
-  void cancelOrder({required int id}) async{
- if(await Helper.hasConnection()){
-   emit(LoadingCancelOrderState());
-   DioHelper.putData(
-     url: ApiConstant.cancelOrder,
-     data: {'order_id': id},
-     token: CacheHelper.getData(key: AppConstant.token),
-   ).then((value) {
-     emit(SuccessCancelOrderState());
-     getAllOrders();
-   }).catchError((error) {
-     if (error is DioError) {
-       print(error.response!.data);
-       emit(ErrorCancelOrderState(error.response!.data['message'][0]));
-     } else {
-       emit(ErrorCancelOrderState(error));
-     }
-   });
- }else{
-
-   emit(NoInternetHomeState());
- }
+  void cancelOrder({required int id}) async {
+    if (await Helper.hasConnection()) {
+      emit(LoadingCancelOrderState());
+      DioHelper.putData(
+        url: ApiConstant.cancelOrder,
+        data: {'order_id': id},
+        token: CacheHelper.getData(key: AppConstant.token),
+      ).then((value) {
+        emit(SuccessCancelOrderState());
+        getAllOrders();
+      }).catchError((error) {
+        if (error is DioError) {
+          print(error.response!.data);
+          emit(ErrorCancelOrderState(error.response!.data['message'][0]));
+        } else {
+          emit(ErrorCancelOrderState(error));
+        }
+      });
+    } else {
+      emit(NoInternetHomeState());
+    }
   }
 
   int rate = 0;
@@ -426,31 +429,31 @@ class HomeCubit extends Cubit<HomeState> {
     emit(ChangeRateState());
   }
 
-  void addRate({required int id, String? comment, required int rate})async {
-  if(await Helper.hasConnection()){
-    emit(LoadingAddRateState());
-    DioHelper.postData(
-    url: ApiConstant.addRate + id.toString(),
-    data: {
-    "rateData": {
-    "rate": rate,
-    if (comment != null) "comment": comment //optinal
-    }
-    },
-    token: CacheHelper.getData(key: AppConstant.token),
-    ).then((value) {
-    emit(SuccessAddRateState());
-    getProductDetails(id: id);
-    }).catchError((error) {
-    if (error is DioError) {
-    print(error.response!.data);
-    emit(ErrorAddRateState(error.response!.data['message'][0]));
+  void addRate({required int id, String? comment, required int rate}) async {
+    if (await Helper.hasConnection()) {
+      emit(LoadingAddRateState());
+      DioHelper.postData(
+        url: ApiConstant.addRate + id.toString(),
+        data: {
+          "rateData": {
+            "rate": rate,
+            if (comment != null) "comment": comment //optinal
+          }
+        },
+        token: CacheHelper.getData(key: AppConstant.token),
+      ).then((value) {
+        emit(SuccessAddRateState());
+        getProductDetails(id: id);
+      }).catchError((error) {
+        if (error is DioError) {
+          print(error.response!.data);
+          emit(ErrorAddRateState(error.response!.data['message'][0]));
+        } else {
+          emit(ErrorAddRateState(error));
+        }
+      });
     } else {
-    emit(ErrorAddRateState(error));
-    }
-    });
-  }else{
-    emit(NoInternetHomeState());
+      emit(NoInternetHomeState());
     }
   }
 
@@ -476,7 +479,6 @@ class HomeCubit extends Cubit<HomeState> {
         emit(SuccessGetProductDetailsState());
       }).catchError((error) {
         if (error is DioError) {
-          print(error.response!.data);
           emit(ErrorGetProductDetailsState(error.response!.data['message']));
         } else {
           print(error.toString());
@@ -518,23 +520,21 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   NotificationModel? notificationModel;
-  List<Notifications>notifications=[];
-  void getNotification({int page=1,int pageSize=10}) async {
+  List<Notifications> notifications = [];
+
+  void getNotification({int page = 1, int pageSize = 10}) async {
     if (await Helper.hasConnection()) {
       print(page);
-      if(page==1){
+      if (page == 1) {
         notifications.clear();
       }
       emit(LoadingGetNotificationState());
       DioHelper.getData(
-        query: {
-          "page":page,
-          "pageSize":pageSize
-        },
-          token: CacheHelper.getData(key: AppConstant.token),
+              query: {"page": page, "pageSize": pageSize},
+              token: CacheHelper.getData(key: AppConstant.token),
               url: ApiConstant.notifications)
           .then((value) {
-        if(page==1){
+        if (page == 1) {
           notifications.clear();
         }
         notificationModel = NotificationModel.fromJson(value.data);
@@ -554,11 +554,9 @@ class HomeCubit extends Cubit<HomeState> {
     if (await Helper.hasConnection()) {
       emit(LoadingUpdateNotificationState());
       DioHelper.patchData(
-        data: {
-          "isReaded": true
-        },
-          token: CacheHelper.getData(key: AppConstant.token),
-          url: ApiConstant.notifications)
+              data: {"isReaded": true},
+              token: CacheHelper.getData(key: AppConstant.token),
+              url: ApiConstant.notifications)
           .then((value) {
         emit(SuccessUpdateNotificationState());
       }).catchError((error) {
@@ -568,6 +566,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(NoInternetHomeState());
     }
   }
+
   ProductRatingModel? productRatingModel;
   List<Rating> productRating = [];
   int currentPage = 1;
@@ -604,6 +603,7 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   RadioButtonValue? selectValue;
+
   void changeType(RadioButtonValue value) {
     selectValue = value;
     emit(ChangeTypeState());
@@ -615,7 +615,4 @@ class HomeCubit extends Cubit<HomeState> {
     price = value;
     emit(ChangePriceState());
   }
-
-
-
 }

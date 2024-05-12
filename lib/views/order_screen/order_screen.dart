@@ -81,7 +81,7 @@ class OrderScreen extends StatelessWidget {
                               double totalPrice = 0.0;
                               List<Map<String, dynamic>> returnData = [];
 
-                              cubit.allOrders[index].carts![0].cartProducts!
+                              cubit.allOrders[index].orderItems!
                                   .forEach((element) {
                                 totalPrice += element.product!.price! *
                                     element.quantity!;
@@ -96,21 +96,20 @@ class OrderScreen extends StatelessWidget {
                               return InkWell(
                                   onTap: () {
                                     int count=0;
-                                    cubit.allOrders[index].carts!
-                                    [0].cartProducts!.forEach((element) {
+                                    cubit.allOrders[index].orderItems!.forEach((element) {
                                       if(element.status=="Cancelled"){
                                         count++;
                                       }
                                     });
                                     Helper.push(
-                                        context,
-                                        OrderDetailsScreen(
-                                          hideCancelOrder:count==cubit.allOrders[index].carts!
-                                          [0].cartProducts!.length ,
-                                          returns: returnData,
-                                          currentIndex: index,
-                                          totalPrice: totalPrice,
-                                        ));
+                                        context: context,
+                                      widget:   OrderDetailsScreen(
+                                        hideCancelOrder:count==cubit.allOrders[index].orderItems
+                                        !.length ,
+                                        returns: returnData,
+                                        currentIndex: index,
+                                        totalPrice: totalPrice,
+                                      ),withAnimate: true);
                                   },
                                   child: BuildCardOrderList(
                                       returns:returnData,
@@ -118,7 +117,7 @@ class OrderScreen extends StatelessWidget {
                                       quantity: cubit.allOrders.length,
                                       createdAt: cubit.allOrders[index]
                                           .createdAt!,
-                                      orderId: cubit.allOrders[index].orderId!,
+                                      orderId: cubit.allOrders[index].id!,
                                       totalPrice: totalPrice,
                                       index: index)
                               );

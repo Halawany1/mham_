@@ -7,10 +7,7 @@ import 'package:mham/core/components/snak_bar_component.dart';
 import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/views/details_recent_purchases_screen/details_recent_purchases_screen.dart';
-import 'package:mham/views/order_details_screen/order_details_screen.dart';
 import 'package:mham/views/order_screen/widget/card_order_list_component.dart';
-
-import '../order_details_screen/widget/card_product_details.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RecentPurchasesScreen extends StatelessWidget {
@@ -80,8 +77,7 @@ class RecentPurchasesScreen extends StatelessWidget {
                                   List<Map<String, dynamic>> returnData = [];
                                   int returnQuantity = 0;
                                   int productQuantity = 0;
-                                  cubit.recentPurchases[index].carts![0]
-                                      .cartProducts!
+                                  cubit.recentPurchases[index].orderItems!
                                       .forEach((element) {
                                     totalPrice += element.product!.price! *
                                         element.quantity!;
@@ -92,9 +88,9 @@ class RecentPurchasesScreen extends StatelessWidget {
                                       "quantity": element.quantity
                                     });
                                     productQuantity += element.quantity!;
-                                    element.returnProduct!.forEach((element) {
-                                      returnQuantity += element.quantity!;
-                                    });
+                                    // element.returnProduct!.forEach((element) {
+                                    //   returnQuantity += element.quantity!;
+                                    // });
                                   });
                                   bool hideReturnButton = false;
                                   if (productQuantity == returnQuantity) {
@@ -103,17 +99,16 @@ class RecentPurchasesScreen extends StatelessWidget {
 
                                   return InkWell(
                                       onTap: () {
-                                        Helper.push(
-                                            context,
-                                            DetailsRecentPurchasesScreen(
-                                              hideReturnButton:
-                                                  hideReturnButton,
-                                              returns: returnData,
-                                              currentIndex: index,
-                                              returnOrder: true,
-                                              hideNav: true,
-                                              totalPrice: totalPrice,
-                                            ));
+                                        Helper.push(context: context,widget:
+                                        DetailsRecentPurchasesScreen(
+                                          hideReturnButton:
+                                          hideReturnButton,
+                                          returns: returnData,
+                                          currentIndex: index,
+                                          returnOrder: true,
+                                          hideNav: true,
+                                          totalPrice: totalPrice,
+                                        ),withAnimate: true);
                                       },
                                       child: BuildCardOrderList(
                                           returns: returnData,
@@ -126,7 +121,7 @@ class RecentPurchasesScreen extends StatelessWidget {
                                               .recentPurchases[index]
                                               .createdAt!,
                                           orderId: cubit
-                                              .recentPurchases[index].orderId!,
+                                              .recentPurchases[index].id!,
                                           totalPrice: totalPrice,
                                           index: index));
                                 },

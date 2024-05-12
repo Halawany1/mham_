@@ -183,17 +183,17 @@ class OrderDetailsScreen extends StatelessWidget {
                       SizedBox(
                         height: 12.h,
                       ),
-                      BuildOrderDetails(currentIndex: currentIndex,
-                          lenght: cubit.allOrders[currentIndex].carts!.length,
+                      BuildOrderDetails(
+                          lenght: cubit.allOrders[currentIndex].orderItems!.length,
                           createdAt: cubit.allOrders[currentIndex].createdAt!,
                           status: cubit.allOrders[currentIndex].status!,
                           totalPrice: totalPrice),
                       SizedBox(
                         height: 20.h,
                       ),
-                      BuildTrackingOrder(currentIndex: currentIndex,
+                      BuildTrackingOrder(
                           createdAt: cubit.allOrders[currentIndex].createdAt!,
-                          orderId: cubit.allOrders[currentIndex].orderId!,
+                          orderId: cubit.allOrders[currentIndex].id!,
                           stepperData: stepperData, totalPrice: totalPrice),
                       SizedBox(
                         height: 20.h,
@@ -212,13 +212,12 @@ class OrderDetailsScreen extends StatelessWidget {
                           List<String> carModels = [];
                           if (cubit
                                   .allOrders[currentIndex]
-                                  .carts![0]
-                                  .cartProducts![index]
+                                  .orderItems![index]
                                   .product!
                                   .availableYears !=
                               null) {
-                            cubit.allOrders[currentIndex].carts![0]
-                                .cartProducts![index].product!.availableYears!
+                            cubit.allOrders[currentIndex].orderItems
+                            ![index].product!.availableYears!
                                 .forEach((element) {
                               carModels.add(element.carModel!.car!.carName! +
                                   ' ' +
@@ -232,22 +231,22 @@ class OrderDetailsScreen extends StatelessWidget {
                           cubit.allOrders.forEach((element) {
                             cubit.cardProductDetails.add(false);
                           });
-                          int returnQuantity = 0;
-                          cubit.allOrders[currentIndex].carts![0]
-                              .cartProducts![index].returnProduct!
-                              .forEach((element) {
-                            returnQuantity += element.quantity!;
-                          });
-                          for (int i = 1;
-                              i <=
-                                  cubit.allOrders[currentIndex].carts![0]
-                                          .cartProducts![index].quantity! -
-                                      returnQuantity;
-                              i++) {
-                            quantities.add(i.toString());
-                          }
+                          // int returnQuantity = 0;
+                          // cubit.allOrders[currentIndex].orderItems
+                          // ![index].returnProduct!
+                          //     .forEach((element) {
+                          //   returnQuantity += element.quantity!;
+                          // });
+                          // for (int i = 1;
+                          //     i <=
+                          //         cubit.allOrders[currentIndex].carts![0]
+                          //                 .cartProducts![index].quantity! -
+                          //             returnQuantity;
+                          //     i++) {
+                          //   quantities.add(i.toString());
+                          // }
                           return BuildCardProductDetails(
-                              returnQuantity: returnQuantity,
+                              returnQuantity: 5,
                               quantity: quantities,
                               onTap: () {
                                 cubit.openAndCloseCardProductDetails(index);
@@ -261,8 +260,7 @@ class OrderDetailsScreen extends StatelessWidget {
                         separatorBuilder: (context, index) => SizedBox(
                           height: 20.h,
                         ),
-                        itemCount: cubit.allOrders[currentIndex].carts![0]
-                            .cartProducts!.length,
+                        itemCount: cubit.allOrders[currentIndex].orderItems!.length,
                       ),
                       SizedBox(
                         height: 20.h,
@@ -279,11 +277,12 @@ class OrderDetailsScreen extends StatelessWidget {
                               text: locale.cancelOrder,
                               width: 120.w,
                               height: 26.h,
+                              fontSize: 15.sp,
                               borderRadius: 8.r,
                               onPressed: () {
                                 if(!hideCancelOrder) {
                                   cubit.cancelOrder(
-                                      id: cubit.allOrders[currentIndex].orderId!);
+                                      id: cubit.allOrders[currentIndex].id!);
                                 }
 
                               },

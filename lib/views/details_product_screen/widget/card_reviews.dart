@@ -32,63 +32,55 @@ class BuildCardReviews extends StatelessWidget {
           SizedBox(
             width: 10.h,
           ),
-          SizedBox(
-            width: 220.w,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: 150.w,
-                      child: Text(
-                        cubit.productRating[index].user!.userName!,
-                        style: font.bodyMedium,
-                      ),
-                    ),
-                    RatingBar.builder(
-                      ignoreGestures: true,
-                      initialRating: cubit.productRating[index].ratingNum!
-                          .toDouble(),
-                      minRating: cubit.productRating[index].ratingNum!
-                          .toDouble(),
-                      direction: Axis.horizontal,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      unratedColor: color.highlightColor
-                          .withOpacity(0.8),
-                      itemSize: 12.sp,
-                      itemBuilder: (context, _) =>
-                      const Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      ),
-                      onRatingUpdate: (value) {},
-                      tapOnlyMode: true,
-                    )
-                  ],
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 150.w,
+                child: Text(
+                  cubit.productRating[index].user!.userName!,
+                  style: font.bodyMedium,
                 ),
-                SizedBox(
-                  height: 5.h,
-                ),
-                Text(
-                  cubit.productRating
-                  [index].review??'No Review',
-                  style: font.bodyMedium!
-                      .copyWith(fontSize: 12.sp),
-                ),
-                SizedBox(height: 2.h,),
-                Text(
-                  '5 Apr, 3:35',
-                  style: font.bodyMedium!.copyWith(
-                      fontSize: 10.sp,
-                      color: color.primaryColor
-                          .withOpacity(0.5)),
-                )
-              ],
+              ),
+              SizedBox(
+                height: 5.h,
+              ),
+              Text(
+                cubit.productRating
+                [index].review??'No Review',
+                style: font.bodyMedium!
+                    .copyWith(fontSize: 12.sp),
+              ),
+              SizedBox(height: 2.h,),
+              Text(
+                '5 Apr, 3:35',
+                style: font.bodyMedium!.copyWith(
+                    fontSize: 10.sp,
+                    color: color.primaryColor
+                        .withOpacity(0.5)),
+              )
+            ],
+          ),
+          Spacer(),
+          RatingBar.builder(
+            ignoreGestures: true,
+            initialRating: cubit.productRating[index].ratingNum!
+                .toDouble(),
+            minRating: cubit.productRating[index].ratingNum!
+                .toDouble(),
+            direction: Axis.horizontal,
+            allowHalfRating: true,
+            itemCount: 5,
+            unratedColor: color.highlightColor
+                .withOpacity(0.8),
+            itemSize: 12.sp,
+            itemBuilder: (context, _) =>
+            const Icon(
+              Icons.star,
+              color: Colors.amber,
             ),
+            onRatingUpdate: (value) {},
+            tapOnlyMode: true,
           )
         ],
       ),

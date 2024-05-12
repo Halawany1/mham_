@@ -11,6 +11,7 @@ import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/layout/widget/no_internet.dart';
+import 'package:mham/views/driver/start_with_driver_or_customer_screen/start_with_driver_or_customer_screen.dart';
 import 'package:mham/views/get_start_screen/get_start_screen.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
@@ -43,7 +44,7 @@ class LayoutScreen extends StatelessWidget {
                       cubit.changeIndex(i);
                     } else {
                       if (i != 0) {
-                        Helper.push(context, GetStartScreen());
+                        Helper.push(context: context, widget: GetStartScreen());
                       }
                     }
                   },

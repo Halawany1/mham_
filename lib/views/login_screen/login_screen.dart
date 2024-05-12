@@ -14,16 +14,19 @@ import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/error/validation.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
+import 'package:mham/driver_layout/driver_layout_screen.dart';
 import 'package:mham/layout/layout_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mham/views/driver/home_screen/driver_home_screen.dart';
 import 'package:mham/views/otp_screen/otp_screen.dart';
 import 'package:mham/views/sign_up_screen/sign_up_screen.dart';
 
 var _formKey = GlobalKey<FormState>();
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({super.key,required this.client});
 
+  final bool client;
   @override
   Widget build(BuildContext context) {
     var font = Theme.of(context).textTheme;
@@ -32,6 +35,7 @@ class LoginScreen extends StatelessWidget {
     void clearAllData() {
       phoneController.clear();
       passwordController.clear();
+      AuthenticationCubit.get(context).selectedCountry=null;
     }
 
     return BlocConsumer<AuthenticationCubit, AuthenticationState>(
@@ -41,16 +45,36 @@ class LoginScreen extends StatelessWidget {
               context: context, success: false);
         }
         var cubit = context.read<AuthenticationCubit>();
-        if (state is SuccessLoginUserState) {
-          clearAllData();
-          CacheHelper.saveData(
-              key: AppConstant.token, value: cubit.userModel!.token);
-          Helper.pushReplacement(context, LayoutScreen());
-          HomeCubit.get(context).getNotification();
-        }
-        if (state is ErrorLoginUserState) {
-         showMessageResponse(message: state.error,
-         context: context, success: false);
+        if(client){
+          if (state is SuccessLoginUserState) {
+            clearAllData();
+            CacheHelper.saveData(
+                key: AppConstant.token, value: cubit.userModel!.token);
+            Navigator.pushAndRemoveUntil(context,
+              MaterialPageRoute(builder: (context) => const LayoutScreen())
+              ,(route) => false,);
+            HomeCubit.get(context).getNotification();
+          }
+          if (state is ErrorLoginUserState) {
+            showMessageResponse(message: state.error,
+                context: context, success: false);
+          }
+        }else{
+          if (state is SuccessLoginUserState) {
+            clearAllData();
+            CacheHelper.saveData(
+                key: AppConstant.token, value: cubit.userModel!.token);
+            CacheHelper.saveData(key: AppConstant.driver,
+                value: true);
+            Navigator.pushAndRemoveUntil(context,
+              MaterialPageRoute(builder: (context) =>
+              const DriverLayoutScreen())
+              ,(route) => false,);
+          }
+          if (state is ErrorLoginUserState) {
+            showMessageResponse(message: state.error,
+                context: context, success: false);
+          }
         }
       },
       builder: (context, state) {
@@ -146,10 +170,13 @@ class LoginScreen extends StatelessWidget {
                                           ? '+985'
                                           : cubit.selectedCountry!.dialCode;
 
-                                  cubit.userLogin(
-                                      lang: LayoutCubit.get(context).lang,
-                                      phone: countryCode + phoneController.text,
-                                      password: passwordController.text);
+                                    cubit.userLogin(
+                                      driver: !client,
+                                        lang: LayoutCubit.get(context).lang,
+                                        phone: countryCode + phoneController.text,
+                                        password: passwordController.text);
+
+                                 
                                 }
                               },
                             ),
@@ -163,7 +190,8 @@ class LoginScreen extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const SignUpScreen()));
+                                  builder: (context) =>
+                                   SignUpScreen(client: client,)));
                           AuthenticationCubit.get(context).resetVisible();
                         },
                         text: locale.noHaveAccount,

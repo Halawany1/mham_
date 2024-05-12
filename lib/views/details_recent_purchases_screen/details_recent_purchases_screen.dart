@@ -36,15 +36,13 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     var color = Theme.of(context);
     var font = Theme.of(context).textTheme;
     final locale = AppLocalizations.of(context);
     var cubit = HomeCubit.get(context);
     List<StepperData> stepperData = [
       StepperData(
-          title: StepperText(locale.ordered,
-              textStyle: font.bodyMedium),
+          title: StepperText(locale.ordered, textStyle: font.bodyMedium),
           subtitle: StepperText(
             locale.orderPlaced +
                 Helper.trackingTimeFormat(
@@ -63,50 +61,54 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
       StepperData(
           title: StepperText(locale.processing, textStyle: font.bodyMedium),
           subtitle: cubit.recentPurchases[currentIndex].deliveredAt != null &&
-              cubit.recentPurchases[currentIndex].processingAt != null?
-          StepperText(
-              locale.orderPrepared +
-                  Helper.trackingTimeFormat(
-                      cubit.recentPurchases[currentIndex].processingAt!),
-              textStyle: font.bodySmall!.copyWith(color:
-              Colors.grey)):null,
+                  cubit.recentPurchases[currentIndex].processingAt != null
+              ? StepperText(
+                  locale.orderPrepared +
+                      Helper.trackingTimeFormat(
+                          cubit.recentPurchases[currentIndex].processingAt!),
+                  textStyle: font.bodySmall!.copyWith(color: Colors.grey))
+              : null,
           iconWidget: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                color: cubit.recentPurchases[currentIndex].deliveredAt != null ||
-                    cubit.recentPurchases[currentIndex].processingAt != null
+                color: cubit.recentPurchases[currentIndex].deliveredAt !=
+                            null ||
+                        cubit.recentPurchases[currentIndex].processingAt != null
                     ? color.backgroundColor
                     : Colors.grey,
                 borderRadius: BorderRadius.all(Radius.circular(15.r))),
             child: Text('2',
                 style: font.bodyMedium!.copyWith(
-                    color: cubit.recentPurchases[currentIndex].deliveredAt != null
-                        ? ColorConstant.brown
-                        : Colors.grey)),
+                    color:
+                        cubit.recentPurchases[currentIndex].deliveredAt != null
+                            ? ColorConstant.brown
+                            : Colors.grey)),
           )),
       StepperData(
           title: StepperText(locale.shipped, textStyle: font.bodyMedium),
-          subtitle:  cubit.recentPurchases[currentIndex].deliveredAt != null &&
-              cubit.recentPurchases[currentIndex].shippedAt != null
-              ?StepperText(
-              textStyle: font.bodySmall!.copyWith(color: Colors.grey),
-              locale.deliverItem +
-                  Helper.trackingTimeFormat(
-                      cubit.recentPurchases[currentIndex].shippedAt!)):
-          null,
+          subtitle: cubit.recentPurchases[currentIndex].deliveredAt != null &&
+                  cubit.recentPurchases[currentIndex].shippedAt != null
+              ? StepperText(
+                  textStyle: font.bodySmall!.copyWith(color: Colors.grey),
+                  locale.deliverItem +
+                      Helper.trackingTimeFormat(
+                          cubit.recentPurchases[currentIndex].shippedAt!))
+              : null,
           iconWidget: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                color: cubit.recentPurchases[currentIndex].deliveredAt != null ||
-                    cubit.recentPurchases[currentIndex].shippedAt != null
+                color: cubit.recentPurchases[currentIndex].deliveredAt !=
+                            null ||
+                        cubit.recentPurchases[currentIndex].shippedAt != null
                     ? color.backgroundColor
                     : Colors.grey,
                 borderRadius: BorderRadius.all(Radius.circular(15.r))),
             child: Text('3',
                 style: font.bodyMedium!.copyWith(
-                    color: cubit.recentPurchases[currentIndex].deliveredAt != null
-                        ? ColorConstant.brown
-                        : Colors.grey)),
+                    color:
+                        cubit.recentPurchases[currentIndex].deliveredAt != null
+                            ? ColorConstant.brown
+                            : Colors.grey)),
           )),
       StepperData(
         iconWidget: Container(
@@ -137,9 +139,11 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
       },
       child: BlocConsumer<HomeCubit, HomeState>(
         listener: (context, state) {
-          if(state is NoInternetHomeState){
-            showMessageResponse(message: locale.noInternetConnection,
-                context: context, success: false);
+          if (state is NoInternetHomeState) {
+            showMessageResponse(
+                message: locale.noInternetConnection,
+                context: context,
+                success: false);
           }
           if (state is SuccessReturnOrderState) {
             cubit.cardProductDetails.clear();
@@ -154,7 +158,6 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
             showMessageResponse(
                 message: state.error, context: context, success: false);
           }
-
         },
         builder: (context, state) {
           var cubit = context.read<HomeCubit>();
@@ -186,20 +189,22 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
                       SizedBox(
                         height: 12.h,
                       ),
-
-                      BuildOrderDetails(currentIndex: currentIndex,
-                          lenght: cubit.recentPurchases[currentIndex].carts!.length,
-                          createdAt: cubit.recentPurchases[currentIndex].createdAt!,
+                      BuildOrderDetails(
+                          lenght: cubit
+                              .recentPurchases[currentIndex].orderItems!.length,
+                          createdAt:
+                              cubit.recentPurchases[currentIndex].createdAt!,
                           status: cubit.recentPurchases[currentIndex].status!,
                           totalPrice: totalPrice),
-
                       SizedBox(
                         height: 20.h,
                       ),
-                      BuildTrackingOrder(currentIndex: currentIndex,
-                          createdAt: cubit.recentPurchases[currentIndex].createdAt!,
-                          orderId: cubit.recentPurchases[currentIndex].orderId!,
-                          stepperData: stepperData, totalPrice: totalPrice),
+                      BuildTrackingOrder(
+                          createdAt:
+                              cubit.recentPurchases[currentIndex].createdAt!,
+                          orderId: cubit.recentPurchases[currentIndex].id!,
+                          stepperData: stepperData,
+                          totalPrice: totalPrice),
                       SizedBox(
                         height: 20.h,
                       ),
@@ -215,15 +220,11 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           List<String> carModels = [];
-                          if (cubit
-                              .recentPurchases[currentIndex]
-                              .carts![0]
-                              .cartProducts![index]
-                              .product!
-                              .availableYears !=
+                          if (cubit.recentPurchases[currentIndex]
+                                  .orderItems![index].product!.availableYears !=
                               null) {
-                            cubit.recentPurchases[currentIndex].carts![0]
-                                .cartProducts![index].product!.availableYears!
+                            cubit.recentPurchases[currentIndex].orderItems![index]
+                                .product!.availableYears!
                                 .forEach((element) {
                               carModels.add(element.carModel!.car!.carName! +
                                   ' ' +
@@ -237,22 +238,22 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
                           cubit.recentPurchases.forEach((element) {
                             cubit.cardProductDetails.add(false);
                           });
-                          int returnQuantity = 0;
-                          cubit.recentPurchases[currentIndex].carts![0]
-                              .cartProducts![index].returnProduct!
-                              .forEach((element) {
-                            returnQuantity += element.quantity!;
-                          });
-                          for (int i = 1;
-                          i <=
-                              cubit.recentPurchases[currentIndex].carts![0]
-                                  .cartProducts![index].quantity! -
-                                  returnQuantity;
-                          i++) {
-                            quantities.add(i.toString());
-                          }
+                          // int returnQuantity = 0;
+                          // cubit.recentPurchases[currentIndex].orderItems![index]
+                          //     .returnProduct!
+                          //     .forEach((element) {
+                          //   returnQuantity += element.quantity!;
+                          // });
+                          // for (int i = 1;
+                          //     i <=
+                          //         cubit.recentPurchases[currentIndex].carts![0]
+                          //                 .cartProducts![index].quantity! -
+                          //             returnQuantity;
+                          //     i++) {
+                          //   quantities.add(i.toString());
+                          // }
                           return BuildCardProductDetails(
-                              returnQuantity: returnQuantity,
+                              returnQuantity: 5,
                               quantity: quantities,
                               onTap: () {
                                 cubit.openAndCloseCardProductDetails(index);
@@ -266,30 +267,32 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
                         separatorBuilder: (context, index) => SizedBox(
                           height: 20.h,
                         ),
-                        itemCount: cubit.recentPurchases[currentIndex].carts![0]
-                            .cartProducts!.length,
+                        itemCount: cubit.recentPurchases[currentIndex].
+                        orderItems!.length,
                       ),
                       SizedBox(
                         height: 20.h,
                       ),
-                      if(returnOrder)
+                      if (returnOrder)
                         BuildDefaultButton(
                             text: locale.returnOrder,
                             borderRadius: 8.r,
                             width: 110.w,
                             height: 26.h,
                             onPressed: () {
-                              if(hideReturnButton){
-                                showDialog(context: context,
+                              if (hideReturnButton) {
+                                showDialog(
+                                  context: context,
                                   builder: (context) {
                                     return BuildReturnOrderPopUp(
                                         returns: returns);
-                                  },);
+                                  },
+                                );
                               }
                             },
-                            backgorundColor:hideReturnButton?
-                                Colors.grey
-                                :color.backgroundColor,
+                            backgorundColor: hideReturnButton
+                                ? Colors.grey
+                                : color.backgroundColor,
                             colorText: ColorConstant.brown)
                     ],
                   ),

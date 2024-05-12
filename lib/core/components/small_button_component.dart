@@ -11,8 +11,6 @@ class BuildSmallButton extends StatelessWidget {
     this.width=68,
     this.withIcon=true,
     this.icon,
-
-
   });
   final String text;
   final bool edit;

@@ -31,9 +31,10 @@ class BuildEmptyOrder extends StatelessWidget {
             SizedBox(height: 22.h),
             BuildDefaultButton(
                 text: locale.startShopping,
-                width: 100.w,
+                width: 120.w,
                 height: 26.h,
                 borderRadius: 8.r,
+                fontSize: 12.sp,
                 onPressed: () {
                   HomeCubit.get(context)
                       .getAllProduct();

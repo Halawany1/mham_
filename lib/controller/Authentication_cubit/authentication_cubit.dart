@@ -47,13 +47,20 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   void userLogin({
     required String phone,
     required String password,
-    required String lang
+    required String lang,
+    bool driver=false
   }) async{
+    print(phone);
+    print(password);
+    print(lang);
     if(await Helper.hasConnection()) {
       emit(LoadingLoginUserState());
-      DioHelper.postData(url: ApiConstant.login,
+      DioHelper.postData(url:driver?
+      ApiConstant.loginDriver
+          : ApiConstant.login,
           data: {
-            "phonenumber": phone,
+            if(driver)"mobile": phone,
+            if(!driver)"phonenumber": phone,
             "password": password,
             "fcmToken": CacheHelper.getData(key: AppConstant.fcmToken),
           }
@@ -62,8 +69,8 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
         emit(SuccessLoginUserState());
       }).catchError((error) {
         if (error is DioError) {
-          errorUserModel = ErrorUserModel.fromJson(error.response!.data);
-          emit(ErrorLoginUserState(errorUserModel!.message!.first));
+          print(error.response!.data);
+          emit(ErrorLoginUserState(error.response!.data['message'][0]));
         } else {
           emit(ErrorLoginUserState(error.toString()));
         }
@@ -180,7 +187,7 @@ String ?countryId;
     required String password,
     required int countryId,
     required String confirmPassword,
-    required String lang
+    required String lang,
   }) async{
 
     if(await Helper.hasConnection()){
@@ -217,5 +224,52 @@ String ?countryId;
     currentIndexOtpVerification = index;
     emit(ChangeIndexOtpVerificationState());
   }
+
+
+  void userSignUpForDriver({
+    required String userName,
+    required String password,
+    required String phone,
+    required String confirmPassword,
+    required String drivingLicence,
+    required int country,
+    required String lang,
+    required String address,
+  }) async {
+    if(await Helper.hasConnection()){
+      emit(LoadingRegisterUserState());
+      try {
+        Dio dio = Dio();
+        dio.options.headers = {
+          'Content-Type': 'multipart/form-data',
+          'lang': lang,
+        };
+        FormData formData = FormData.fromMap({
+          "username": userName,
+          if(drivingLicence!='') "drivingLicence": await MultipartFile.fromFile(drivingLicence),
+          "password": password,
+          "mobile": phone,
+          "countryId": country,
+          "confirmPassword": confirmPassword,
+         if(address!='') "address":address,
+        });
+
+        await dio.post(
+            ApiConstant.baseUrl + ApiConstant.registerDriver,
+            data: formData);
+        emit(SuccessRegisterUserState());
+      } catch (error) {
+        if (error is DioError) {
+          print(error.response!.data);
+          emit(ErrorRegisterUserState(error.response!.data.toString()));
+        } else {
+          emit(ErrorRegisterUserState(error.toString()));
+        }
+      }
+    }else{
+      emit(NoInternetAuthState());
+    }
+  }
+
 
 }

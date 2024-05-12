@@ -33,13 +33,13 @@ class BuildCarFilter extends StatelessWidget {
               text: locale.requestScrap,
               height: 17.h,
               withBorder: true,
-              width: 90.w,
+              width: 100.w,
               borderRadius: 5.r,
               fontSize: 8.sp,
 
               onPressed: () {
                 if(CacheHelper.getData(key: AppConstant.token) == null) {
-                  Helper.push(context, GetStartScreen());
+                  Helper.push(context: context,widget: GetStartScreen());
                 }else{
                   showDialog(
                     context: context,

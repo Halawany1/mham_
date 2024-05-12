@@ -207,5 +207,16 @@
   "startYourAutoPartsJourneyWithUs":
   "ابدأ مشروعك الاستضافة بشكل جزئي للمصانع السيارية",
   "noInternetConnection": "لا يوجد اتصال بالانترنت",
-  "areYouSureToLogout": "هل انت متاكد من تسجيل الخروج؟"
+  "areYouSureToLogout": "هل انت متاكد من تسجيل الخروج؟",
+  "address": "العنوان (اختياري)",
+  "asDriver": "كسائق",
+  "asClient": "كعميل",
+  "enterAddress": "ادخل عنوانك",
+  "timeLine":"الجدول الزمني",
+  "assignOrder":"الطلبات المعينة",
+  "history":"تاريخ",
+  "niceToSeeYouAgain":"جميل ان اراك مرة اخرى",
+  "hi": "مرحبا",
+  "customerLocation": "موقع العميل"
+
 }

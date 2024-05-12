@@ -85,7 +85,7 @@ class FavouriteScreen extends StatelessWidget {
                                         .favoriteProducts[index].productsId!);
                                 cubit.increaseReview(cubit
                                     .favoriteProducts[index].productsId!);
-                                Helper.push(context, DetailsScreen());
+                                Helper.push(context: context,widget: DetailsScreen() );
                               },
                               child: BuildProductCard(
                                 id: cubit.favoriteProducts[index].productsId!,

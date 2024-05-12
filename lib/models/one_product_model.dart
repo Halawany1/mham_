@@ -114,7 +114,7 @@ class Product {
         ?  BusinessCategory.fromJson(json['businessCategory'])
         : null;
     trader =
-    json['trader'] != null ?  Trader.fromJson(json['trader']) : null;
+    json['driver'] != null ?  Trader.fromJson(json['driver']) : null;
     if (json['availableYears'] != null) {
       availableYears = <AvailableYears>[];
       json['availableYears'].forEach((v) {

@@ -29,6 +29,7 @@ class NotificationScreen extends StatelessWidget {
             ),
             leading: InkWell(
                 onTap: () {
+                  HomeCubit.get(context).getNotification();
                   Helper.pop(context);
                 },
                 child: Icon(

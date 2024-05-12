@@ -9,7 +9,7 @@ class Validation{
     if (value == null || value.isEmpty) {
       return locale.pleaseEnterYourPassword;
     }
-    if (value.length < 8) {
+    if (value.length < 6) {
       return locale.pleaseEnterYourValidPassword;
     }
     // Add additional password validation rules as needed

@@ -45,16 +45,62 @@ class Helper {
     String formattedDateTime = DateFormat('h:mm a - MMM dd').format(dateTime);
     return formattedDateTime;
   }
-  static void push(BuildContext context, Widget widget) {
-    Navigator.push(context, MaterialPageRoute(builder:
-        (context) => widget,));
+  static void push({required BuildContext context,
+    required Widget widget,bool withAnimate=false}) {
+    if(withAnimate){
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => widget,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var begin = Offset(1.0, 0.0);
+            var end = Offset.zero;
+            var curve = Curves.ease;
+
+            var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        ),
+      );
+    }else{
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => widget));
+    }
+
+  }
+  static void pushReplacement({required BuildContext context,
+    required Widget widget,bool withAnimate=false}) {
+    if(withAnimate){
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => widget,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var begin = Offset(1.0, 0.0);
+            var end = Offset.zero;
+            var curve = Curves.ease;
+
+            var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        ),
+      );
+    }else{
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => widget));
+    }
+
   }
 
-  static void pushReplacement(BuildContext context, Widget widget) {
-    Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder:
-        (context) => widget,),(route) => false,);
-  }
+
   static void pop(BuildContext context) {
    Navigator.pop(context);
   }

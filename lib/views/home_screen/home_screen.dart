@@ -7,7 +7,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mham/controller/cart_cubit/cart_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
-import 'package:mham/controller/internet_cubit/internet_cubit.dart';
 import 'package:mham/core/components/laoding_animation_component.dart';
 import 'package:mham/core/components/product_card_component.dart';
 import 'package:mham/core/components/row_product_and_see_all_component.dart';
@@ -47,9 +46,14 @@ class HomeScreen extends StatelessWidget {
     var font = Theme.of(context).textTheme;
     return BlocConsumer<CartCubit, CartState>(
       listener: (context, state) {
+        if(state is ErrorAddToCart){
+          showMessageResponse(
+              message: state.error, context: context, success: false);
+        }
         if (state is SuccessAddToCart) {
           showMessageResponse(
               message: locale.addedSuccess, context: context, success: true);
+
           HomeCubit.get(context).getAllProduct();
         }
       },
@@ -167,10 +171,10 @@ class HomeScreen extends StatelessWidget {
                       onTap: () {
                         if (CacheHelper.getData(key: AppConstant.token) ==
                             null) {
-                          Helper.push(context, GetStartScreen());
+                          Helper.push(context: context,widget:  GetStartScreen());
                         } else {
                           cubit.updateNotification();
-                          Helper.push(context, NotificationScreen());
+                          Helper.push(context: context,widget:  NotificationScreen());
                         }
                       },
                       child: Stack(
@@ -216,9 +220,9 @@ class HomeScreen extends StatelessWidget {
                           CartCubit.get(context).getCart(
                               token:
                                   CacheHelper.getData(key: AppConstant.token));
-                          Helper.push(context, CartScreen());
+                          Helper.push(context: context,widget: CartScreen(),withAnimate: true);
                         } else {
-                          Helper.push(context, GetStartScreen());
+                          Helper.push(context: context,widget:  GetStartScreen());
                         }
                       },
                       child: Icon(
@@ -232,7 +236,8 @@ class HomeScreen extends StatelessWidget {
                   padding: EdgeInsets.only(top: 10.h),
                   child: BuildSearchFormField(
                     onTap: () {
-                      Helper.push(context, SearchScreen());
+                      Helper.push(context: context,
+                          widget: SearchScreen(),withAnimate: true);
                     },
                     readOnly: true,
                   ),
@@ -279,10 +284,11 @@ class HomeScreen extends StatelessWidget {
                                   empty: false,
                                   onTap: () {
                                     Helper.push(
-                                        context,
-                                        SeeAllScreen(
-                                          title: locale.products,
-                                        ));
+                                        context: context,
+                                      widget:   SeeAllScreen(
+                                        title: locale.products,
+                                      )
+                                      );
                                   },
                                 ),
                                 SizedBox(
@@ -328,8 +334,8 @@ class HomeScreen extends StatelessWidget {
                                           cubit.increaseReview(cubit
                                               .homeProducts[index]
                                               .productsId!);
-                                          Helper.push(context,
-                                              DetailsScreen());
+                                          Helper.push(context: context,
+                                             widget: DetailsScreen());
                                         },
                                         child: BuildProductCard(
                                           id: cubit

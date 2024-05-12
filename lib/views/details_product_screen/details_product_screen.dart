@@ -71,8 +71,8 @@ class DetailsScreen extends StatelessWidget {
           return BlocConsumer<HomeCubit, HomeState>(
             listener: (context, state) {
               if (state is SuccessAddRateState) {
-                cubit.getProductRating(id: cubit.oneProductModel!
-                    .product!.productsId!);
+                cubit.getProductRating(
+                    id: cubit.oneProductModel!.product!.productsId!);
                 showMessageResponse(
                     message: locale.addRateSuccess,
                     context: context,
@@ -80,9 +80,11 @@ class DetailsScreen extends StatelessWidget {
                 comment.clear();
                 cubit.changeRate(value: 0);
               }
-              if(state is NoInternetHomeState){
-                showMessageResponse(message: locale.noInternetConnection,
-                    context: context, success: false);
+              if (state is NoInternetHomeState) {
+                showMessageResponse(
+                    message: locale.noInternetConnection,
+                    context: context,
+                    success: false);
               }
             },
             builder: (context, state) {
@@ -278,8 +280,14 @@ class DetailsScreen extends StatelessWidget {
                                       Spacer(),
                                       TextButton(
                                           onPressed: () {
-
-                                            Helper.push(context, AllReviewsScreen(productId: cubit.oneProductModel!.product!.productsId!));
+                                            Helper.push(
+                                                context: context,
+                                                widget: AllReviewsScreen(
+                                                    productId: cubit
+                                                        .oneProductModel!
+                                                        .product!
+                                                        .productsId!),
+                                                withAnimate: true);
                                           },
                                           child: Text(
                                             locale.seeAll,

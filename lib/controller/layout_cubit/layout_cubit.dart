@@ -4,6 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/network/local.dart';
+import 'package:mham/views/driver/assign_orders_screen/assign_order_screen.dart';
+import 'package:mham/views/driver/history_screen/hstory_screen.dart';
+import 'package:mham/views/driver/home_screen/driver_home_screen.dart';
+import 'package:mham/views/driver/profile_screen/profile_screen.dart';
+import 'package:mham/views/driver/time_line_screen/time_line_screen.dart';
 import 'package:mham/views/home_screen/home_screen.dart';
 import 'package:mham/views/order_screen/order_screen.dart';
 import 'package:mham/views/profile_screen/profile_screen.dart';
@@ -28,6 +33,19 @@ class LayoutCubit extends Cubit<LayoutState> {
     emit(LayoutChangeIndexState());
   }
 
+  List<Widget>screensDriver=[
+    DriverHomeScreen(),
+    TimeLineScreen(),
+    AssignOrdersDriverScreen(),
+    HistoryDriverScreen(),
+    ProfileDriverScreen()
+  ];
+  int driverIndex=0;
+  void changeDriverIndex(int value) {
+    driverIndex=value;
+    emit(LayoutChangeIndexState());
+  }
+
   String lang=CacheHelper.getData(key: AppConstant.lang)??"en";
   void changeLang(String value) {
     lang=value;
@@ -42,5 +60,7 @@ class LayoutCubit extends Cubit<LayoutState> {
     CacheHelper.saveData(key: AppConstant.theme, value: theme);
     emit(LayoutChangeThemeModeState());
   }
+
+
 
 }

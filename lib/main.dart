@@ -12,6 +12,7 @@ import 'package:mham/controller/cart_cubit/cart_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/controller/internet_cubit/internet_cubit.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
+import 'package:mham/controller/order_driver_cubit/order_driver_cubit.dart';
 import 'package:mham/controller/profile_cubit/profile_cubit.dart';
 import 'package:mham/core/components/show_toast.dart';
 import 'package:mham/core/constent/api_constant.dart';
@@ -23,6 +24,7 @@ import 'package:mham/core/network/bloc_observer.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/core/network/remote.dart';
 import 'package:mham/core/style/theme.dart';
+import 'package:mham/driver_layout/driver_layout_screen.dart';
 import 'package:mham/l10n/l10n.dart';
 import 'package:mham/layout/layout_screen.dart';
 import 'package:mham/views/login_screen/login_screen.dart';
@@ -41,7 +43,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheHelper.init();
   await DioHelper.init();
-  //await CacheHelper.deleteAllData();
+  // await CacheHelper.deleteAllData();
   await LocalNotificationService().init();
   await Firebase.initializeApp();
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -85,10 +87,15 @@ void main() async {
   if (CacheHelper.getData(key: AppConstant.theme) == null) {
     CacheHelper.saveData(key: AppConstant.theme, value: true);
   }
+
   if (CacheHelper.getData(key: AppConstant.onBoarding) == null) {
     widget = const OnBoardingScreen();
   } else {
-    widget = const LayoutScreen();
+    if (CacheHelper.getData(key: AppConstant.driver) != null) {
+      widget = const DriverLayoutScreen();
+    } else {
+      widget = const LayoutScreen();
+    }
   }
   print(CacheHelper.getData(key: AppConstant.token));
   runApp(
@@ -111,15 +118,23 @@ class MyApp extends StatelessWidget {
           create: (context) => LayoutCubit(),
         ),
         BlocProvider(
+          create: (context) => OrderDriverCubit()..getAllOrders(),
+        ),
+        BlocProvider(
           create: (context) => HomeCubit()
             ..getCarModels()
-            ..getNotification(),
+            ..getNotification()
+          ,
         ),
         BlocProvider(
           create: (context) => AuthenticationCubit(),
         ),
         BlocProvider(
-          create: (context) => ProfileCubit()..getProfile(),
+          create: (context) => ProfileCubit()
+            ..getProfile(
+                driver: CacheHelper.getData(key: AppConstant.driver) != null
+                    ? true
+                    : false),
         ),
         BlocProvider(create: (context) => CartCubit()),
         BlocProvider(create: (context) => InternetCubit()..checkConnectivity()),

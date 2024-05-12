@@ -59,6 +59,13 @@ dependencies:
   connectivity_plus: ^5.0.2
   internet_connection_checker: ^1.0.0+1
   flutter_local_notifications: ^17.1.0
+  image_picker: ^1.1.1
+  flutter_inappwebview: ^6.0.0
+  location: ^6.0.2
+  flutter_polyline_points: ^2.0.0
+  google_maps_flutter: ^2.6.1
+  url_launcher: ^6.2.6
+  geolocator: ^11.0.0
 
   #firebase for FCM
   firebase_messaging: ^14.7.20

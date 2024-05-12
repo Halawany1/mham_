@@ -32,7 +32,8 @@ class BuildAllCategories extends StatelessWidget {
                 busniessId: 1,
               );
               Helper.push(
-                  context,
+                  context: context,
+                  widget:
                   SeeAllScreen(
                     title: locale.spareParts,
                   ));
@@ -49,7 +50,8 @@ class BuildAllCategories extends StatelessWidget {
                 busniessId: 4,
               );
               Helper.push(
-                  context,
+                  context: context,
+                  widget:
                   SeeAllScreen(
                     title: locale.tiresAndWheels,
                   ));
@@ -67,7 +69,8 @@ class BuildAllCategories extends StatelessWidget {
                 busniessId: 5,
               );
               Helper.push(
-                  context,
+                  context: context,
+                  widget:
                   SeeAllScreen(
                     title: locale.batteries,
                   ));
@@ -93,7 +96,8 @@ class BuildAllCategories extends StatelessWidget {
                 busniessId: 3,
               );
               Helper.push(
-                  context,
+                  context: context,
+                  widget:
                   SeeAllScreen(
                     title: locale.motorOil,
                   ));
@@ -110,7 +114,8 @@ class BuildAllCategories extends StatelessWidget {
                 busniessId: 9,
               );
               Helper.push(
-                  context,
+                  context: context,
+                  widget:
                   SeeAllScreen(
                     title: locale.rimCover,
                   ));
@@ -127,7 +132,8 @@ class BuildAllCategories extends StatelessWidget {
                 busniessId: 2,
               );
               Helper.push(
-                  context,
+                  context: context,
+                  widget:
                   SeeAllScreen(
                     title: locale.accessories,
                   ));
@@ -153,7 +159,8 @@ class BuildAllCategories extends StatelessWidget {
                 busniessId: 8,
               );
               Helper.push(
-                  context,
+                  context: context,
+                  widget:
                   SeeAllScreen(
                     title: locale.rim,
                   ));
@@ -170,7 +177,8 @@ class BuildAllCategories extends StatelessWidget {
                 busniessId: 6,
               );
               Helper.push(
-                  context,
+                  context: context,
+                  widget:
                   SeeAllScreen(
                     title: locale.sparkPlugs,
                   ));
@@ -187,7 +195,8 @@ class BuildAllCategories extends StatelessWidget {
                 busniessId: 7,
               );
               Helper.push(
-                  context,
+                  context: context,
+                  widget:
                   SeeAllScreen(
                     title: locale.liquids,
                   ));

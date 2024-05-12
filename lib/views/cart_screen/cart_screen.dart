@@ -111,12 +111,6 @@ class CartScreen extends StatelessWidget {
                                 itemBuilder: (context, index) => InkWell(
                                       onTap: () {
                                         HomeCubit.get(context).oneProductModel=null;
-                                        print(cubit
-                                            .cartModel!
-                                            .cart!
-                                            .cartProducts![index]
-                                            .product!
-                                            .productsId!);
                                         HomeCubit.get(context).getProductDetails(
                                             id: cubit
                                                 .cartModel!

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
@@ -17,6 +18,7 @@ import 'package:mham/core/error/validation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
+import 'package:mham/driver_layout/driver_layout_screen.dart';
 import 'package:mham/layout/layout_screen.dart';
 
 var _formKey = GlobalKey<FormState>();
@@ -24,10 +26,14 @@ var userNameController = TextEditingController();
 var phoneController = TextEditingController();
 var passwordController = TextEditingController();
 var confirmPasswordController = TextEditingController();
-
+var addressController = TextEditingController();
+var driverLicenseController = TextEditingController();
+XFile ?imageFileOne;
 class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key});
-
+  const  SignUpScreen({super.key,
+    required this.client
+  });
+  final bool client;
   @override
   Widget build(BuildContext context) {
     var font = Theme
@@ -39,7 +45,12 @@ void clearAllData() {
   passwordController.clear();
   confirmPasswordController.clear();
   phoneController.clear();
+  addressController.clear();
+  driverLicenseController.clear();
+  AuthenticationCubit.get(context).countryId=null;
+  AuthenticationCubit.get(context).selectedCountry=null;
 }
+
     final locale = AppLocalizations.of(context);
     return BlocConsumer<AuthenticationCubit, AuthenticationState>(
       listener: (context, state) {
@@ -48,18 +59,35 @@ void clearAllData() {
               context: context, success: false);
         }
         var cubit=context.read<AuthenticationCubit>();
-        if (state is SuccessRegisterUserState) {
-          CacheHelper.saveData(
-              key: AppConstant.token,
-              value: cubit.userModel!.token);
-          Helper.pushReplacement(context, LayoutScreen());
-          HomeCubit.get(context).getNotification();
-        }
+        if(client){
+          if (state is SuccessRegisterUserState) {
+            clearAllData();
+            CacheHelper.saveData(
+                key: AppConstant.token,
+                value: cubit.userModel!.token);
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LayoutScreen())
+              ,(route) => false,);
+            HomeCubit.get(context).getNotification();
+          }
 
-        if (state is ErrorRegisterUserState) {
-          showMessageResponse(message: state.error,
-              context: context, success: false);
+          if (state is ErrorRegisterUserState) {
+            showMessageResponse(message: state.error,
+                context: context, success: false);
+          }
+        }else{
+          if (state is SuccessRegisterUserState) {
+            clearAllData();
+           // HomeCubit.get(context).getNotification();
+            showMessageResponse(message: 'your account requires approval from our admin team',
+                context: context, success: true);
+          }
+
+          if (state is ErrorRegisterUserState) {
+            showMessageResponse(message: state.error,
+                context: context, success: false);
+          }
         }
+     
       },
       builder: (context, state) {
         var cubit = context.read<AuthenticationCubit>();
@@ -160,6 +188,21 @@ void clearAllData() {
                         SizedBox(
                           height: 20.h,
                         ),
+                        if(!client)
+                        BuildTextFormField(
+                            maxLength: 120,
+                            keyboardType: TextInputType.text,
+                            cubit: cubit,
+                            validator: (value) {
+                              return null;
+                            },
+                            title: locale.address,
+                            hint:locale.enterAddress,
+                            controller: addressController),
+                        if(!client)
+                        SizedBox(
+                          height: 20.h,
+                        ),
                         BuildTextFormField(
                             maxLength: 120,
                             keyboardType: TextInputType.text,
@@ -188,6 +231,39 @@ void clearAllData() {
                             title: locale.confirmPassword,
                             hint: locale.confirmPassword,
                             controller: confirmPasswordController),
+                        if(!client)
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        if(!client)
+                        BuildTextFormField(
+                            maxLength: 120,
+                            keyboardType: TextInputType.text,
+                            cubit: cubit,
+
+                            validator: (value) {
+                              return Validation.validateField(
+                                  value, driverLicenseController.text, context);
+                            },
+                            title: 'Driving License',
+                            hint: 'Driving License',
+                            readOnly: true,
+                            onTap: () async {
+                              final ImagePicker picker = ImagePicker();
+                              imageFileOne = await picker.pickImage(
+                                source: ImageSource.gallery,
+                                // alternatively, use ImageSource.gallery
+                                maxWidth: 400,
+                              );
+                              if (imageFileOne == null) return;
+                              final String imagePath = imageFileOne!.path;
+                              final String imageName = imagePath
+                                  .substring(imagePath.lastIndexOf('/') + 1);
+
+// Set the image filename to the imageController
+                              driverLicenseController.text = imageName;
+                            },
+                            controller: driverLicenseController),
                         SizedBox(
                           height: 35.h,
                         ),
@@ -203,14 +279,30 @@ void clearAllData() {
                               cubit.selectedCountry == null
                                   ? '+985'
                                   : cubit.selectedCountry!.dialCode;
-                              cubit.userSignUp(
-                                  phone: countryCode + phoneController.text,
-                                  userName: userNameController.text,
-                                  password: passwordController.text,
-                                  countryId: cubit.countriesId[cubit.countryId]!,
-                                  confirmPassword: confirmPasswordController
-                                      .text,
-                                  lang: 'en');
+                              if(client){
+                                cubit.userSignUp(
+                                    phone: countryCode + phoneController.text,
+                                    userName: userNameController.text,
+                                    password: passwordController.text,
+                                    countryId: cubit.countriesId[cubit.countryId]!,
+                                    confirmPassword: confirmPasswordController
+                                        .text,
+                                    lang:LayoutCubit.get(context).lang);
+                              }else{
+                                XFile? driverLicense = imageFileOne;
+                               print(cubit.countriesId[cubit.countryId]!);
+                                cubit.userSignUpForDriver(
+                                  country: cubit.countriesId[cubit.countryId]!,
+                                  address: addressController.text,
+                                    drivingLicence: driverLicense==null?'':driverLicense.path,
+                                    phone: countryCode + phoneController.text,
+                                    userName: userNameController.text,
+                                    password: passwordController.text,
+                                    confirmPassword: confirmPasswordController
+                                        .text,
+                                    lang:LayoutCubit.get(context).lang);
+                              }
+
                             }
                           },
                         ),

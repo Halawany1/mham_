@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/controller/profile_cubit/profile_cubit.dart';
@@ -21,8 +22,8 @@ import '../../core/helper/helper.dart';
 var _formKey = GlobalKey<FormState>();
 
 class EditProfileScreen extends StatelessWidget {
-  const EditProfileScreen({super.key});
-
+  const EditProfileScreen({super.key, required this.driver});
+  final bool driver;
   @override
   Widget build(BuildContext context) {
     var color = Theme.of(context);
@@ -37,17 +38,29 @@ class EditProfileScreen extends StatelessWidget {
               context: context, success: false);
         }
         if (state is SuccessGetCountriesState) {
-          AuthenticationCubit.get(context).countryId =
-          LayoutCubit.get(context).lang=='en'?
-          ProfileCubit.get(context)
-              .userModel!
-              .user!
-              .country!
-              .countryNameEn!: ProfileCubit.get(context)
-              .userModel!
-              .user!
-              .country!
-              .countryNameAr!;
+          if(driver){
+            AuthenticationCubit.get(context).countryId =
+            LayoutCubit.get(context).lang=='en'?
+            ProfileCubit.get(context)
+                .driverModel!
+                .driver!.user!.country!.countryNameEn
+                :     ProfileCubit.get(context)
+                .driverModel!
+                .driver!.user!.country!.countryNameAr;
+          }else{
+            AuthenticationCubit.get(context).countryId =
+            LayoutCubit.get(context).lang=='en'?
+            ProfileCubit.get(context)
+                .userModel!
+                .user!
+                .country!
+                .countryNameEn!: ProfileCubit.get(context)
+                .userModel!
+                .user!
+                .country!
+                .countryNameAr!;
+          }
+
         }
         if (state is SuccessUpdateProfileState) {
           Helper.pop(context);
@@ -189,6 +202,53 @@ class EditProfileScreen extends StatelessWidget {
                                 valueName: locale.selectCountry,
                               ),
                               SizedBox(
+                                height: 20.h,
+                              ),
+                              BuildTextFormField(
+                                  withBorder: true,
+                                  maxLength: 120,
+                                  keyboardType: TextInputType.text,
+                                  cubit: cubit,
+                                  validator: (value) {
+                                    return Validation.validateField(value,
+                                        locale.address, context);
+                                  },
+                                  title: locale.address,
+                                  hint: locale.address,
+                                  controller: addressController),
+
+                              SizedBox(
+                                height: 20.h,
+                              ),
+                              BuildTextFormField(
+                                  maxLength: 120,
+                                  keyboardType: TextInputType.text,
+                                  cubit: cubit,
+                                  validator: (value) {
+                                    return Validation.validateField(
+                                        value, driverLicenseController.text, context);
+                                  },
+                                  title: 'Driving License',
+                                  hint: 'Driving License',
+                                  withBorder: true,
+                                  readOnly: true,
+                                  onTap: () async {
+                                    final ImagePicker picker = ImagePicker();
+                                    imageFileOne = await picker.pickImage(
+                                      source: ImageSource.gallery,
+                                      // alternatively, use ImageSource.gallery
+                                      maxWidth: 400,
+                                    );
+                                    if (imageFileOne == null) return;
+                                    final String imagePath = imageFileOne!.path;
+                                    final String imageName = imagePath
+                                        .substring(imagePath.lastIndexOf('/') + 1);
+
+// Set the image filename to the imageController
+                                    driverLicenseController.text = imageName;
+                                  },
+                                  controller: driverLicenseController),
+                              SizedBox(
                                 height: 50.h,
                               ),
                               state is LoadingUpdateProfileState
@@ -200,11 +260,20 @@ class EditProfileScreen extends StatelessWidget {
                                       text: locale.save,
                                       borderRadius: 10.r,
                                       onPressed: () {
-                                        profileCubit.updateProfile(
-                                            userName: userNameController.text,
-                                            countryId: cubit
-                                                .countriesId[cubit.countryId]!,
-                                            phone: phoneController.text);
+                                        if(_formKey.currentState!.validate()) {
+                                          if(driver){
+
+                                          }else{
+                                            profileCubit.updateProfile(
+                                                driver: driver,
+                                                userName: userNameController.text,
+                                                countryId: cubit
+                                                    .countriesId[cubit.countryId]!,
+                                                phone: phoneController.text);
+                                          }
+
+                                        }
+
                                       },
                                       backgorundColor: color.backgroundColor,
                                       colorText: ColorConstant.brown),

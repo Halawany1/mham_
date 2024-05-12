@@ -3,23 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
+import 'package:mham/core/components/material_button_component.dart';
+import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 
 class BuildTrackingOrder extends StatelessWidget {
   const BuildTrackingOrder(
       {super.key,
-      required this.currentIndex,
       required this.orderId,
       required this.createdAt,
       required this.stepperData,
+       this.notClosed=false,
       required this.totalPrice});
-
-  final int currentIndex;
 
   final double totalPrice;
   final List<StepperData> stepperData;
   final int orderId;
   final String createdAt;
+  final bool notClosed;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,10 @@ class BuildTrackingOrder extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () {
-                cubit.openAndCloseTrackingContainer();
+                if(!notClosed){
+                  cubit.openAndCloseTrackingContainer();
+                }
+
               },
               child: Container(
                 width: double.infinity,
@@ -48,19 +52,30 @@ class BuildTrackingOrder extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      locale.trackYourOrder,
+                      'Order Status',
                       style: font.bodyLarge!.copyWith(fontSize: 20.sp),
                     ),
+                    if(!notClosed)
                     Icon(
                       cubit.trackingContainer
                           ? Icons.keyboard_arrow_down_outlined
                           : Icons.keyboard_arrow_up,
-                    )
+                    ),
+                    if(notClosed)
+                      BuildDefaultButton(text: 'Delivered',
+                          width: 90.w,
+                          height: 25.h,
+                          borderRadius: 8.r,
+                          fontSize: 12.sp,
+                          onPressed: () {
+
+                          }, backgorundColor: color.backgroundColor,
+                          colorText: ColorConstant.brown)
                   ],
                 ),
               ),
             ),
-            if (cubit.trackingContainer)
+            if (cubit.trackingContainer || notClosed)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

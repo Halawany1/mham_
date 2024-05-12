@@ -21,17 +21,14 @@ class Cart {
 
 
   Cart.fromJson(Map<String, dynamic> json) {
-    cartId = json['cart_id'];
-    userId = json['user_id'];
-    totalPrice = json['total_price'];
+    cartId = json['cartId'];
+    userId = json['userId'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    status = json['status'];
-    orderId = json['order_id'];
-    if (json['cartProducts'] != null) {
+    if (json['cartItems'] != null) {
       cartProducts = <CartProducts>[];
-      json['cartProducts'].forEach((v) {
-        cartProducts!.add(new CartProducts.fromJson(v));
+      json['cartItems'].forEach((v) {
+        cartProducts!.add( CartProducts.fromJson(v));
       });
     }
   }
@@ -51,13 +48,13 @@ class CartProducts {
 
   CartProducts.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    cartId = json['cart_id'];
-    productId = json['product_id'];
+    cartId = json['cartId'];
+    productId = json['productId'];
     quantity = json['quantity'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
     product =
-    json['product'] != null ? new Product.fromJson(json['product']) : null;
+    json['product'] != null ?  Product.fromJson(json['product']) : null;
   }
 
 
@@ -69,7 +66,7 @@ class Product {
   String? description;
   String? manufacturerPartNumber;
   String? brandName;
-  List<Address>? address;
+//  List<Address>? address;
   String? productsImg;
   String? madeIn;
   dynamic price;
@@ -120,15 +117,12 @@ class Product {
     description = json['description'];
     manufacturerPartNumber = json['manufacturer_part_number'];
     brandName = json['brand_name'];
-    if (json['address'] != null) {
-      address = <Address>[];
-      json['address'].forEach((v) {
-        address!.add(new Address.fromJson(v));
-      });
-    }
-    ratePercentage = json['ratePercentage'] != null
-        ?  RatePercentage.fromJson(json['ratePercentage'])
-        : null;
+    // if (json['address'] != null) {
+    //   address = <Address>[];
+    //   json['address'].forEach((v) {
+    //     address!.add(new Address.fromJson(v));
+    //   });
+    // }
     productsImg = json['products_img'];
     madeIn = json['madeIn'];
     price = json['price'];
@@ -136,7 +130,7 @@ class Product {
     offerPrice = json['offer_price'];
     offerStartDate = json['offer_start_date'];
     offerEndDate = json['offer_end_date'];
-    averageRate = json['averageRate'];
+    averageRate = json['rating'];
     reviewCount = json['review_count'];
     type = json['type'];
     isBestSeller = json['is_best_seller'];

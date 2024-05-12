@@ -7,6 +7,7 @@ import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/core/helper/helper.dart';
+import 'package:mham/views/driver/start_with_driver_or_customer_screen/start_with_driver_or_customer_screen.dart';
 import 'package:mham/views/login_screen/login_screen.dart';
 import 'package:mham/views/sign_up_screen/sign_up_screen.dart';
 
@@ -69,7 +70,8 @@ void clearAllData() {
                       onPressed: () {
                         clearAllData();
                         Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => LoginScreen(),));
+                          builder: (context) =>
+                              GetStartWithDriverOrCustomerScreen(signUp: false,),));
                       },
                       backgorundColor: ColorConstant.brown,
                       colorText: ColorConstant.white),
@@ -79,7 +81,7 @@ void clearAllData() {
                         clearAllData();
                         AuthenticationCubit.get(context).getCountries();
                         Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => SignUpScreen(),));
+                          builder: (context) => GetStartWithDriverOrCustomerScreen(signUp: true),));
                       },
                       withBorder: true,
                       backgorundColor: ColorConstant.backgroundAuth,

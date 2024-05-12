@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
-import 'package:mham/core/components/pop_up_sure_component.dart';
 import 'package:mham/core/components/small_button_component.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/views/order_details_screen/order_details_screen.dart';
-import 'package:mham/views/order_screen/order_screen.dart';
-import 'package:mham/views/recent_purchases_screen/widget/return_order_popup.dart';
 
 class BuildCardOrderList extends StatelessWidget {
   const BuildCardOrderList({
@@ -115,13 +112,15 @@ class BuildCardOrderList extends StatelessWidget {
                           hieght: 17.h,
                           text: locale.moreDetails,
                           onPressed: () {
+
                             Helper.push(
-                                context,
+                                context: context,
+                                widget:
                                 OrderDetailsScreen(
                                   returns: returns,
                                   currentIndex: index,
                                   totalPrice: totalPrice,
-                                ));
+                                ),withAnimate: true);
                           },
                         )
                       ],
