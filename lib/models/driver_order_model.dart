@@ -31,7 +31,7 @@ class Orders {
   String? anotherMobile;
   String? address;
   String? location;
-  int? totalPrice;
+  dynamic totalPrice;
   String? status;
   String? processingAt;
   String? shippedAt;

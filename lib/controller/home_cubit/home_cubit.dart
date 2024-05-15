@@ -8,6 +8,7 @@ import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/core/network/remote.dart';
 import 'package:mham/models/car_model.dart';
+import 'package:mham/models/my_scrap_model.dart';
 import 'package:mham/models/notification_model.dart';
 import 'package:mham/models/one_product_model.dart';
 import 'package:mham/models/order_model.dart';
@@ -94,7 +95,7 @@ class HomeCubit extends Cubit<HomeState> {
         emit(SuccessGetAllProduct());
       }).catchError((error) {
         print(error.toString());
-        if(error is DioError){
+        if (error is DioError) {
           print(error.response!.data);
         }
         emit(ErrorGetAllProduct(error.toString()));
@@ -274,6 +275,8 @@ class HomeCubit extends Cubit<HomeState> {
       ).then((value) {
         requestScrapModel = RequestScrapModel.fromJson(value.data);
         emit(SuccessAddScrapState(requestScrapModel!));
+        getAllProduct();
+        getMyScrap();
       }).catchError((error) {
         if (error is DioError) {
           print(error.response!.data);
@@ -324,7 +327,7 @@ class HomeCubit extends Cubit<HomeState> {
       allOrders.clear();
       emit(LoadingGetAllOrdersState());
       DioHelper.getData(
-        url:ApiConstant.orders,
+        url: ApiConstant.orders,
         token: CacheHelper.getData(key: AppConstant.token),
       ).then((value) {
         allOrders.clear();
@@ -375,14 +378,12 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   void cancelProduct({
-    required int orderId,
     required int productId,
   }) async {
     if (await Helper.hasConnection()) {
       emit(LoadingCancelProductState());
-      DioHelper.putData(
-        url: ApiConstant.cancelProduct,
-        data: {'order_id': orderId, 'cartProduct_id': productId},
+      DioHelper.patchData(
+        url: ApiConstant.cancelProduct(productId),
         token: CacheHelper.getData(key: AppConstant.token),
       ).then((value) {
         emit(SuccessCancelProductState());
@@ -402,9 +403,8 @@ class HomeCubit extends Cubit<HomeState> {
   void cancelOrder({required int id}) async {
     if (await Helper.hasConnection()) {
       emit(LoadingCancelOrderState());
-      DioHelper.putData(
-        url: ApiConstant.cancelOrder,
-        data: {'order_id': id},
+      DioHelper.patchData(
+        url: ApiConstant.cancelOrder(id),
         token: CacheHelper.getData(key: AppConstant.token),
       ).then((value) {
         emit(SuccessCancelOrderState());
@@ -614,5 +614,59 @@ class HomeCubit extends Cubit<HomeState> {
   void changePrice(double value) {
     price = value;
     emit(ChangePriceState());
+  }
+
+  MyScrapModel? myScrapModel;
+
+  void getMyScrap() async{
+    if(await Helper.hasConnection()) {
+      DioHelper.getData(
+          url: ApiConstant.myScrap,
+          token: CacheHelper.getData(key: AppConstant.token))
+          .then((value) {
+        myScrapModel = MyScrapModel.fromJson(value.data);
+        emit(SuccessGetMyScrapState());
+      })
+          .catchError((error) {
+        emit(ErrorGetMyScrapState());
+      });
+    }else{
+      emit(NoInternetHomeState());
+    }
+
+  }
+
+  ReturnOrderModel? returnOrderModel;
+  void getReturnsProducts() {
+    DioHelper.getData(url: ApiConstant.returnsMe,
+      token: CacheHelper.getData(key: AppConstant.token),
+    ).then((value) {
+      returnOrderModel=ReturnOrderModel.fromJson(value.data);
+      emit(SuccessGetReturnsProductsState());
+    }).catchError((error){
+      emit(ErrorGetReturnsProductsState());
+    });
+  }
+
+  void createOrder(){
+    emit(LoadingCreateOrderState());
+    DioHelper.postData(
+        url: '/${ApiConstant.updateOrder}',
+      data: {
+        "anotherMobile": "+201003083521",
+        "address": "Ismailia",
+        "location": "www.ismailia.com"
+      },
+      token: CacheHelper.getData(key: AppConstant.token),
+    ).then((value) {
+      emit(SuccessCreateOrderState());
+      getAllOrders();
+    }).catchError((error){
+    if(error is DioError){
+      emit(ErrorCreateOrderState(error.response!.data['message'][0]));
+    }else{
+      emit(ErrorCreateOrderState(error.toString()));
+    }
+    });
   }
 }

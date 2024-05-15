@@ -8,6 +8,7 @@ import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/core/network/remote.dart';
 import 'package:mham/models/driverDataModel.dart';
+import 'package:mham/models/driver_profile_model.dart';
 import 'package:mham/models/user_model.dart';
 part 'profile_state.dart';
 
@@ -16,7 +17,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   static ProfileCubit get(context) => BlocProvider.of(context);
 
   UserModel ?userModel;
-  DriverModel? driverModel;
+  DriverProfileModel? driverProfileModel;
   void getProfile({required bool driver}) async{
     if(await Helper.hasConnection()){
       emit(LoadingProfileState());
@@ -25,7 +26,7 @@ class ProfileCubit extends Cubit<ProfileState> {
           token: CacheHelper.getData(key: AppConstant.token)
       ).then((value) {
         if(driver){
-          driverModel = DriverModel.fromJson(value.data);
+          driverProfileModel = DriverProfileModel.fromJson(value.data);
         }else{
           userModel = UserModel.fromJson(value.data);
         }

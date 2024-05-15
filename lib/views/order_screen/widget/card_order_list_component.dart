@@ -112,7 +112,6 @@ class BuildCardOrderList extends StatelessWidget {
                           hieght: 17.h,
                           text: locale.moreDetails,
                           onPressed: () {
-
                             Helper.push(
                                 context: context,
                                 widget:

@@ -41,3 +41,12 @@ class ErrorCancelOrderDriverState extends OrderDriverState {
   final String error;
   ErrorCancelOrderDriverState(this.error);
 }
+
+
+class SuccessTakeTheOrderState extends OrderDriverState {}
+
+class ErrorTakeTheOrderState extends OrderDriverState {
+
+  final String error;
+  ErrorTakeTheOrderState(this.error);
+}

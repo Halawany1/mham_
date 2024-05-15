@@ -27,6 +27,7 @@ class BuildCardProductDetails extends StatelessWidget {
     required this.returnQuantity,
     required this.orders,
     required this.quantity,
+    required this.hideCancelOrder,
   });
 
   final Orders orders;
@@ -37,6 +38,7 @@ class BuildCardProductDetails extends StatelessWidget {
   final List<String>? carModels;
   final List<String> quantity;
   final int returnQuantity;
+  final bool hideCancelOrder;
 
   @override
   Widget build(BuildContext context) {
@@ -273,7 +275,7 @@ class BuildCardProductDetails extends StatelessWidget {
                           null)
                         Text(
                           orders.orderItems![index].product!
-                              .manufacturerPartNumber!,
+                              .manufacturerPartNumber!.toString(),
                           style: font.bodyMedium!
                               .copyWith(color: color.backgroundColor),
                         ),
@@ -827,24 +829,26 @@ class BuildCardProductDetails extends StatelessWidget {
                                     );
                                   }
                                 } else {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return confirmPopUp(
-                                        context: context,
-                                        onPress: () {
-                                          HomeCubit.get(context).cancelProduct(
-                                              orderId:
-                                                  orders.id!,
-                                              productId: orders
-                                                  .orderItems![index].id!);
-                                          Navigator.pop(context);
-                                        },
-                                        title: locale.cancelItem,
-                                        content: locale.areYourSureToCancelItem,
-                                      );
-                                    },
-                                  );
+                                  if(!hideCancelOrder){
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+
+                                        return confirmPopUp(
+                                          context: context,
+                                          onPress: () {
+                                            HomeCubit.get(context).cancelProduct(
+                                                productId: orders
+                                                    .orderItems![index].id!);
+                                            Navigator.pop(context);
+                                          },
+                                          title: locale.cancelItem,
+                                          content: locale.areYourSureToCancelItem,
+                                        );
+                                      },
+                                    );
+                                  }
+
                                 }
                               },
                               fontSize: 13.sp,

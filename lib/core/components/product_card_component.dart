@@ -45,6 +45,7 @@ class BuildProductCard extends StatelessWidget {
   final bool inFavorite;
   final int id;
 
+
   @override
   Widget build(BuildContext context) {
     var font = Theme

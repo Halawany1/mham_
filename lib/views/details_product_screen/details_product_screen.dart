@@ -2,18 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
 import 'package:mham/controller/cart_cubit/cart_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
-import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/core/components/laoding_animation_component.dart';
-import 'package:mham/core/components/material_button_component.dart';
-import 'package:mham/core/components/small_container_for_type_component.dart';
 import 'package:mham/core/components/snak_bar_component.dart';
-import 'package:mham/core/components/text_form_field_component.dart';
 import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/constent/image_constant.dart';
@@ -27,9 +21,6 @@ import 'package:mham/views/details_product_screen/widget/all_product_details.dar
 import 'package:mham/views/details_product_screen/widget/bottom_sheet.dart';
 import 'package:mham/views/details_product_screen/widget/card_reviews.dart';
 import 'package:mham/views/details_product_screen/widget/rating_summary.dart';
-import 'package:mham/views/get_start_screen/get_start_screen.dart';
-import 'package:rating_summary/rating_summary.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 var comment = TextEditingController();
 

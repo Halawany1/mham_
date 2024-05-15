@@ -8,6 +8,7 @@ import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/core/network/remote.dart';
 import 'package:mham/models/countries_model.dart';
+import 'package:mham/models/driverDataModel.dart';
 import 'package:mham/models/user_model.dart';
 
 part 'authentication_state.dart';
@@ -43,16 +44,13 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   }
 
   UserModel ?userModel;
-
+  DriverModel? driverModel;
   void userLogin({
     required String phone,
     required String password,
     required String lang,
     bool driver=false
   }) async{
-    print(phone);
-    print(password);
-    print(lang);
     if(await Helper.hasConnection()) {
       emit(LoadingLoginUserState());
       DioHelper.postData(url:driver?
@@ -65,7 +63,11 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
             "fcmToken": CacheHelper.getData(key: AppConstant.fcmToken),
           }
       ).then((value) {
-        userModel = UserModel.fromJson(value.data);
+        if(driver){
+          driverModel = DriverModel.fromJson(value.data);
+        }else{
+          userModel = UserModel.fromJson(value.data);
+        }
         emit(SuccessLoginUserState());
       }).catchError((error) {
         if (error is DioError) {

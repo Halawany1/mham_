@@ -42,11 +42,10 @@ class EditProfileScreen extends StatelessWidget {
             AuthenticationCubit.get(context).countryId =
             LayoutCubit.get(context).lang=='en'?
             ProfileCubit.get(context)
-                .driverModel!
+                .driverProfileModel!
                 .driver!.user!.country!.countryNameEn
-                :     ProfileCubit.get(context)
-                .driverModel!
-                .driver!.user!.country!.countryNameAr;
+                :     ProfileCubit.get(context).
+            driverProfileModel!.driver!.user!.country!.countryNameAr;
           }else{
             AuthenticationCubit.get(context).countryId =
             LayoutCubit.get(context).lang=='en'?

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/core/components/material_button_component.dart';
+import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/views/driver/home_screen/widget/quantity_container.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -61,14 +62,14 @@ class BuildHistoryOrder extends StatelessWidget {
                 BuildQuantityContainer(quantity: 3),
                 SizedBox(width: 10.w,),
                 BuildDefaultButton(text: locale.moreDetails,
-                    width: 80.w,
+                    width: 85.w,
                     height: 18.h,
                     borderRadius: 12.r,
                     fontSize: 8.sp,
                     onPressed: () {
 
-                    }, backgorundColor: color.primaryColor,
-                    colorText: color.cardColor)
+                    }, backgorundColor: color.backgroundColor,
+                    colorText:ColorConstant.brown)
               ],)
           ],
         ),

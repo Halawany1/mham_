@@ -129,12 +129,7 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
       onWillPop: () async {
         cubit.cardProductDetails.clear();
         cubit.trackingContainer = false;
-        if (hideNav) {
-          Navigator.pop(context);
-        } else {
-          Helper.pop(context);
-        }
-
+        Navigator.pop(context);
         return true;
       },
       child: BlocConsumer<HomeCubit, HomeState>(
@@ -148,11 +143,7 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
           if (state is SuccessReturnOrderState) {
             cubit.cardProductDetails.clear();
             cubit.trackingContainer = false;
-            if (hideNav) {
-              Navigator.pop(context);
-            } else {
-              Helper.pop(context);
-            }
+            Navigator.pop(context);
           }
           if (state is ErrorReturnOrderState) {
             showMessageResponse(
@@ -167,11 +158,7 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
                   onTap: () {
                     cubit.cardProductDetails.clear();
                     cubit.trackingContainer = false;
-                    if (hideNav) {
-                      Navigator.pop(context);
-                    } else {
-                      Helper.pop(context);
-                    }
+                    Navigator.pop(context);
                   },
                   child: Icon(Icons.arrow_back, color: color.primaryColor)),
               centerTitle: true,
@@ -253,6 +240,7 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
                           //   quantities.add(i.toString());
                           // }
                           return BuildCardProductDetails(
+                            hideCancelOrder:hideReturnButton ,
                               returnQuantity: 5,
                               quantity: quantities,
                               onTap: () {

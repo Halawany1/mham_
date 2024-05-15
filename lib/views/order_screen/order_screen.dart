@@ -34,6 +34,12 @@ class OrderScreen extends StatelessWidget {
               context: context,
               success: true);
         }
+        if (state is SuccessCancelProductState) {
+          showMessageResponse(
+              message: 'cancelled Product Successfully',
+              context: context,
+              success: true);
+        }
         if(state is NoInternetHomeState){
           showMessageResponse(message: locale.noInternetConnection,
               context: context, success: false);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -38,7 +39,14 @@ class ProfileDriverScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = ProfileCubit.get(context);
         return Scaffold(
-            body: cubit.driverModel == null ?
+            appBar: AppBar(
+              toolbarHeight: 0,
+              systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: color.scaffoldBackgroundColor,
+                statusBarBrightness: Brightness.light,
+              ),
+            ),
+            body: cubit.driverProfileModel == null ?
             Center(child: BuildImageLoader(assetName: ImageConstant.logo)) :
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
@@ -66,7 +74,7 @@ class ProfileDriverScreen extends StatelessWidget {
                           height: 12.h,
                         ),
                         Text(
-                          cubit.driverModel!.driver!.user!.userName!,
+                          cubit.driverProfileModel!.driver!.user!.userName!,
                           style: font.bodyLarge!.copyWith(
                               color: color.backgroundColor, fontSize: 18.sp),
                         ),
@@ -80,9 +88,9 @@ class ProfileDriverScreen extends StatelessWidget {
                             cubit.getProfile(driver: true);
                             AuthenticationCubit.get(context).getCountries();
                             userNameController.text =
-                            cubit.driverModel!.driver!.user!.userName!;
+                            cubit.driverProfileModel!.driver!.user!.userName!;
                             phoneController.text =
-                            cubit.driverModel!.driver!.user!.mobile!;
+                            cubit.driverProfileModel!.driver!.user!.mobile!;
 
                             Helper.push(
                                 context: context,
@@ -168,6 +176,8 @@ class ProfileDriverScreen extends StatelessWidget {
                                               key: AppConstant.token);
                                           CacheHelper.removeData(
                                               key: AppConstant.driver);
+                                          CacheHelper.removeData(
+                                              key: AppConstant.driverId);
                                           LayoutCubit.get(context).changeTheme(
                                               true);
                                           Navigator.pop(context);

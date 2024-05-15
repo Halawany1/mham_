@@ -19,6 +19,7 @@ class BuildCarFilter extends StatelessWidget {
     var color = Theme.of(context);
     var font = Theme.of(context).textTheme;
     final locale = AppLocalizations.of(context);
+    var cubit = HomeCubit.get(context);
     return Stack(
       children: [
         Image.asset(
@@ -26,33 +27,41 @@ class BuildCarFilter extends StatelessWidget {
           fit: BoxFit.cover,
           width: double.infinity,
         ),
-        Positioned(
-          top: 60.h,
-          right: 20.w,
-          child: BuildDefaultButton(
-              text: locale.requestScrap,
-              height: 17.h,
-              withBorder: true,
-              width: 100.w,
-              borderRadius: 5.r,
-              fontSize: 8.sp,
-
-              onPressed: () {
-                if(CacheHelper.getData(key: AppConstant.token) == null) {
-                  Helper.push(context: context,widget: GetStartScreen());
-                }else{
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return BuildRequestScrap();
-                    },
-                  );
-                }
-
-              },
-              backgorundColor: color.scaffoldBackgroundColor,
-              colorText: color.primaryColor),
-        ),
+        if (cubit.myScrapModel != null)
+          Positioned(
+            top: 60.h,
+            right: 20.w,
+            child: BuildDefaultButton(
+                text: cubit.myScrapModel!.scraps!.isNotEmpty&&
+                    cubit.myScrapModel!.scraps![0].status != "Rejected"
+                    ? cubit.myScrapModel!.scraps![0].status!
+                    : locale.requestScrap,
+                height: 17.h,
+                withBorder: true,
+                width: 100.w,
+                borderRadius: 5.r,
+                fontSize: 8.sp,
+                onPressed: () {
+                  if (!cubit.myScrapModel!.scraps!.isEmpty ||
+                      cubit.myScrapModel!.scraps![0].status != "Rejected") {
+                    if (CacheHelper.getData(key: AppConstant.token) == null) {
+                      Helper.push(context: context, widget: GetStartScreen());
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return BuildRequestScrap();
+                        },
+                      );
+                    }
+                  }
+                },
+                backgorundColor: cubit.myScrapModel!.scraps!.isNotEmpty&&
+                    cubit.myScrapModel!.scraps![0].status != "Rejected"
+                    ? Colors.grey
+                    : color.scaffoldBackgroundColor,
+                colorText: color.primaryColor),
+          ),
         Positioned(
           top: 5.h,
           left: 12.w,
@@ -71,11 +80,17 @@ class BuildCarFilter extends StatelessWidget {
                 HomeCubit.get(context).selectCarModels(value: value);
                 HomeCubit.get(context).removeSelectionCarModels();
                 HomeCubit.get(context).getAllProduct(
-
                   busniessId: CacheHelper.getData(key: AppConstant.businessId),
-                  carId: HomeCubit.get(context).carController.selectedOptions.isEmpty
+                  carId: HomeCubit.get(context)
+                          .carController
+                          .selectedOptions
+                          .isEmpty
                       ? null
-                      : HomeCubit.get(context).carController.selectedOptions.first.value,
+                      : HomeCubit.get(context)
+                          .carController
+                          .selectedOptions
+                          .first
+                          .value,
                 );
               },
               selectedOptions: HomeCubit.get(context).selectedCarType,
@@ -91,14 +106,27 @@ class BuildCarFilter extends StatelessWidget {
                 HomeCubit.get(context).selectCarYear(value: value);
                 HomeCubit.get(context).removeSelectionYearModels();
                 HomeCubit.get(context).getAllProduct(
-
                   busniessId: CacheHelper.getData(key: AppConstant.businessId),
-                  carModelId: HomeCubit.get(context).modelController.selectedOptions.isEmpty
+                  carModelId: HomeCubit.get(context)
+                          .modelController
+                          .selectedOptions
+                          .isEmpty
                       ? null
-                      : HomeCubit.get(context).modelController.selectedOptions.first.value,
-                  carId: HomeCubit.get(context).carController.selectedOptions.isEmpty
+                      : HomeCubit.get(context)
+                          .modelController
+                          .selectedOptions
+                          .first
+                          .value,
+                  carId: HomeCubit.get(context)
+                          .carController
+                          .selectedOptions
+                          .isEmpty
                       ? null
-                      : HomeCubit.get(context).carController.selectedOptions.first.value,
+                      : HomeCubit.get(context)
+                          .carController
+                          .selectedOptions
+                          .first
+                          .value,
                 );
               },
               selectedOptions: HomeCubit.get(context).selectedCarModels,
@@ -112,17 +140,37 @@ class BuildCarFilter extends StatelessWidget {
               controller: HomeCubit.get(context).yearController,
               onOptionSelected: (value) {
                 HomeCubit.get(context).getAllProduct(
-
                   busniessId: CacheHelper.getData(key: AppConstant.businessId),
-                  availableYearId: HomeCubit.get(context).yearController.selectedOptions.isEmpty
+                  availableYearId: HomeCubit.get(context)
+                          .yearController
+                          .selectedOptions
+                          .isEmpty
                       ? null
-                      : HomeCubit.get(context).yearController.selectedOptions.first.value,
-                  carModelId: HomeCubit.get(context).modelController.selectedOptions.isEmpty
+                      : HomeCubit.get(context)
+                          .yearController
+                          .selectedOptions
+                          .first
+                          .value,
+                  carModelId: HomeCubit.get(context)
+                          .modelController
+                          .selectedOptions
+                          .isEmpty
                       ? null
-                      : HomeCubit.get(context).modelController.selectedOptions.first.value,
-                  carId: HomeCubit.get(context).carController.selectedOptions.isEmpty
+                      : HomeCubit.get(context)
+                          .modelController
+                          .selectedOptions
+                          .first
+                          .value,
+                  carId: HomeCubit.get(context)
+                          .carController
+                          .selectedOptions
+                          .isEmpty
                       ? null
-                      : HomeCubit.get(context).carController.selectedOptions.first.value,
+                      : HomeCubit.get(context)
+                          .carController
+                          .selectedOptions
+                          .first
+                          .value,
                 );
               },
               selectedOptions: HomeCubit.get(context).selectedCarYears,

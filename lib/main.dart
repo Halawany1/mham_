@@ -44,6 +44,10 @@ void main() async {
   await CacheHelper.init();
   await DioHelper.init();
   // await CacheHelper.deleteAllData();
+  CacheHelper.saveData(
+      key: AppConstant.token,
+      value:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxNjIsInVzZXJfbmFtZSI6Imhvc3NhbTIwMiIsIm1vYmlsZSI6IisyMDEwNjQ2NDgzNzIiLCJyb2xlIjoidXNlciIsImNvdW50cnkiOnsiY291bnRyeV9pZCI6MiwiY291bnRyeV9uYW1lX2VuIjoiRWd5cHQiLCJjb3VudHJ5X25hbWVfYXIiOiLZhdi12LEifX0sImlhdCI6MTcxNTY3NzczNSwiZXhwIjoxNzQ2NzgxNzM1fQ.rtX51yT6mjnMsljr5fMRbMMkoXL5Ou4gbv5wLwAtKvg");
   await LocalNotificationService().init();
   await Firebase.initializeApp();
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -124,7 +128,8 @@ class MyApp extends StatelessWidget {
           create: (context) => HomeCubit()
             ..getCarModels()
             ..getNotification()
-          ,
+            ..getMyScrap()
+            ..getReturnsProducts(),
         ),
         BlocProvider(
           create: (context) => AuthenticationCubit(),

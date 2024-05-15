@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,6 +14,7 @@ import 'package:mham/core/helper/helper.dart';
 import 'package:mham/views/driver/home_screen/widget/top_app_bar.dart';
 import 'package:mham/views/driver/order_details_screen/order_details_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mham/views/notification_screen/notification_screen.dart';
 
 class DriverHomeScreen extends StatelessWidget {
   const DriverHomeScreen({super.key});
@@ -23,21 +25,22 @@ class DriverHomeScreen extends StatelessWidget {
     var color = Theme.of(context);
     var locale = AppLocalizations.of(context);
     var layoutCubit = LayoutCubit.get(context);
+
+    if(OrderDriverCubit.get(context).driverOrderModel == null){
+      OrderDriverCubit.get(context).getAllOrders();
+    }
     return BlocBuilder<OrderDriverCubit, OrderDriverState>(
       builder: (context, state) {
         var cubit = OrderDriverCubit.get(context);
         return Scaffold(
-          body: cubit.driverOrderModel == null
+          appBar: topAppBar(context),
+          body: cubit.driverOrderModel == null || state is LoadingGetAllOrdersState
               ? Center(child: BuildImageLoader(assetName: ImageConstant.logo))
               : SafeArea(
                   child: Center(
                       child: SingleChildScrollView(
                     physics: BouncingScrollPhysics(),
                     child: Column(children: [
-                      BuildTopAppBarInDriver(),
-                      SizedBox(
-                        height: 10.h,
-                      ),
                       Padding(
                         padding: EdgeInsets.all(12.h),
                         child: Row(
@@ -96,10 +99,13 @@ class DriverHomeScreen extends StatelessWidget {
                                       context: context,
                                       widget: OrderDetailsDriverScreen(index: index,));
                                 },
-                                child: BuildCardOrderGrid(index: index),
+                                child:
+                                BuildCardOrderGrid(index:
+                                index),
                               );
                             }),
-                      )
+                      ),
+
                     ]),
                   )),
                 ),

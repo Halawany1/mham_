@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -43,7 +44,8 @@ class ProfileScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = context.read<ProfileCubit>();
         return Scaffold(
-          body: cubit.driverModel != null
+
+          body: cubit.userModel != null
               ? SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: SafeArea(

@@ -60,6 +60,10 @@ class HomeScreen extends StatelessWidget {
       builder: (context, cartState) {
         return BlocConsumer<HomeCubit, HomeState>(
           listener: (context, state) {
+            if(state is SuccessCreateOrderState){
+              showMessageResponse(message: 'Order Created Successfully',
+                  context: context, success: true);
+            }
             if (state is SuccessAddScrapState) {
               showDialog(
                 context: context,
@@ -111,7 +115,7 @@ class HomeScreen extends StatelessWidget {
                                 width: 5.w,
                               ),
                               Text(
-                                '#' + state.data.createScrap!.id.toString(),
+                                '#' + state.data.scrap!.id.toString(),
                                 style: font.bodyMedium!.copyWith(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15.sp),

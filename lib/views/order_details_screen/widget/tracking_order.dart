@@ -4,8 +4,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/core/components/material_button_component.dart';
+import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/helper/helper.dart';
+import 'package:mham/core/network/local.dart';
 
 class BuildTrackingOrder extends StatelessWidget {
   const BuildTrackingOrder(
@@ -14,6 +16,7 @@ class BuildTrackingOrder extends StatelessWidget {
       required this.createdAt,
       required this.stepperData,
        this.notClosed=false,
+        this.shiped=false,
       required this.totalPrice});
 
   final double totalPrice;
@@ -21,6 +24,7 @@ class BuildTrackingOrder extends StatelessWidget {
   final int orderId;
   final String createdAt;
   final bool notClosed;
+  final bool shiped;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +56,8 @@ class BuildTrackingOrder extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Order Status',
+                      CacheHelper.getData(key: AppConstant.driver)!=null?
+                      'Order Status':locale.trackYourOrder,
                       style: font.bodyLarge!.copyWith(fontSize: 20.sp),
                     ),
                     if(!notClosed)
@@ -67,10 +72,17 @@ class BuildTrackingOrder extends StatelessWidget {
                           height: 25.h,
                           borderRadius: 8.r,
                           fontSize: 12.sp,
-                          onPressed: () {
+                          onPressed:() {
+                        if(shiped){
 
-                          }, backgorundColor: color.backgroundColor,
-                          colorText: ColorConstant.brown)
+                        }
+                          },
+                          backgorundColor:
+                          shiped
+                              ?Colors.grey:
+                          color.backgroundColor,
+                          colorText:
+                          ColorConstant.brown)
                   ],
                 ),
               ),

@@ -59,96 +59,106 @@ class BuildOrderDetails extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Divider(),
-                SizedBox(
-                  height: 12.h,
-                ),
-                Text(
-                  'Customer Name',
-                  style: font.bodyMedium!
-                      .copyWith(fontSize: 12.sp, color: color.hintColor),
-                ),
-                SizedBox(
-                  height: 3.h,
-                ),
-                Text(
-                  cubit.driverOrderByIdModel!.order!.customer!.userName!,
-                  style: font.bodyMedium!.copyWith(
-                    fontSize: 13.sp,
-                  ),
-                ),
-                SizedBox(
-                  height: 5.h,
-                ),
-                Container(
-                  width: 220.w,
-                  height: 1.h,
-                  color: color.hintColor.withOpacity(0.2),
-                ),
-                SizedBox(
-                  height: 5.h,
-                ),
-                Text(
-                  'Phone Number',
-                  style: font.bodyMedium!
-                      .copyWith(fontSize: 12.sp, color: color.hintColor),
-                ),
-                SizedBox(
-                  height: 3.h,
-                ),
-                Text(
-                  cubit.driverOrderByIdModel!.order!.customer!.mobile!,
-                  style: font.bodyMedium!.copyWith(
-                    fontSize: 13.sp,
-                  ),
-                ),
-                SizedBox(
-                  height: 5.h,
-                ),
-                Container(
-                  width: 220.w,
-                  height: 1.h,
-                  color: color.hintColor.withOpacity(0.2),
-                ),
-                SizedBox(
-                  height: 5.h,
-                ),
-                Text(
-                  'Address',
-                  style: font.bodyMedium!
-                      .copyWith(fontSize: 12.sp, color: color.hintColor),
-                ),
-                SizedBox(
-                  height: 3.h,
-                ),
-                Text(
-                  cubit.driverOrderByIdModel!.order!.address!,
-                  style: font.bodyMedium!.copyWith(
-                    fontSize: 13.sp,
-                  ),
-                ),
-                if (cubit.checkboxListTiles[3].value ||
-                    cubit.checkboxListTiles[2].value)
-                  Container(
-                    width: 220.w,
-                    height: 1.h,
-                    color: color.hintColor.withOpacity(0.2),
-                  ),
-                if (cubit.checkboxListTiles[3].value ||
-                    cubit.checkboxListTiles[2].value)
-                  SizedBox(
-                    height: 8.h,
-                  ),
-                if (cubit.checkboxListTiles[3].value ||
-                    cubit.checkboxListTiles[2].value)
-                  BuildGoToLinkRow(),
-                SizedBox(
-                  height: 5.h,
-                ),
-                Container(
-                  width: 220.w,
-                  height: 1.h,
-                  color: color.hintColor.withOpacity(0.2),
-                ),
+               if(cubit.driverOrderByIdModel!=null)
+               Column(
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 children: [
+                 SizedBox(
+                   height: 12.h,
+                 ),
+                 Text(
+                   'Customer Name',
+                   style: font.bodyMedium!
+                       .copyWith(fontSize: 12.sp,
+                       color: color.primaryColor.withOpacity(0.5)),
+                 ),
+                 SizedBox(
+                   height: 3.h,
+                 ),
+                 Text(
+                   cubit.driverOrderByIdModel!.order!.customer!.userName!,
+                   style: font.bodyMedium!.copyWith(
+                     fontSize: 13.sp,
+
+                   ),
+                 ),
+                 SizedBox(
+                   height: 5.h,
+                 ),
+                 Container(
+                   width: 220.w,
+                   height: 1.h,
+                   color: color.primaryColor.withOpacity(0.2),
+                 ),
+                 SizedBox(
+                   height: 5.h,
+                 ),
+                 Text(
+                   'Phone Number',
+                   style: font.bodyMedium!
+                       .copyWith(fontSize: 12.sp,
+                       color: color.primaryColor.withOpacity(0.5)),
+                 ),
+                 SizedBox(
+                   height: 3.h,
+                 ),
+                 Text(
+                   cubit.driverOrderByIdModel!.order!.customer!.mobile!,
+                   style: font.bodyMedium!.copyWith(
+                     fontSize: 13.sp,
+                   ),
+                 ),
+                 SizedBox(
+                   height: 5.h,
+                 ),
+                 Container(
+                   width: 220.w,
+                   height: 1.h,
+                   color: color.primaryColor.withOpacity(0.2),
+                 ),
+                 SizedBox(
+                   height: 5.h,
+                 ),
+                 Text(
+                   'Address',
+                   style: font.bodyMedium!
+                       .copyWith(fontSize: 12.sp,
+                       color: color.primaryColor.withOpacity(0.5)),
+                 ),
+                 SizedBox(
+                   height: 3.h,
+                 ),
+                 Text(
+                   cubit.driverOrderByIdModel!.order!.address!,
+                   style: font.bodyMedium!.copyWith(
+                     fontSize: 13.sp,
+                   ),
+                 ),
+                 if (cubit.checkboxListTiles[3].value ||
+                     cubit.checkboxListTiles[2].value)
+                   Container(
+                     width: 220.w,
+                     height: 1.h,
+                     color: color.primaryColor.withOpacity(0.2),
+                   ),
+                 if (cubit.checkboxListTiles[3].value ||
+                     cubit.checkboxListTiles[2].value)
+                   SizedBox(
+                     height: 8.h,
+                   ),
+                 if (cubit.checkboxListTiles[3].value ||
+                     cubit.checkboxListTiles[2].value)
+                   BuildGoToLinkRow(),
+                 SizedBox(
+                   height: 5.h,
+                 ),
+                 Container(
+                   width: 220.w,
+                   height: 1.h,
+                   color: color.primaryColor.withOpacity(0.2),
+                 ),
+
+               ],),
 
                 SizedBox(
                   height: 20.h,
@@ -169,7 +179,7 @@ class BuildOrderDetails extends StatelessWidget {
                       width: 25.w,
                       height: 25.w,
                       decoration: BoxDecoration(
-                        border: Border.all(color: color.disabledColor),
+                        border: Border.all(color: color.primaryColor),
                         borderRadius: BorderRadius.circular(5.r),
                       ),
                       child: Text(

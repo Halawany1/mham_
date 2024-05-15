@@ -124,12 +124,7 @@ class OrderDetailsScreen extends StatelessWidget {
       onWillPop: () async {
         cubit.cardProductDetails.clear();
         cubit.trackingContainer = false;
-        if (hideNav) {
-          Navigator.pop(context);
-        } else {
-          Helper.pop(context);
-        }
-
+        Navigator.pop(context);
         return true;
       },
       child: BlocConsumer<HomeCubit, HomeState>(
@@ -141,12 +136,8 @@ class OrderDetailsScreen extends StatelessWidget {
           if (state is SuccessCancelProductState) {
             cubit.cardProductDetails.clear();
             cubit.trackingContainer = false;
-            if (hideNav) {
-              Navigator.pop(context);
-            } else {
-              Helper.pop(context);
-            }
             cubit.getAllOrders();
+            Navigator.pop(context);
           }
           if (state is ErrorCancelProductState) {
             showMessageResponse(
@@ -161,11 +152,7 @@ class OrderDetailsScreen extends StatelessWidget {
                   onTap: () {
                     cubit.cardProductDetails.clear();
                     cubit.trackingContainer = false;
-                    if (hideNav) {
-                      Navigator.pop(context);
-                    } else {
-                      Helper.pop(context);
-                    }
+                    Navigator.pop(context);
                   },
                   child: Icon(Icons.arrow_back, color: color.primaryColor)),
               centerTitle: true,
@@ -174,7 +161,9 @@ class OrderDetailsScreen extends StatelessWidget {
                 style: font.bodyLarge!.copyWith(fontSize: 22.sp),
               ),
             ),
-            body: SafeArea(
+            body:state is LoadingCreateOrderState?
+              Center(child: CircularProgressIndicator())
+              :SafeArea(
               child: SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.all(20.h),
@@ -192,9 +181,11 @@ class OrderDetailsScreen extends StatelessWidget {
                         height: 20.h,
                       ),
                       BuildTrackingOrder(
+
                           createdAt: cubit.allOrders[currentIndex].createdAt!,
                           orderId: cubit.allOrders[currentIndex].id!,
-                          stepperData: stepperData, totalPrice: totalPrice),
+                          stepperData: stepperData,
+                          totalPrice: totalPrice),
                       SizedBox(
                         height: 20.h,
                       ),
@@ -246,6 +237,7 @@ class OrderDetailsScreen extends StatelessWidget {
                           //   quantities.add(i.toString());
                           // }
                           return BuildCardProductDetails(
+                            hideCancelOrder: hideCancelOrder,
                               returnQuantity: 5,
                               quantity: quantities,
                               onTap: () {

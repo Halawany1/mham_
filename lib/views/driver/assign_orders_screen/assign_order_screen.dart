@@ -16,12 +16,12 @@ class AssignOrdersDriverScreen extends StatelessWidget {
     var color = Theme.of(context);
     var layoutCubit = LayoutCubit.get(context);
     return Scaffold(
+      appBar: topAppBar(context),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              BuildTopAppBarInDriver(hideHello: true,),
-              SizedBox(
+        SizedBox(
                 height: 10.h,
               ),
               Padding(

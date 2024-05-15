@@ -17,7 +17,7 @@ class Order {
   String? anotherMobile;
   String? address;
   String? location;
-  int? totalPrice;
+  dynamic totalPrice;
   String? status;
   String? processingAt;
   String? shippedAt;
@@ -91,7 +91,7 @@ class OrderItems {
   String? createdAt;
   String? updatedAt;
   int? quantity;
-  double? unitPrice;
+  dynamic unitPrice;
   String? status;
   String? processingAt;
   String? shippedAt;

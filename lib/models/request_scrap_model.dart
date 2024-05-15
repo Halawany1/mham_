@@ -1,35 +1,33 @@
 class RequestScrapModel {
-  String? message;
-  CreateScrap? createScrap;
-
-  RequestScrapModel({this.message, this.createScrap});
+  Scrap? scrap;
 
   RequestScrapModel.fromJson(Map<String, dynamic> json) {
-    message = json['message'];
-    createScrap = json['createScrap'] != null
-        ?  CreateScrap.fromJson(json['createScrap'])
-        : null;
+    scrap = json['scrap'] != null ? new Scrap.fromJson(json['scrap']) : null;
   }
 
 
 }
 
-class CreateScrap {
+class Scrap {
   int? id;
   int? userId;
   String? description;
+  String? status;
   String? response;
   String? createdAt;
   String? responseAt;
 
 
-  CreateScrap.fromJson(Map<String, dynamic> json) {
+
+  Scrap.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userId = json['user_id'];
     description = json['description'];
+    status = json['status'];
     response = json['response'];
     createdAt = json['created_at'];
     responseAt = json['response_at'];
   }
+
 
 }

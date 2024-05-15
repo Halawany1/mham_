@@ -121,33 +121,65 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
     }
   }
 
-  void cancelOrder({required int id,required String reason}) async {
-    print(id);
-    if (await Helper.hasConnection()) {
-      emit(LoadingCancelOrderDriverState());
-      DioHelper.patchData(
+
+  void takeTheOrder({required int id,required int driverId}) {
+    DioHelper.patchData(url: ApiConstant.updateOrder+'/$id',
         data: {
-          "cancelReason":reason
+          "driverId":driverId
         },
-        url:  ApiConstant.cancelOrderDriver(id),
-        token: CacheHelper.getData(key: AppConstant.token),
-      ).then((value) {
+        token: CacheHelper.getData(key: AppConstant.token)
+    ).then((value) {
+      emit(SuccessTakeTheOrderState());
+      getAllOrders();
+    }).catchError((error){
+      if(error is DioError){
+        emit(ErrorTakeTheOrderState(error.response!
+            .data['message'][0]));
+      }else{
+        emit(ErrorTakeTheOrderState(error.toString()));
+      }
+
+    });
+
+  }
+
+  void cancelOrder({required int id,
+    required String image,
+    required String lang,
+    required String reason}) async {
+    if(await Helper.hasConnection()){
+      emit(LoadingCancelOrderDriverState());
+      try {
+        Dio dio = Dio();
+        dio.options.headers = {
+          'Content-Type': 'multipart/form-data',
+          'lang': lang,
+          "authorization":
+          CacheHelper.getData(key: AppConstant.token),
+        };
+        FormData formData = FormData.fromMap({
+          "reason": reason,
+          if(image!='') "cancelImage":
+          await MultipartFile.fromFile(image),
+        });
+
+        await dio.patch(
+            ApiConstant.baseUrl + ApiConstant.cancelOrder(id),
+            data: formData);
         emit(SuccessCancelOrderDriverState());
-        getOrderById(id: id);
-      }).catchError((error) {
-        if(error is DioError){
-          print(error.response!.data);
-          emit(ErrorCancelOrderDriverState(error.response!
-              .data['message'][0]));
-        }else{
+      } catch (error) {
+        if (error is DioError) {
+          emit(ErrorCancelOrderDriverState(error.
+          response!.data['message'][0]));
+        } else {
           emit(ErrorCancelOrderDriverState(error.toString()));
         }
-
-      });
-    } else {
+      }
+    }else{
       emit(NoInternetHomeState());
     }
   }
+
 
 }
 enum ProductStatus{ordered,processing,shipped,delivered}

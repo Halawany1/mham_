@@ -51,7 +51,8 @@ class LoginScreen extends StatelessWidget {
             CacheHelper.saveData(
                 key: AppConstant.token, value: cubit.userModel!.token);
             Navigator.pushAndRemoveUntil(context,
-              MaterialPageRoute(builder: (context) => const LayoutScreen())
+              MaterialPageRoute(builder: (context) =>
+              const LayoutScreen())
               ,(route) => false,);
             HomeCubit.get(context).getNotification();
           }
@@ -63,9 +64,12 @@ class LoginScreen extends StatelessWidget {
           if (state is SuccessLoginUserState) {
             clearAllData();
             CacheHelper.saveData(
-                key: AppConstant.token, value: cubit.userModel!.token);
+                key: AppConstant.token,
+                value: cubit.driverModel!.token);
             CacheHelper.saveData(key: AppConstant.driver,
                 value: true);
+            CacheHelper.saveData(key: AppConstant.driverId,
+                value: cubit.driverModel!.user!.id!);
             Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (context) =>
               const DriverLayoutScreen())

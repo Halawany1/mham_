@@ -164,3 +164,22 @@ class LoadingUpdateNotificationState extends HomeState {}
 class SuccessUpdateNotificationState extends HomeState {}
 
 class ErrorUpdateNotificationState extends HomeState {}
+
+class SuccessGetMyScrapState extends HomeState {}
+
+class ErrorGetMyScrapState extends HomeState {}
+
+class SuccessGetReturnsProductsState extends HomeState {}
+
+class ErrorGetReturnsProductsState extends HomeState {}
+
+class LoadingCreateOrderState extends HomeState {}
+
+class SuccessCreateOrderState extends HomeState {}
+
+class ErrorCreateOrderState extends HomeState {
+  final String error;
+  ErrorCreateOrderState(this.error);
+}
+
+

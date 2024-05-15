@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/controller/order_driver_cubit/order_driver_cubit.dart';
 import 'package:mham/core/components/laoding_animation_component.dart';
 import 'package:mham/core/components/material_button_component.dart';
@@ -22,7 +24,8 @@ import 'package:mham/views/order_details_screen/widget/tracking_order.dart';
 
 var reasonController = TextEditingController();
 var formKey = GlobalKey<FormState>();
-
+var imageController = TextEditingController();
+XFile ?imageFileOne;
 class OrderDetailsDriverScreen extends StatelessWidget {
   const OrderDetailsDriverScreen({
     super.key,
@@ -38,7 +41,6 @@ class OrderDetailsDriverScreen extends StatelessWidget {
     final locale = AppLocalizations.of(context);
     var cubit = OrderDriverCubit.get(context);
 
-
     return WillPopScope(
       onWillPop: () async {
         Helper.pop(context);
@@ -46,14 +48,15 @@ class OrderDetailsDriverScreen extends StatelessWidget {
       },
       child: BlocConsumer<OrderDriverCubit, OrderDriverState>(
         listener: (context, state) {
-
-          if(state is SuccessCancelOrderState){
-            showMessageResponse(message:'Order Canceled Successfully',
-                context: context, success: true);
+          if (state is SuccessCancelOrderState) {
+            showMessageResponse(
+                message: 'Order Canceled Successfully',
+                context: context,
+                success: true);
           }
-          if(state is ErrorCancelOrderDriverState){
-            showMessageResponse(message: state.error,
-                context: context, success: false);
+          if (state is ErrorCancelOrderDriverState) {
+            showMessageResponse(
+                message: state.error, context: context, success: false);
           }
         },
         builder: (context, state) {
@@ -94,75 +97,123 @@ class OrderDetailsDriverScreen extends StatelessWidget {
                               height: 20.h,
                             ),
                             BuildTrackingOrder(
+                                shiped: cubit.driverOrderByIdModel!.order!
+                                            .shippedAt ==
+                                        null
+                                    ? true
+                                    : false,
                                 notClosed: true,
                                 createdAt: cubit
                                     .driverOrderByIdModel!.order!.createdAt!,
                                 orderId: cubit.driverOrderByIdModel!.order!.id!,
                                 stepperData: [
                                   StepperData(
-                                      title: StepperText(locale.ordered, textStyle: font.bodyMedium),
+                                      title: StepperText(locale.ordered,
+                                          textStyle: font.bodyMedium),
                                       subtitle: StepperText(
                                         locale.orderPlaced +
-                                            Helper.trackingTimeFormat(
-                                                cubit.driverOrderByIdModel!.order!.createdAt!),
+                                            Helper.trackingTimeFormat(cubit
+                                                .driverOrderByIdModel!
+                                                .order!
+                                                .createdAt!),
                                         textStyle: font.bodyMedium!.copyWith(
-                                            fontSize: 12.sp, color: color.primaryColor.withOpacity(0.7)),
+                                            fontSize: 12.sp,
+                                            color: color.primaryColor
+                                                .withOpacity(0.7)),
                                       ),
                                       iconWidget: Container(
                                         alignment: Alignment.center,
                                         decoration: BoxDecoration(
                                             color: color.backgroundColor,
-                                            borderRadius: BorderRadius.all(Radius.circular(15.r))),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15.r))),
                                         child: Text('1',
-                                            style: font.bodyMedium!.copyWith(color: ColorConstant.brown)),
+                                            style: font.bodyMedium!.copyWith(
+                                                color: ColorConstant.brown)),
                                       )),
                                   StepperData(
-                                      title: StepperText(locale.processing, textStyle: font.bodyMedium),
-                                      subtitle: cubit.driverOrderByIdModel!.order!.deliveredAt != null &&
-                                          cubit.driverOrderByIdModel!.order!.processingAt != null
+                                      title: StepperText(locale.processing,
+                                          textStyle: font.bodyMedium),
+                                      subtitle: cubit.driverOrderByIdModel!
+                                                      .order!.deliveredAt !=
+                                                  null &&
+                                              cubit.driverOrderByIdModel!.order!
+                                                      .processingAt !=
+                                                  null
                                           ? StepperText(
-                                          locale.orderPrepared +
-                                              Helper.trackingTimeFormat(
-                                                  cubit.driverOrderByIdModel!.order!.processingAt!),
-                                          textStyle: font.bodySmall!.copyWith(color: Colors.grey))
+                                              locale.orderPrepared +
+                                                  Helper.trackingTimeFormat(
+                                                      cubit
+                                                          .driverOrderByIdModel!
+                                                          .order!
+                                                          .processingAt!),
+                                              textStyle: font.bodySmall!
+                                                  .copyWith(color: Colors.grey))
                                           : null,
                                       iconWidget: Container(
                                         alignment: Alignment.center,
                                         decoration: BoxDecoration(
-                                            color: cubit.driverOrderByIdModel!.order!.deliveredAt != null ||
-                                                cubit.driverOrderByIdModel!.order!.processingAt != null
+                                            color: cubit.driverOrderByIdModel!
+                                                            .order!.deliveredAt !=
+                                                        null ||
+                                                    cubit
+                                                            .driverOrderByIdModel!
+                                                            .order!
+                                                            .processingAt !=
+                                                        null
                                                 ? color.backgroundColor
                                                 : Colors.grey,
-                                            borderRadius: BorderRadius.all(Radius.circular(15.r))),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15.r))),
                                         child: Text('2',
                                             style: font.bodyMedium!.copyWith(
-                                                color:
-                                                cubit.driverOrderByIdModel!.order!.deliveredAt != null
+                                                color: cubit
+                                                            .driverOrderByIdModel!
+                                                            .order!
+                                                            .deliveredAt !=
+                                                        null
                                                     ? ColorConstant.brown
                                                     : Colors.grey)),
                                       )),
                                   StepperData(
-                                      title: StepperText(locale.shipped, textStyle: font.bodyMedium),
-                                      subtitle: cubit.driverOrderByIdModel!.order!.deliveredAt != null &&
-                                          cubit.driverOrderByIdModel!.order!.shippedAt != null
+                                      title: StepperText(locale.shipped,
+                                          textStyle: font.bodyMedium),
+                                      subtitle: cubit.driverOrderByIdModel!
+                                                      .order!.deliveredAt !=
+                                                  null &&
+                                              cubit.driverOrderByIdModel!.order!
+                                                      .shippedAt !=
+                                                  null
                                           ? StepperText(
-                                          textStyle: font.bodySmall!.copyWith(color: Colors.grey),
-                                          locale.deliverItem +
-                                              Helper.trackingTimeFormat(
-                                                  cubit.driverOrderByIdModel!.order!.shippedAt!))
+                                              textStyle: font.bodySmall!
+                                                  .copyWith(color: Colors.grey),
+                                              locale.deliverItem +
+                                                  Helper.trackingTimeFormat(
+                                                      cubit
+                                                          .driverOrderByIdModel!
+                                                          .order!
+                                                          .shippedAt!))
                                           : null,
                                       iconWidget: Container(
                                         alignment: Alignment.center,
                                         decoration: BoxDecoration(
-                                            color: cubit.driverOrderByIdModel!.order!.deliveredAt != null ||
-                                                cubit.driverOrderByIdModel!.order!.shippedAt != null
+                                            color: cubit.driverOrderByIdModel!
+                                                            .order!.deliveredAt !=
+                                                        null ||
+                                                    cubit.driverOrderByIdModel!
+                                                            .order!.shippedAt !=
+                                                        null
                                                 ? color.backgroundColor
                                                 : Colors.grey,
-                                            borderRadius: BorderRadius.all(Radius.circular(15.r))),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15.r))),
                                         child: Text('3',
                                             style: font.bodyMedium!.copyWith(
-                                                color:
-                                                cubit.driverOrderByIdModel!.order!.deliveredAt != null
+                                                color: cubit
+                                                            .driverOrderByIdModel!
+                                                            .order!
+                                                            .deliveredAt !=
+                                                        null
                                                     ? ColorConstant.brown
                                                     : Colors.grey)),
                                       )),
@@ -170,15 +221,22 @@ class OrderDetailsDriverScreen extends StatelessWidget {
                                     iconWidget: Container(
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
-                                          border: cubit.driverOrderByIdModel!.order!.deliveredAt != null
-                                              ? Border.all(color: color.primaryColor)
+                                          border: cubit.driverOrderByIdModel!
+                                                      .order!.deliveredAt !=
+                                                  null
+                                              ? Border.all(
+                                                  color: color.primaryColor)
                                               : null,
-                                          color: cubit.driverOrderByIdModel!.order!.deliveredAt != null
+                                          color: cubit.driverOrderByIdModel!
+                                                      .order!.deliveredAt !=
+                                                  null
                                               ? color.backgroundColor
                                               : Colors.grey,
-                                          borderRadius: BorderRadius.all(Radius.circular(15.r))),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(15.r))),
                                     ),
-                                    title: StepperText(locale.delivered, textStyle: font.bodyMedium),
+                                    title: StepperText(locale.delivered,
+                                        textStyle: font.bodyMedium),
                                   ),
                                 ],
                                 totalPrice: cubit
@@ -235,27 +293,61 @@ class OrderDetailsDriverScreen extends StatelessWidget {
                                                 color: ColorConstant.error),
                                           ),
                                           content: SingleChildScrollView(
-                                            child: BuildTextFormField(
-                                              cubit: AuthenticationCubit.get(
-                                                  context),
-                                              title: locale.cancelOrder,
-                                              contentPadding: true,
-                                              hint: locale.reason,
-                                              validator: (String? value) {
-                                                return Validation.validateField(
-                                                    value,
-                                                    locale.reason,
-                                                    context);
-                                              },
-                                              controller: reasonController,
-                                              keyboardType: TextInputType.text,
-                                              maxLength: 1000,
-                                              maxLines: 5,
+                                            child:Column(
+                                              children: [
+                                                BuildTextFormField(
+                                                  cubit: AuthenticationCubit.get(
+                                                      context),
+                                                  title: locale.cancelOrder,
+                                                  contentPadding: true,
+                                                  hint: locale.reason,
+                                                  validator: (String? value) {
+                                                    return Validation.validateField(
+                                                        value,
+                                                        locale.reason,
+                                                        context);
+                                                  },
+                                                  controller: reasonController,
+                                                  keyboardType: TextInputType.text,
+                                                  maxLength: 1000,
+                                                  maxLines: 5,
+                                                ),
+                                                SizedBox(height: 10.h,),
+                                                BuildTextFormField(title: 'Image',
+                                                    hint: 'enter reasong image',
+                                                    cubit: AuthenticationCubit.get(context),
+                                                    controller: imageController,
+                                                    withBorder: true,
+                                                    validator: (value) {
+                                                  return Validation.validateField(value,
+                                                      'reason image', context);
+                                                    },
+                                                    onTap: () async {
+                                                      final ImagePicker picker = ImagePicker();
+                                                      imageFileOne = await picker.pickImage(
+                                                        source: ImageSource.gallery,
+                                                        // alternatively, use ImageSource.gallery
+                                                        maxWidth: 400,
+                                                      );
+                                                      if (imageFileOne == null) return;
+                                                      final String imagePath = imageFileOne!.path;
+                                                      final String imageName = imagePath
+                                                          .substring(imagePath.lastIndexOf('/') + 1);
+
+// Set the image filename to the imageController
+                                                      imageController.text = imageName;
+                                                    },
+                                                    readOnly: true,
+                                                    keyboardType: TextInputType.text,
+                                                    maxLength: 100)
+                                              ],
                                             ),
                                           ),
                                           actions: [
                                             TextButton(
                                               onPressed: () {
+                                                reasonController.clear();
+                                                imageController.clear();
                                                 Navigator.of(context).pop();
                                               },
                                               child: Text(
@@ -271,11 +363,17 @@ class OrderDetailsDriverScreen extends StatelessWidget {
                                                 if (formKey.currentState!
                                                     .validate()) {
                                                   cubit.cancelOrder(
-                                                    reason: reasonController.text,
+                                                      image: imageFileOne==null?'':imageFileOne!.path,
+                                                      lang: LayoutCubit
+                                                          .get(context).lang,
+                                                      reason:
+                                                          reasonController.text,
                                                       id: cubit
                                                           .driverOrderByIdModel!
                                                           .order!
                                                           .id!);
+                                                  reasonController.clear();
+                                                  imageController.clear();
                                                   Navigator.pop(context);
                                                 }
                                               },

@@ -7,4 +7,5 @@ class   AppConstant {
   static String indexProduct="indexProduct";
   static String fcmToken="fcmToken";
   static String driver="driver";
+  static String driverId="driverId";
 }

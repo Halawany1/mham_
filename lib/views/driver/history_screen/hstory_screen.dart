@@ -19,10 +19,10 @@ class HistoryDriverScreen extends StatelessWidget {
     var locale = AppLocalizations.of(context);
     var layoutCubit = LayoutCubit.get(context);
     return Scaffold(
+      appBar: topAppBar(context),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            BuildTopAppBarInDriver(hideHello: true,),
             SizedBox(
               height: 10.h,
             ),
@@ -54,7 +54,7 @@ class HistoryDriverScreen extends StatelessWidget {
                     },
                     child: Icon(
                       FontAwesomeIcons.filter,
-                      color: color.primaryColor,
+                      color: color.backgroundColor,
                     ),
                   )
                 ],
