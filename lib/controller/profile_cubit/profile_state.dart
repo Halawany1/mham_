@@ -26,3 +26,12 @@ class ErrorUpdateProfileState extends ProfileState {
 
   ErrorUpdateProfileState(this.message);
 }
+class LoadingUpdateProfileDriverState extends ProfileState {}
+
+class SuccessUpdateProfileDriverState extends ProfileState {}
+
+class ErrorUpdateProfileDriverState extends ProfileState {
+  final String message;
+
+  ErrorUpdateProfileDriverState(this.message);
+}

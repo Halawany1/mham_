@@ -13,6 +13,7 @@ class BuildTrackingOrder extends StatelessWidget {
   const BuildTrackingOrder(
       {super.key,
       required this.orderId,
+      required this.activeProcess,
       required this.createdAt,
       required this.stepperData,
        this.notClosed=false,
@@ -25,6 +26,7 @@ class BuildTrackingOrder extends StatelessWidget {
   final String createdAt;
   final bool notClosed;
   final bool shiped;
+  final int activeProcess;
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +120,7 @@ class BuildTrackingOrder extends StatelessWidget {
                   AnotherStepper(
                     verticalGap: 15.h,
                     stepperList: stepperData,
-                    activeIndex: 1,
+                    activeIndex: activeProcess,
                     stepperDirection: Axis.vertical,
                     iconWidth: 32.w,
                     // Height that will be applied to all the stepper icons

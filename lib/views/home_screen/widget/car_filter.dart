@@ -42,18 +42,14 @@ class BuildCarFilter extends StatelessWidget {
                 borderRadius: 5.r,
                 fontSize: 8.sp,
                 onPressed: () {
-                  if (!cubit.myScrapModel!.scraps!.isEmpty ||
-                      cubit.myScrapModel!.scraps![0].status != "Rejected") {
-                    if (CacheHelper.getData(key: AppConstant.token) == null) {
-                      Helper.push(context: context, widget: GetStartScreen());
-                    } else {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return BuildRequestScrap();
-                        },
-                      );
-                    }
+                  if (cubit.myScrapModel!.scraps!.isEmpty ||
+                      cubit.myScrapModel!.scraps![0].status == "Rejected") {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return BuildRequestScrap();
+                      },
+                    );
                   }
                 },
                 backgorundColor: cubit.myScrapModel!.scraps!.isNotEmpty&&

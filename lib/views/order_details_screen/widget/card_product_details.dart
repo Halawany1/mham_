@@ -12,6 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/core/components/text_form_field_component.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/error/validation.dart';
+import 'package:mham/core/helper/helper.dart';
 import 'package:mham/models/order_model.dart';
 
 var reasonController = TextEditingController();
@@ -42,7 +43,6 @@ class BuildCardProductDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(orders.orderItems![index].status);
     var color = Theme.of(context);
     var font = Theme.of(context).textTheme;
     final locale = AppLocalizations.of(context);
@@ -607,70 +607,72 @@ class BuildCardProductDetails extends StatelessWidget {
                         SizedBox(
                           height: 10.h,
                         ),
-                      // if (returnProduct&&orders.orderItems![index].returnProduct!.length>0)
-                      //   Text(
-                      //     '${locale.returnn}: ',
-                      //   ),
-                      // if (returnProduct&&orders.orderItems![index].returnProduct!.length>0)
-                      // SizedBox(height: 5.h,),
-                      // if (returnProduct&&orders.orderItems![index].returnProduct!.length>0)
-                      // ListView.separated(
-                      //   separatorBuilder: (context, index) => Divider(),
-                      //   itemCount: orders.orderItems![index].returnProduct!.length,
-                      //   shrinkWrap: true,
-                      //   physics: NeverScrollableScrollPhysics(),
-                      //   itemBuilder: (context, i) => Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     children: [
-                      //       Row(
-                      //         children: [
-                      //           Text('${locale.quantity}: ',style: font.bodyMedium!.copyWith(
-                      //             fontSize: 15.sp
-                      //           ),),
-                      //           Text(
-                      //             '${orders.orderItems![index].returnProduct![i].quantity}',
-                      //           style: font.bodyMedium!.copyWith(
-                      //             color: color.backgroundColor
-                      //           ),
-                      //           ),
-                      //         ],
-                      //       ),
-                      //       Row(
-                      //         crossAxisAlignment: CrossAxisAlignment.start,
-                      //         children: [
-                      //           Text('${locale.reason}: ',
-                      //             style: font.bodyMedium!.copyWith(
-                      //                 fontSize: 15.sp
-                      //             ),),
-                      //           SizedBox(
-                      //             width: 220.w,
-                      //             child: Text(
-                      //               '${orders.orderItems![index].returnProduct![i].reason}',
-                      //               style: font.bodyMedium!.copyWith(
-                      //                   color: color.backgroundColor
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         ],
-                      //       ),
-                      //       Row(
-                      //         children: [
-                      //           Text('${locale.dateTime}: ',
-                      //             style: font.bodyMedium!.copyWith(
-                      //                 fontSize: 15.sp
-                      //             ),),
-                      //           Text(
-                      //             '${Helper.trackingTimeFormat(orders.orderItems![index].returnProduct![i].createdAt!)}',
-                      //             style: font.bodyMedium!.copyWith(
-                      //                 color: color.backgroundColor
-                      //             ),
-                      //           ),
-                      //         ],
-                      //       ),
-                      //       SizedBox(height: 2.h,),
-                      //     ],
-                      //   ),
-                      // ),
+                      if (returnProduct&&orders.orderItems![index].returnProducts!.length>0)
+                        Text(
+                          '${locale.returnn}: ',
+                        ),
+                      if (returnProduct&&orders.orderItems![index].returnProducts!.length>0)
+                      SizedBox(height: 5.h,),
+                      if (returnProduct&&orders.orderItems![index].returnProducts!.length>0)
+                      ListView.separated(
+                        separatorBuilder: (context, index) => Divider(),
+                        itemCount: orders.orderItems![index].returnProducts!.length,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, i) => Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text('${locale.quantity}: ',style: font.bodyMedium!.copyWith(
+                                  fontSize: 15.sp
+                                ),),
+                                Text(
+                                  '${orders.orderItems![index].returnProducts![i].quantity}',
+                                style: font.bodyMedium!.copyWith(
+                                  color: color.backgroundColor
+                                ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('${locale.reason}: ',
+                                  style: font.bodyMedium!.copyWith(
+                                      fontSize: 15.sp
+                                  ),),
+                                SizedBox(
+                                  width: 220.w,
+                                  child: Text(
+                                    '${orders.orderItems![index]
+                                        .returnProducts![i].reason}',
+                                    style: font.bodyMedium!.copyWith(
+                                        color: color.backgroundColor
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text('${locale.dateTime}: ',
+                                  style: font.bodyMedium!.copyWith(
+                                      fontSize: 15.sp
+                                  ),),
+                                Text(
+                                  '${Helper.trackingTimeFormat(orders.orderItems![index].
+                                  returnProducts![i].createdAt!)}',
+                                  style: font.bodyMedium!.copyWith(
+                                      color: color.backgroundColor
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 2.h,),
+                          ],
+                        ),
+                      ),
                       SizedBox(
                         height: 20.h,
                       ),
@@ -681,8 +683,8 @@ class BuildCardProductDetails extends StatelessWidget {
                               text: returnProduct
                                   ? locale.returnProduct
                                   : locale.cancelItem,
-                              width: 100.w,
-                              height: 30.h,
+                              width: 110.w,
+                              height: 25.h,
                               borderRadius: 8.r,
                               onPressed: () {
                                 if (returnProduct) {
@@ -790,11 +792,11 @@ class BuildCardProductDetails extends StatelessWidget {
                                                                       dynamic>>
                                                               returns = [];
                                                           returns.add({
-                                                            'cartProduct_id':
+                                                            'orderItemId':
                                                                 orders
                                                                     .orderItems![
                                                                         index]
-                                                                    .productId,
+                                                                    .id,
                                                             "reason":
                                                                 reasonController
                                                                     .text,
@@ -810,6 +812,7 @@ class BuildCardProductDetails extends StatelessWidget {
                                                               null;
                                                           HomeCubit.get(context)
                                                               .returnOrder(
+                                                            orderId:  orders.id! ,
                                                                   returns:
                                                                       returns);
                                                           Navigator.pop(
@@ -851,7 +854,7 @@ class BuildCardProductDetails extends StatelessWidget {
 
                                 }
                               },
-                              fontSize: 13.sp,
+                              fontSize: 10.5.sp,
                               backgorundColor: (returnProduct &&
                                           returnQuantity ==
                                               orders

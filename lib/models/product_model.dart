@@ -72,10 +72,12 @@ class Products {
   bool ?inCart;
   bool ?inFavourite;
   String ?status;
+  int ?qntInStock;
 
   Products.fromJson(Map<String, dynamic> json) {
     productsId = json['products_id'];
     traderId = json['trader_id'];
+    qntInStock = json['qtyInStock'];
     status = json['status'];
     rateCount = json['rateCount'];
     description = json['description'];

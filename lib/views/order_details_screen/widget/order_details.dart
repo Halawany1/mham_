@@ -148,7 +148,7 @@ class BuildOrderDetails extends StatelessWidget {
                    ),
                  if (cubit.checkboxListTiles[3].value ||
                      cubit.checkboxListTiles[2].value)
-                   BuildGoToLinkRow(),
+                   BuildGoToLinkRow(link: cubit.driverOrderByIdModel!.order!.location! ,),
                  SizedBox(
                    height: 5.h,
                  ),

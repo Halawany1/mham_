@@ -1,3 +1,5 @@
+import 'assign_order_model.dart';
+
 class DriverOrderModel {
   int? totalPages;
   int? page;
@@ -13,12 +15,10 @@ class DriverOrderModel {
     if (json['orders'] != null) {
       orders = <Orders>[];
       json['orders'].forEach((v) {
-        orders!.add( Orders.fromJson(v));
+        orders!.add(Orders.fromJson(v));
       });
     }
   }
-
-
 }
 
 class Orders {
@@ -40,7 +40,7 @@ class Orders {
   String? cancelReason;
   bool? isPaid;
   String? driver;
-
+  List<OrderItems>? orderItems;
 
   Orders.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -60,68 +60,66 @@ class Orders {
     cancelledAt = json['cancelledAt'];
     cancelReason = json['cancelReason'];
     isPaid = json['isPaid'];
-
+    if (json['orderItems'] != null) {
+      orderItems = <OrderItems>[];
+      json['orderItems'].forEach((v) {
+        orderItems!.add(OrderItems.fromJson(v));
+      });
+    }
   }
-
-
 }
 
-// class Customer {
-//   int? id;
-//   String? userName;
-//   String? mobile;
-//   String? password;
-//   int? countryId;
-//   String? role;
-//
-//
-//
-//   Customer.fromJson(Map<String, dynamic> json) {
-//     id = json['id'];
-//     userName = json['user_name'];
-//     mobile = json['mobile'];
-//     password = json['password'];
-//     countryId = json['country_id'];
-//     role = json['role'];
-//   }
-//
-//
-// }
+class Customer {
+  int? id;
+  String? userName;
+  String? mobile;
+  String? password;
+  int? countryId;
+  String? role;
 
-// class OrderItems {
-//   int? id;
-//   int? subOrderId;
-//   int? userOrderId;
-//   int? productId;
-//   String? createdAt;
-//   String? updatedAt;
-//   int? quantity;
-//   dynamic unitPrice;
-//   String? status;
-//   String? processingAt;
-//   String? shippedAt;
-//   String? deliveredAt;
-//   String? cancelledAt;
-//
-//
-//
-//
-//   OrderItems.fromJson(Map<String, dynamic> json) {
-//     id = json['id'];
-//     subOrderId = json['subOrderId'];
-//     userOrderId = json['userOrderId'];
-//     productId = json['productId'];
-//     createdAt = json['createdAt'];
-//     updatedAt = json['updatedAt'];
-//     quantity = json['quantity'];
-//     unitPrice = json['unitPrice'];
-//     status = json['status'];
-//     processingAt = json['processingAt'];
-//     shippedAt = json['shippedAt'];
-//     deliveredAt = json['deliveredAt'];
-//     cancelledAt = json['cancelledAt'];
-//
-//   }
-//
-//
-// }
+  Customer.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    userName = json['user_name'];
+    mobile = json['mobile'];
+    password = json['password'];
+    countryId = json['country_id'];
+    role = json['role'];
+  }
+}
+
+class OrderItems {
+  int? id;
+  int? subOrderId;
+  int? userOrderId;
+  int? productId;
+  String? createdAt;
+  String? updatedAt;
+  int? quantity;
+  dynamic unitPrice;
+  String? status;
+  String? processingAt;
+  String? shippedAt;
+  String? deliveredAt;
+  String? cancelledAt;
+//  Product? product;
+
+  OrderItems.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    subOrderId = json['subOrderId'];
+    userOrderId = json['userOrderId'];
+    productId = json['productId'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    quantity = json['quantity'];
+    unitPrice = json['unitPrice'];
+    status = json['status'];
+    processingAt = json['processingAt'];
+    shippedAt = json['shippedAt'];
+    deliveredAt = json['deliveredAt'];
+    cancelledAt = json['cancelledAt'];
+    // if (json['product'] != null && json['product'] is Map<String, dynamic>) {
+    //   product =
+    //       json['product'] != null ? Product.fromJson(json['product']) : null;
+    // }
+  }
+}

@@ -8,4 +8,5 @@ class   AppConstant {
   static String fcmToken="fcmToken";
   static String driver="driver";
   static String driverId="driverId";
+  static String timeLineProcess="timeLineProcess";
 }

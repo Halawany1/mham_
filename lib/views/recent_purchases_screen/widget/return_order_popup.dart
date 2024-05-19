@@ -11,8 +11,11 @@ import '../../../core/error/validation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BuildReturnOrderPopUp extends StatelessWidget {
-  const BuildReturnOrderPopUp({super.key,required this.returns});
+  const BuildReturnOrderPopUp({super.key,
+
+    required this.orderId,required this.returns});
   final List<Map<String,dynamic>> returns;
+  final int orderId;
   @override
   Widget build(BuildContext context) {
     var color = Theme.of(context);
@@ -71,6 +74,7 @@ class BuildReturnOrderPopUp extends StatelessWidget {
                       reasonController.clear();
                       HomeCubit.get(context)
                           .returnOrder(
+                        orderId: orderId,
                           returns:returns);
                       Navigator.pop(context);
                     },

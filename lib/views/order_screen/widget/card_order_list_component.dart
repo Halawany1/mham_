@@ -79,51 +79,33 @@ class BuildCardOrderList extends StatelessWidget {
                         color: color.backgroundColor),
                   ),
                   SizedBox(
-                    width: 195.w,
-                    child: Row(
-                      children: [
-                        Text(
-                         status.toString(),
-                          style: font.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12.sp,
-                              color: Colors.green),
+                    height: 8.h,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                       status.toString(),
+                        style: font.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12.sp,
+                            color: Colors.green),
+                      ),
+                      SizedBox(width: 10.w,),
+                      Container(
+                        alignment: Alignment.center,
+                        width: 22.w,
+                        height: 22.w,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: color.primaryColor),
+                          borderRadius: BorderRadius.circular(5.r),
                         ),
-                        Spacer(),
-                        Container(
-                          alignment: Alignment.center,
-                          width: 22.w,
-                          height: 22.w,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: color.primaryColor),
-                            borderRadius: BorderRadius.circular(5.r),
-                          ),
-                          child: Text(
-                            quantity.toString(),
-                            style: font.bodyMedium!.copyWith(fontSize: 12.sp),
-                          ),
+                        child: Text(
+                          quantity.toString(),
+                          style: font.bodyMedium!.copyWith(fontSize: 12.sp),
                         ),
-                          SizedBox(
-                          width: 10.w,
-                        ),
-                          BuildSmallButton(
-                          withIcon: false,
-                          width: 75.w,
-                          hieght: 17.h,
-                          text: locale.moreDetails,
-                          onPressed: () {
-                            Helper.push(
-                                context: context,
-                                widget:
-                                OrderDetailsScreen(
-                                  returns: returns,
-                                  currentIndex: index,
-                                  totalPrice: totalPrice,
-                                ),withAnimate: true);
-                          },
-                        )
-                      ],
-                    ),
+                      ),
+
+                    ],
                   ),
                 ],
               ),

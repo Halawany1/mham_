@@ -88,6 +88,8 @@ class FavouriteScreen extends StatelessWidget {
                                 Helper.push(context: context,widget: DetailsScreen() );
                               },
                               child: BuildProductCard(
+                                outOfStock:cubit
+                                    .favoriteProducts[index].qntInStock==0 ,
                                 id: cubit.favoriteProducts[index].productsId!,
                                 inCart:
                                     cubit.favoriteProducts[index].inCart ??

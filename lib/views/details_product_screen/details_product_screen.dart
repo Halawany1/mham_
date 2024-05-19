@@ -42,11 +42,7 @@ class DetailsScreen extends StatelessWidget {
       onWillPop: () async {
         cubit.resetQuantity();
         cubit.changeRate(value: 0);
-        if (hideAddedToCart) {
-          Navigator.pop(context);
-        } else {
-          Helper.pop(context);
-        }
+        Helper.pop(context);
         cubit.productDetailsContainer = false;
         return true;
       },
@@ -83,8 +79,9 @@ class DetailsScreen extends StatelessWidget {
               return Scaffold(
                 bottomSheet: cubit.oneProductModel != null &&
                         state is! LoadingGetProductDetailsState
-                    ? !hideAddedToCart
-                        ? BuildBottomSheet()
+                    ? !hideAddedToCart &&cubit.oneProductModel!.
+                product!.qntInStock!=0
+                    ? BuildBottomSheet()
                         : null
                     : null,
                 appBar: AppBar(
@@ -98,11 +95,7 @@ class DetailsScreen extends StatelessWidget {
                       onTap: () {
                         cubit.resetQuantity();
                         cubit.changeRate(value: 0);
-                        if (hideAddedToCart) {
-                          Navigator.pop(context);
-                        } else {
-                          Helper.pop(context);
-                        }
+                        Helper.pop(context);
                         cubit.productDetailsContainer = false;
                       },
                       child: Icon(

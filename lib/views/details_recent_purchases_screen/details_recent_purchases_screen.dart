@@ -21,6 +21,7 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
     super.key,
     required this.currentIndex,
     required this.totalPrice,
+    required this.orderId,
     required this.returns,
     this.hideNav = false,
     this.returnOrder = false,
@@ -28,6 +29,7 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
   });
 
   final int currentIndex;
+  final int orderId;
   final double totalPrice;
   final bool hideNav;
   final bool returnOrder;
@@ -187,6 +189,10 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
                         height: 20.h,
                       ),
                       BuildTrackingOrder(
+                          activeProcess:cubit.recentPurchases[currentIndex]
+                              .deliveredAt!=null?4:
+                          cubit.recentPurchases[currentIndex]
+                              .shippedAt!=null?3:2 ,
                           createdAt:
                               cubit.recentPurchases[currentIndex].createdAt!,
                           orderId: cubit.recentPurchases[currentIndex].id!,
@@ -225,23 +231,24 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
                           cubit.recentPurchases.forEach((element) {
                             cubit.cardProductDetails.add(false);
                           });
-                          // int returnQuantity = 0;
-                          // cubit.recentPurchases[currentIndex].orderItems![index]
-                          //     .returnProduct!
-                          //     .forEach((element) {
-                          //   returnQuantity += element.quantity!;
-                          // });
-                          // for (int i = 1;
-                          //     i <=
-                          //         cubit.recentPurchases[currentIndex].carts![0]
-                          //                 .cartProducts![index].quantity! -
-                          //             returnQuantity;
-                          //     i++) {
-                          //   quantities.add(i.toString());
-                          // }
+                          int returnQuantity = 0;
+                          cubit.recentPurchases[currentIndex].orderItems![index]
+                              .returnProducts!
+                              .forEach((element) {
+                            returnQuantity += element.quantity!;
+                          });
+                          for (int i = 1;
+                              i <=
+                                  cubit.recentPurchases[currentIndex]
+                                      .orderItems![index].quantity! -
+                                      returnQuantity;
+                              i++) {
+                            quantities.add(i.toString());
+                          }
+
                           return BuildCardProductDetails(
                             hideCancelOrder:hideReturnButton ,
-                              returnQuantity: 5,
+                              returnQuantity: returnQuantity,
                               quantity: quantities,
                               onTap: () {
                                 cubit.openAndCloseCardProductDetails(index);
@@ -267,18 +274,20 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
                             borderRadius: 8.r,
                             width: 110.w,
                             height: 26.h,
+                            fontSize: 13.sp,
                             onPressed: () {
-                              if (hideReturnButton) {
+                              if (!hideReturnButton) {
                                 showDialog(
                                   context: context,
                                   builder: (context) {
                                     return BuildReturnOrderPopUp(
+                                      orderId: orderId,
                                         returns: returns);
                                   },
                                 );
                               }
                             },
-                            backgorundColor: hideReturnButton
+                            backgorundColor:hideReturnButton
                                 ? Colors.grey
                                 : color.backgroundColor,
                             colorText: ColorConstant.brown)

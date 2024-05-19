@@ -34,6 +34,9 @@ class ProfileScreen extends StatelessWidget {
     var font = Theme
         .of(context)
         .textTheme;
+    if(ProfileCubit.get(context).userModel==null){
+      ProfileCubit.get(context).getProfile(driver: false);
+    }
     return BlocConsumer<ProfileCubit, ProfileState>(
       listener: (context, state) {
         if (state is SuccessUpdateProfileState) {
@@ -113,6 +116,7 @@ class ProfileScreen extends StatelessWidget {
                         onTap: () {
                           HomeCubit.get(context).orderModel=null;
                           HomeCubit.get(context).getAllOrders();
+
                           Helper.push(context: context,widget:
                           ReturnsScreen(),withAnimate: true);
                         },

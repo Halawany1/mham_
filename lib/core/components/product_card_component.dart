@@ -31,6 +31,7 @@ class BuildProductCard extends StatelessWidget {
     required this.inCart,
     required this.inFavorite,
     required this.id,
+    required this.outOfStock,
   });
 
   final dynamic price;
@@ -44,6 +45,7 @@ class BuildProductCard extends StatelessWidget {
   final bool inCart;
   final bool inFavorite;
   final int id;
+  final bool outOfStock;
 
 
   @override
@@ -190,6 +192,16 @@ class BuildProductCard extends StatelessWidget {
                 tapOnlyMode: true,
               ),
             ),
+            if(outOfStock)
+              Positioned(
+                top: 210.h,
+                left: 28.w,
+                child: Text('out of stock',
+                  style: font.bodyMedium!.
+                  copyWith(color:ColorConstant.brown,
+                      fontSize: 15.sp),),
+              ),
+            if(!outOfStock)
             Positioned(
               top: 192.h,
               left: 18.5.w,
@@ -215,7 +227,7 @@ class BuildProductCard extends StatelessWidget {
 
                 },),
             ),
-
+            if(!outOfStock)
             Positioned(
               top: 222.h,
               left: 18.5.w,
@@ -236,8 +248,9 @@ class BuildProductCard extends StatelessWidget {
                       oneProductName: title,
                       price: double.parse(price.toString()),
                     ),
-                      withAnimate: true
+                        withAnimate: true
                     );
+
                   }
 
                 },),

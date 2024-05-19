@@ -8,13 +8,14 @@ class OneProductModel {
 
 }
 
+
 class Product {
   int? productsId;
   int? traderId;
   String? description;
   String? manufacturerPartNumber;
   String? brandName;
-  List<Map<String, String>>? address;
+  //List<Address>? address;
   String? productsImg;
   String? madeIn;
   dynamic price;
@@ -22,7 +23,6 @@ class Product {
   dynamic offerPrice;
   String? offerStartDate;
   String? offerEndDate;
-  dynamic rating;
   int? reviewCount;
   String? type;
   bool? isBestSeller;
@@ -30,9 +30,9 @@ class Product {
   bool? assemblyKit;
   String? productLine;
   String? frontOrRear;
-  int? tyreSpeedRate;
+  String? tyreSpeedRate;
   int? maximumTyreLoad;
-  int? tyreEngraving;
+  String? tyreEngraving;
   int? rimDiameter;
   int? tyreHeight;
   int? tyreWidth;
@@ -58,30 +58,37 @@ class Product {
   dynamic averageRate;
   int? rateCount;
   RatePercentage? ratePercentage;
-  bool? inCart;
-  bool? inFavourite;
-  String? status;
-
+  bool ?inCart;
+  bool ?inFavourite;
+  String ?status;
+  int ?qntInStock;
 
   Product.fromJson(Map<String, dynamic> json) {
     productsId = json['products_id'];
     traderId = json['trader_id'];
-    averageRate = json['averageRate'];
+    qntInStock = json['qtyInStock'];
     status = json['status'];
+    rateCount = json['rateCount'];
     description = json['description'];
     manufacturerPartNumber = json['manufacturer_part_number'];
     brandName = json['brand_name'];
-    if (json['address'] != null) {
-      address = List<Map<String, String>>.from(json['address'].map((x) => Map<String, String>.from(x)));
-    }
+    // if (json['address'] != null) {
+    //   address = <Address>[];
+    //   json['address'].forEach((v) {
+    //     address!.add( Address.fromJson(v));
+    //   });
+    // }
     productsImg = json['products_img'];
     madeIn = json['madeIn'];
+    ratePercentage = json['ratePercentage'] != null
+        ?  RatePercentage.fromJson(json['ratePercentage'])
+        : null;
     price = json['price'];
     isOffer = json['is_offer'];
     offerPrice = json['offer_price'];
     offerStartDate = json['offer_start_date'];
     offerEndDate = json['offer_end_date'];
-    rating = json['rating'];
+    averageRate = json['averageRate'];
     reviewCount = json['review_count'];
     type = json['type'];
     isBestSeller = json['is_best_seller'];
@@ -110,6 +117,8 @@ class Product {
     warranty = json['warranty'];
     disabledAt = json['disabled_at'];
     updatedAt = json['updated_at'];
+    inCart = json['inCart'];
+    inFavourite = json['inFavourite'];
     businessCategory = json['businessCategory'] != null
         ?  BusinessCategory.fromJson(json['businessCategory'])
         : null;
@@ -121,18 +130,6 @@ class Product {
         availableYears!.add( AvailableYears.fromJson(v));
       });
     }
-    if (json['productRating'] != null) {
-      productRating = <ProductRating>[];
-      json['productRating'].forEach((v) {
-        productRating!.add( ProductRating.fromJson(v));
-      });
-    }
-    rateCount = json['rateCount'];
-    ratePercentage = json['ratePercentage'] != null
-        ?  RatePercentage.fromJson(json['ratePercentage'])
-        : null;
-    inCart = json['inCart'];
-    inFavourite = json['inFavourite'];
   }
 
 

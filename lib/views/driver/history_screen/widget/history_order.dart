@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/constent/color_constant.dart';
+import 'package:mham/core/helper/helper.dart';
+import 'package:mham/models/driver_order_model.dart';
 import 'package:mham/views/driver/home_screen/widget/quantity_container.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -10,8 +12,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class BuildHistoryOrder extends StatelessWidget {
-  const BuildHistoryOrder({super.key});
-
+  const BuildHistoryOrder({super.key,
+    required this.index,
+    required this.orders});
+  final List<Orders> orders;
+  final int index;
   @override
   Widget build(BuildContext context) {
     var color = Theme.of(context);
@@ -36,41 +41,27 @@ class BuildHistoryOrder extends StatelessWidget {
             CircleAvatar(
               radius: 28.r,
               backgroundColor: color.backgroundColor,
-              child: Text('1',style: font.bodyMedium,),
+              child: Text('${index+1}',style: font.bodyMedium,),
             ),
             SizedBox(width: 15.w,),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('12 Apr, 3:58 Pm',style: font.bodyMedium!.copyWith(
+                Text(Helper.
+                trackingTimeFormat(orders[index].createdAt!),style: font.bodyMedium!.copyWith(
                     fontSize: 12.sp
                 ),),
-                Text('1000 KD',style: font.bodyMedium!.copyWith(
+                Text('${orders[index].totalPrice!} ${locale.kd}',style: font.bodyMedium!.copyWith(
                     fontSize: 12.sp,
                     color: color.backgroundColor
                 ),),
-                Text('Delivered',style: font.bodyMedium!.copyWith(
+                Text(orders[index].status!,style: font.bodyMedium!.copyWith(
                     fontSize: 12.sp,
                     color: Colors.green
                 ),),
               ],),
             Spacer(),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                BuildQuantityContainer(quantity: 3),
-                SizedBox(width: 10.w,),
-                BuildDefaultButton(text: locale.moreDetails,
-                    width: 85.w,
-                    height: 18.h,
-                    borderRadius: 12.r,
-                    fontSize: 8.sp,
-                    onPressed: () {
-
-                    }, backgorundColor: color.backgroundColor,
-                    colorText:ColorConstant.brown)
-              ],)
+            BuildQuantityContainer(quantity:orders[index].orderItems!.length),
           ],
         ),
       ),

@@ -23,7 +23,9 @@ var _formKey = GlobalKey<FormState>();
 
 class EditProfileScreen extends StatelessWidget {
   const EditProfileScreen({super.key, required this.driver});
+
   final bool driver;
+
   @override
   Widget build(BuildContext context) {
     var color = Theme.of(context);
@@ -33,33 +35,42 @@ class EditProfileScreen extends StatelessWidget {
 
     return BlocConsumer<AuthenticationCubit, AuthenticationState>(
       listener: (context, state) {
-        if(state is NoInternetProfileState){
-          showMessageResponse(message: locale.noInternetConnection,
-              context: context, success: false);
+        if (state is NoInternetProfileState) {
+          showMessageResponse(
+              message: locale.noInternetConnection,
+              context: context,
+              success: false);
         }
         if (state is SuccessGetCountriesState) {
-          if(driver){
+          if (driver) {
             AuthenticationCubit.get(context).countryId =
-            LayoutCubit.get(context).lang=='en'?
-            ProfileCubit.get(context)
-                .driverProfileModel!
-                .driver!.user!.country!.countryNameEn
-                :     ProfileCubit.get(context).
-            driverProfileModel!.driver!.user!.country!.countryNameAr;
-          }else{
+                LayoutCubit.get(context).lang == 'en'
+                    ? ProfileCubit.get(context)
+                        .driverProfileModel!
+                        .driver!
+                        .user!
+                        .country!
+                        .countryNameEn
+                    : ProfileCubit.get(context)
+                        .driverProfileModel!
+                        .driver!
+                        .user!
+                        .country!
+                        .countryNameAr;
+          } else {
             AuthenticationCubit.get(context).countryId =
-            LayoutCubit.get(context).lang=='en'?
-            ProfileCubit.get(context)
-                .userModel!
-                .user!
-                .country!
-                .countryNameEn!: ProfileCubit.get(context)
-                .userModel!
-                .user!
-                .country!
-                .countryNameAr!;
+                LayoutCubit.get(context).lang == 'en'
+                    ? ProfileCubit.get(context)
+                        .userModel!
+                        .user!
+                        .country!
+                        .countryNameEn!
+                    : ProfileCubit.get(context)
+                        .userModel!
+                        .user!
+                        .country!
+                        .countryNameAr!;
           }
-
         }
         if (state is SuccessUpdateProfileState) {
           Helper.pop(context);
@@ -73,6 +84,15 @@ class EditProfileScreen extends StatelessWidget {
               Helper.pop(context);
             }
             if (state is ErrorUpdateProfileState) {
+              showMessageResponse(
+                  message: state.message.toString(),
+                  context: context,
+                  success: false);
+            }
+            if (state is SuccessUpdateProfileDriverState) {
+              Helper.pop(context);
+            }
+            if (state is ErrorUpdateProfileDriverState) {
               showMessageResponse(
                   message: state.message.toString(),
                   context: context,
@@ -109,14 +129,18 @@ class EditProfileScreen extends StatelessWidget {
                               ),
                               Positioned(
                                 top: 50.h,
-                                left:LayoutCubit.get(context).lang == 'en'?20.w:null,
-                                right:LayoutCubit.get(context).lang == 'ar'?20.w:null,
+                                left: LayoutCubit.get(context).lang == 'en'
+                                    ? 20.w
+                                    : null,
+                                right: LayoutCubit.get(context).lang == 'ar'
+                                    ? 20.w
+                                    : null,
                                 child: InkWell(
                                   onTap: () {
                                     Helper.pop(context);
                                   },
                                   child: Icon(
-                                   Icons.arrow_back,
+                                    Icons.arrow_back,
                                     size: 30.r,
                                     color: color.primaryColor,
                                   ),
@@ -209,13 +233,11 @@ class EditProfileScreen extends StatelessWidget {
                                   keyboardType: TextInputType.text,
                                   cubit: cubit,
                                   validator: (value) {
-                                    return Validation.validateField(value,
-                                        locale.address, context);
+                                    return null;
                                   },
                                   title: locale.address,
                                   hint: locale.address,
                                   controller: addressController),
-
                               SizedBox(
                                 height: 20.h,
                               ),
@@ -224,8 +246,8 @@ class EditProfileScreen extends StatelessWidget {
                                   keyboardType: TextInputType.text,
                                   cubit: cubit,
                                   validator: (value) {
-                                    return Validation.validateField(
-                                        value, driverLicenseController.text, context);
+                                    return Validation.validateField(value,
+                                        driverLicenseController.text, context);
                                   },
                                   title: 'Driving License',
                                   hint: 'Driving License',
@@ -240,8 +262,9 @@ class EditProfileScreen extends StatelessWidget {
                                     );
                                     if (imageFileOne == null) return;
                                     final String imagePath = imageFileOne!.path;
-                                    final String imageName = imagePath
-                                        .substring(imagePath.lastIndexOf('/') + 1);
+                                    final String imageName =
+                                        imagePath.substring(
+                                            imagePath.lastIndexOf('/') + 1);
 
 // Set the image filename to the imageController
                                     driverLicenseController.text = imageName;
@@ -250,7 +273,8 @@ class EditProfileScreen extends StatelessWidget {
                               SizedBox(
                                 height: 50.h,
                               ),
-                              state is LoadingUpdateProfileState
+                              state is LoadingUpdateProfileState ||
+                                      state is LoadingUpdateProfileDriverState
                                   ? Center(
                                       child: CircularProgressIndicator(
                                       color: color.primaryColor,
@@ -259,20 +283,31 @@ class EditProfileScreen extends StatelessWidget {
                                       text: locale.save,
                                       borderRadius: 10.r,
                                       onPressed: () {
-                                        if(_formKey.currentState!.validate()) {
-                                          if(driver){
-
-                                          }else{
+                                        if (_formKey.currentState!.validate()) {
+                                          if (driver) {
+                                            profileCubit.updateProfileForDriver(
+                                                lang: LayoutCubit.get(context)
+                                                    .lang,
+                                                address: addressController.text,
+                                                country: cubit.countriesId[
+                                                    cubit.countryId]!,
+                                                drivingLicence:
+                                                    imageFileOne == null
+                                                        ? ''
+                                                        : imageFileOne!.path,
+                                                mobile: phoneController.text,
+                                                userName:
+                                                    userNameController.text);
+                                          } else {
                                             profileCubit.updateProfile(
                                                 driver: driver,
-                                                userName: userNameController.text,
-                                                countryId: cubit
-                                                    .countriesId[cubit.countryId]!,
+                                                userName:
+                                                    userNameController.text,
+                                                countryId: cubit.countriesId[
+                                                    cubit.countryId]!,
                                                 phone: phoneController.text);
                                           }
-
                                         }
-
                                       },
                                       backgorundColor: color.backgroundColor,
                                       colorText: ColorConstant.brown),

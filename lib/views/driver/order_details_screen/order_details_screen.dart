@@ -14,10 +14,12 @@ import 'package:mham/core/components/laoding_animation_component.dart';
 import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/components/snak_bar_component.dart';
 import 'package:mham/core/components/text_form_field_component.dart';
+import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/error/validation.dart';
 import 'package:mham/core/helper/helper.dart';
+import 'package:mham/core/network/local.dart';
 import 'package:mham/views/driver/order_details_screen/card_products.dart';
 import 'package:mham/views/order_details_screen/widget/order_details.dart';
 import 'package:mham/views/order_details_screen/widget/tracking_order.dart';
@@ -25,14 +27,15 @@ import 'package:mham/views/order_details_screen/widget/tracking_order.dart';
 var reasonController = TextEditingController();
 var formKey = GlobalKey<FormState>();
 var imageController = TextEditingController();
-XFile ?imageFileOne;
+XFile? imageFileOne;
+
 class OrderDetailsDriverScreen extends StatelessWidget {
   const OrderDetailsDriverScreen({
     super.key,
-    required this.index,
+     this.closeDetails=false,
   });
 
-  final int index;
+  final bool closeDetails;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +51,7 @@ class OrderDetailsDriverScreen extends StatelessWidget {
       },
       child: BlocConsumer<OrderDriverCubit, OrderDriverState>(
         listener: (context, state) {
-          if (state is SuccessCancelOrderState) {
+          if (state is SuccessCancelOrderDriverState) {
             showMessageResponse(
                 message: 'Order Canceled Successfully',
                 context: context,
@@ -57,6 +60,11 @@ class OrderDetailsDriverScreen extends StatelessWidget {
           if (state is ErrorCancelOrderDriverState) {
             showMessageResponse(
                 message: state.error, context: context, success: false);
+          }
+          if(state is ErrorUpdateOrderItemState){
+            showMessageResponse(
+                message: state.error, context: context, success: false);
+
           }
         },
         builder: (context, state) {
@@ -87,16 +95,27 @@ class OrderDetailsDriverScreen extends StatelessWidget {
                               height: 12.h,
                             ),
                             BuildOrderDetails(
-                                lenght: 5,
+                                lenght: cubit.driverOrderByIdModel!.order!
+                                    .orderItems!.length,
                                 createdAt: cubit
                                     .driverOrderByIdModel!.order!.createdAt!,
                                 status:
                                     cubit.driverOrderByIdModel!.order!.status!,
-                                totalPrice: 2000),
+                                totalPrice: double.parse(cubit
+                                    .driverOrderByIdModel!.order!.totalPrice!
+                                    .toString())),
                             SizedBox(
                               height: 20.h,
                             ),
                             BuildTrackingOrder(
+                                activeProcess: cubit.driverOrderByIdModel!.order!
+                                    .deliveredAt != null ? 4 :
+                                cubit.driverOrderByIdModel!.order!
+                                    .shippedAt != null ? 3 : cubit.driverOrderByIdModel!
+                                    .order!
+                                    .processingAt != null ? 2 : cubit.driverOrderByIdModel!
+                                    .order!
+                                    .createdAt != null ? 1:0,
                                 shiped: cubit.driverOrderByIdModel!.order!
                                             .shippedAt ==
                                         null
@@ -167,13 +186,7 @@ class OrderDetailsDriverScreen extends StatelessWidget {
                                                 Radius.circular(15.r))),
                                         child: Text('2',
                                             style: font.bodyMedium!.copyWith(
-                                                color: cubit
-                                                            .driverOrderByIdModel!
-                                                            .order!
-                                                            .deliveredAt !=
-                                                        null
-                                                    ? ColorConstant.brown
-                                                    : Colors.grey)),
+                                                color:ColorConstant.brown)),
                                       )),
                                   StepperData(
                                       title: StepperText(locale.shipped,
@@ -209,13 +222,7 @@ class OrderDetailsDriverScreen extends StatelessWidget {
                                                 Radius.circular(15.r))),
                                         child: Text('3',
                                             style: font.bodyMedium!.copyWith(
-                                                color: cubit
-                                                            .driverOrderByIdModel!
-                                                            .order!
-                                                            .deliveredAt !=
-                                                        null
-                                                    ? ColorConstant.brown
-                                                    : Colors.grey)),
+                                                color: ColorConstant.brown)),
                                       )),
                                   StepperData(
                                     iconWidget: Container(
@@ -257,10 +264,14 @@ class OrderDetailsDriverScreen extends StatelessWidget {
                               SizedBox(
                                 height: 25.h,
                               ),
-                            ListView.builder(
+                            ListView.separated(
+                              separatorBuilder: (context, index) => SizedBox(
+                                height: 20.h,
+                              ),
                               itemBuilder: (context, index) =>
                                   BuildCardProductDetailsForDriver(
                                       index: index,
+                                      notClosed: closeDetails,
                                       opened:
                                           cubit.openAndCloseDetailsContainer),
                               shrinkWrap: true,
@@ -271,6 +282,7 @@ class OrderDetailsDriverScreen extends StatelessWidget {
                             SizedBox(
                               height: 30.h,
                             ),
+                            if(!closeDetails)
                             BuildDefaultButton(
                                 text: locale.cancelOrder,
                                 width: 120.w,
@@ -293,52 +305,71 @@ class OrderDetailsDriverScreen extends StatelessWidget {
                                                 color: ColorConstant.error),
                                           ),
                                           content: SingleChildScrollView(
-                                            child:Column(
+                                            child: Column(
                                               children: [
                                                 BuildTextFormField(
-                                                  cubit: AuthenticationCubit.get(
-                                                      context),
+                                                  cubit:
+                                                      AuthenticationCubit.get(
+                                                          context),
                                                   title: locale.cancelOrder,
                                                   contentPadding: true,
                                                   hint: locale.reason,
                                                   validator: (String? value) {
-                                                    return Validation.validateField(
-                                                        value,
-                                                        locale.reason,
-                                                        context);
+                                                    return Validation
+                                                        .validateField(
+                                                            value,
+                                                            locale.reason,
+                                                            context);
                                                   },
                                                   controller: reasonController,
-                                                  keyboardType: TextInputType.text,
+                                                  keyboardType:
+                                                      TextInputType.text,
                                                   maxLength: 1000,
                                                   maxLines: 5,
                                                 ),
-                                                SizedBox(height: 10.h,),
-                                                BuildTextFormField(title: 'Image',
+                                                SizedBox(
+                                                  height: 10.h,
+                                                ),
+                                                BuildTextFormField(
+                                                    title: 'Image',
                                                     hint: 'enter reasong image',
-                                                    cubit: AuthenticationCubit.get(context),
+                                                    cubit:
+                                                        AuthenticationCubit.get(
+                                                            context),
                                                     controller: imageController,
                                                     withBorder: true,
                                                     validator: (value) {
-                                                  return Validation.validateField(value,
-                                                      'reason image', context);
+                                                      return null;
                                                     },
                                                     onTap: () async {
-                                                      final ImagePicker picker = ImagePicker();
-                                                      imageFileOne = await picker.pickImage(
-                                                        source: ImageSource.gallery,
+                                                      final ImagePicker picker =
+                                                          ImagePicker();
+                                                      imageFileOne =
+                                                          await picker
+                                                              .pickImage(
+                                                        source:
+                                                            ImageSource.gallery,
                                                         // alternatively, use ImageSource.gallery
                                                         maxWidth: 400,
                                                       );
-                                                      if (imageFileOne == null) return;
-                                                      final String imagePath = imageFileOne!.path;
-                                                      final String imageName = imagePath
-                                                          .substring(imagePath.lastIndexOf('/') + 1);
+                                                      if (imageFileOne == null)
+                                                        return;
+                                                      final String imagePath =
+                                                          imageFileOne!.path;
+                                                      final String imageName =
+                                                          imagePath.substring(
+                                                              imagePath
+                                                                      .lastIndexOf(
+                                                                          '/') +
+                                                                  1);
 
 // Set the image filename to the imageController
-                                                      imageController.text = imageName;
+                                                      imageController.text =
+                                                          imageName;
                                                     },
                                                     readOnly: true,
-                                                    keyboardType: TextInputType.text,
+                                                    keyboardType:
+                                                        TextInputType.text,
                                                     maxLength: 100)
                                               ],
                                             ),
@@ -363,9 +394,13 @@ class OrderDetailsDriverScreen extends StatelessWidget {
                                                 if (formKey.currentState!
                                                     .validate()) {
                                                   cubit.cancelOrder(
-                                                      image: imageFileOne==null?'':imageFileOne!.path,
-                                                      lang: LayoutCubit
-                                                          .get(context).lang,
+                                                      image: imageFileOne ==
+                                                              null
+                                                          ? ''
+                                                          : imageFileOne!.path,
+                                                      lang: LayoutCubit.get(
+                                                              context)
+                                                          .lang,
                                                       reason:
                                                           reasonController.text,
                                                       id: cubit

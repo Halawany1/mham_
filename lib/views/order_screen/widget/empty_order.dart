@@ -9,8 +9,9 @@ import 'package:mham/core/constent/image_constant.dart';
 
 
 class BuildEmptyOrder extends StatelessWidget {
-  const BuildEmptyOrder({super.key});
+  const BuildEmptyOrder({super.key, this.withoutButton=false});
 
+  final bool withoutButton;
   @override
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
@@ -29,6 +30,7 @@ class BuildEmptyOrder extends StatelessWidget {
               font.bodyMedium!.
               copyWith(fontSize: 18.sp),),
             SizedBox(height: 22.h),
+            if(!withoutButton)
             BuildDefaultButton(
                 text: locale.startShopping,
                 width: 120.w,

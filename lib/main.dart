@@ -43,11 +43,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheHelper.init();
   await DioHelper.init();
-  // await CacheHelper.deleteAllData();
-  CacheHelper.saveData(
-      key: AppConstant.token,
-      value:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxNjIsInVzZXJfbmFtZSI6Imhvc3NhbTIwMiIsIm1vYmlsZSI6IisyMDEwNjQ2NDgzNzIiLCJyb2xlIjoidXNlciIsImNvdW50cnkiOnsiY291bnRyeV9pZCI6MiwiY291bnRyeV9uYW1lX2VuIjoiRWd5cHQiLCJjb3VudHJ5X25hbWVfYXIiOiLZhdi12LEifX0sImlhdCI6MTcxNTY3NzczNSwiZXhwIjoxNzQ2NzgxNzM1fQ.rtX51yT6mjnMsljr5fMRbMMkoXL5Ou4gbv5wLwAtKvg");
+  await CacheHelper.deleteAllData();
+  // CacheHelper.saveData(
+  //     key: AppConstant.token,
+  //     value:
+  //         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxNjIsInVzZXJfbmFtZSI6Imhvc3NhbTIwMiIsIm1vYmlsZSI6IisyMDEwNjQ2NDgzNzIiLCJyb2xlIjoidXNlciIsImNvdW50cnkiOnsiY291bnRyeV9pZCI6MiwiY291bnRyeV9uYW1lX2VuIjoiRWd5cHQiLCJjb3VudHJ5X25hbWVfYXIiOiLZhdi12LEifX0sImlhdCI6MTcxNTY3NzczNSwiZXhwIjoxNzQ2NzgxNzM1fQ.rtX51yT6mjnMsljr5fMRbMMkoXL5Ou4gbv5wLwAtKvg");
   await LocalNotificationService().init();
   await Firebase.initializeApp();
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -121,9 +121,19 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => LayoutCubit(),
         ),
-        BlocProvider(
-          create: (context) => OrderDriverCubit()..getAllOrders(),
-        ),
+        BlocProvider(create: (context) {
+          if (CacheHelper.getData(key: AppConstant.driver) != null) {
+            return OrderDriverCubit()
+              ..getAllOrders()
+              ..getAssignedOrder(
+                  driverId: CacheHelper.getData(key:
+                  AppConstant.driverId))
+              ..getDriverOrdersById(
+                  driverId: CacheHelper.getData(key: AppConstant.driverId));
+          } else {
+            return OrderDriverCubit()..getAllOrders();
+          }
+        }),
         BlocProvider(
           create: (context) => HomeCubit()
             ..getCarModels()

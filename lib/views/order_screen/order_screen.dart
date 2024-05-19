@@ -25,7 +25,7 @@ class OrderScreen extends StatelessWidget {
         .of(context)
         .textTheme;
     final locale = AppLocalizations.of(context);
-
+    var color = Theme.of(context);
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
         if (state is SuccessCancelOrderState) {
@@ -53,93 +53,92 @@ class OrderScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
         return Scaffold(
+          appBar: cubit.orderModel != null&&
+              cubit.allOrders.length > 0?
+              AppBar(
+                surfaceTintColor: Colors.transparent,
+            title:  Text(
+              locale.orders,
+              style:
+              font.bodyLarge!.copyWith(fontSize: 22.sp),
+            ),
+          ):null,
             body: cubit.orderModel != null &&
                 state is! LoadingGetAllOrdersState
                 ? RefreshIndicator(
+              color: color.backgroundColor,
+              backgroundColor: color.primaryColor,
               onRefresh: () async{
                 cubit.getAllOrders();
               },
                   child: SafeArea(
-                                child: Padding(
-                  padding: EdgeInsets.all(20.h),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        if(cubit.allOrders.length > 0)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                locale.orders,
-                                style:
-                                font.bodyLarge!.copyWith(fontSize: 22.sp),
-                              ),
-                            ],
-                          ),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        cubit.allOrders.length > 0 ?
-                        ListView.separated(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              double totalPrice = 0.0;
-                              List<Map<String, dynamic>> returnData = [];
+                                child: SingleChildScrollView(
+                                  child: Padding(
+                                    padding:  EdgeInsets.all(15.h),
+                                    child: Column(
+                                      children: [
 
-                              cubit.allOrders[index].orderItems!
-                                  .forEach((element) {
-                                totalPrice += element.product!.price! *
-                                    element.quantity!;
-                                cubit.cardProductDetails.add(false);
-                                returnData.add({
-                                  "cartProduct_id": element.productId,
-                                  "reason": reasonController.text,
-                                  "quantity": element.quantity
-                                });
-                              });
+                                        cubit.allOrders.length > 0 ?
+                                        ListView.separated(
+                                            shrinkWrap: true,
+                                            physics: NeverScrollableScrollPhysics(),
+                                            itemBuilder: (context, index) {
+                                              double totalPrice = 0.0;
+                                              List<Map<String, dynamic>> returnData = [];
 
-                              return InkWell(
-                                  onTap: () {
-                                    int count=0;
-                                    cubit.allOrders[index].orderItems!.forEach((element) {
-                                      if(element.status=="Cancelled"){
-                                        count++;
-                                      }
-                                    });
-                                    Helper.push(
-                                        context: context,
-                                      widget:   OrderDetailsScreen(
-                                        hideCancelOrder:count==cubit.allOrders[index].orderItems
-                                        !.length ,
-                                        returns: returnData,
-                                        currentIndex: index,
-                                        totalPrice: totalPrice,
-                                      ),withAnimate: true);
-                                  },
-                                  child: BuildCardOrderList(
-                                      returns:returnData,
-                                      status: cubit.allOrders[index].status!,
-                                      quantity: cubit.allOrders.length,
-                                      createdAt: cubit.allOrders[index]
-                                          .createdAt!,
-                                      orderId: cubit.allOrders[index].id!,
-                                      totalPrice: totalPrice,
-                                      index: index)
-                              );
-                            },
-                            separatorBuilder: (context, index) =>
-                                SizedBox(
-                                  height: 10.h,
-                                ),
-                            itemCount: cubit.allOrders.length) :
-                       BuildEmptyOrder(),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                      ],
-                    ),
-                  ),
+                                              cubit.allOrders[index].orderItems!
+                                                  .forEach((element) {
+                                                totalPrice += element.product!.price! *
+                                                    element.quantity!;
+                                                cubit.cardProductDetails.add(false);
+                                                returnData.add({
+                                                  "cartProduct_id": element.productId,
+                                                  "reason": reasonController.text,
+                                                  "quantity": element.quantity
+                                                });
+                                              });
+
+                                              return InkWell(
+                                                  onTap: () {
+                                                    int count=0;
+                                                    cubit.allOrders[index].orderItems!.forEach((element) {
+                                                      if(element.status=="Cancelled"){
+                                                        count++;
+                                                      }
+                                                    });
+                                                    Helper.push(
+                                                        context: context,
+                                                      widget:   OrderDetailsScreen(
+                                                        hideCancelOrder:count==cubit.allOrders[index].orderItems
+                                                        !.length ,
+                                                        returns: returnData,
+                                                        currentIndex: index,
+                                                        totalPrice: totalPrice,
+                                                      ),withAnimate: true);
+                                                  },
+                                                  child: BuildCardOrderList(
+                                                      returns:returnData,
+                                                      status: cubit.allOrders[index].status!,
+                                                      quantity: cubit.allOrders.length,
+                                                      createdAt: cubit.allOrders[index]
+                                                          .createdAt!,
+                                                      orderId: cubit.allOrders[index].id!,
+                                                      totalPrice: totalPrice,
+                                                      index: index)
+                                              );
+                                            },
+                                            separatorBuilder: (context, index) =>
+                                                SizedBox(
+                                                  height: 10.h,
+                                                ),
+                                            itemCount: cubit.allOrders.length) :
+                                       BuildEmptyOrder(),
+                                        SizedBox(
+                                          height: 20.h,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
                 )

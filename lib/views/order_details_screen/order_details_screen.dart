@@ -181,7 +181,11 @@ class OrderDetailsScreen extends StatelessWidget {
                         height: 20.h,
                       ),
                       BuildTrackingOrder(
-
+                          activeProcess:cubit.allOrders[currentIndex]
+                              .processingAt!=null?2:
+                          cubit.allOrders[currentIndex]
+                              .shippedAt!=null?3:cubit.allOrders[currentIndex].createdAt!=null?
+                          1:0,
                           createdAt: cubit.allOrders[currentIndex].createdAt!,
                           orderId: cubit.allOrders[currentIndex].id!,
                           stepperData: stepperData,
@@ -189,10 +193,12 @@ class OrderDetailsScreen extends StatelessWidget {
                       SizedBox(
                         height: 20.h,
                       ),
+                      if(cubit.allOrders[currentIndex].orderItems!.length>0)
                       Text(
                         locale.productDetails,
                         style: font.bodyLarge!.copyWith(fontSize: 22.sp),
                       ),
+                      if(cubit.allOrders[currentIndex].orderItems!.length>0)
                       SizedBox(
                         height: 10.h,
                       ),
@@ -222,23 +228,23 @@ class OrderDetailsScreen extends StatelessWidget {
                           cubit.allOrders.forEach((element) {
                             cubit.cardProductDetails.add(false);
                           });
-                          // int returnQuantity = 0;
-                          // cubit.allOrders[currentIndex].orderItems
-                          // ![index].returnProduct!
-                          //     .forEach((element) {
-                          //   returnQuantity += element.quantity!;
-                          // });
-                          // for (int i = 1;
-                          //     i <=
-                          //         cubit.allOrders[currentIndex].carts![0]
-                          //                 .cartProducts![index].quantity! -
-                          //             returnQuantity;
-                          //     i++) {
-                          //   quantities.add(i.toString());
-                          // }
+                          int returnQuantity = 0;
+                          cubit.allOrders[currentIndex].orderItems
+                          ![index].returnProducts!
+                              .forEach((element) {
+                            returnQuantity += element.quantity!;
+                          });
+                          for (int i = 1;
+                              i <=
+                                  cubit.allOrders[currentIndex].orderItems![index]
+                                      .quantity! -
+                                      returnQuantity;
+                              i++) {
+                            quantities.add(i.toString());
+                          }
                           return BuildCardProductDetails(
                             hideCancelOrder: hideCancelOrder,
-                              returnQuantity: 5,
+                              returnQuantity: returnQuantity,
                               quantity: quantities,
                               onTap: () {
                                 cubit.openAndCloseCardProductDetails(index);
@@ -269,7 +275,7 @@ class OrderDetailsScreen extends StatelessWidget {
                               text: locale.cancelOrder,
                               width: 120.w,
                               height: 26.h,
-                              fontSize: 15.sp,
+                              fontSize: 13.sp,
                               borderRadius: 8.r,
                               onPressed: () {
                                 if(!hideCancelOrder) {

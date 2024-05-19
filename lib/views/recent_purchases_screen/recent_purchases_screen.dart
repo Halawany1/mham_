@@ -37,11 +37,7 @@ class RecentPurchasesScreen extends StatelessWidget {
         var cubit = HomeCubit.get(context);
         return WillPopScope(
           onWillPop: () async {
-            if(hideNav){
-              Helper.pop(context);
-            }else{
-              Navigator.pop(context);
-            }
+            Navigator.pop(context);
             return true;
           },
           child: Scaffold(
@@ -50,11 +46,7 @@ class RecentPurchasesScreen extends StatelessWidget {
               title: Text(locale.yourRecentPurchases),
               leading: InkWell(
                   onTap: () {
-                    if(hideNav){
-                      Helper.pop(context);
-                    }else{
-                      Navigator.pop(context);
-                    }
+                    Navigator.pop(context);
                   },
                   child: Icon(
                     Icons.arrow_back,
@@ -83,14 +75,14 @@ class RecentPurchasesScreen extends StatelessWidget {
                                         element.quantity!;
                                     cubit.cardProductDetails.add(false);
                                     returnData.add({
-                                      "cartProduct_id": element.productId,
+                                      "orderItemId": element.id,
                                       "reason": 'reason',
                                       "quantity": element.quantity
                                     });
                                     productQuantity += element.quantity!;
-                                    // element.returnProduct!.forEach((element) {
-                                    //   returnQuantity += element.quantity!;
-                                    // });
+                                    element.returnProducts!.forEach((element) {
+                                      returnQuantity += element.quantity!;
+                                    });
                                   });
                                   bool hideReturnButton = false;
                                   if (productQuantity == returnQuantity) {
@@ -101,6 +93,7 @@ class RecentPurchasesScreen extends StatelessWidget {
                                       onTap: () {
                                         Helper.push(context: context,widget:
                                         DetailsRecentPurchasesScreen(
+                                          orderId: cubit.recentPurchases[index].id! ,
                                           hideReturnButton:
                                           hideReturnButton,
                                           returns: returnData,

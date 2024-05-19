@@ -185,6 +185,7 @@ class SeeAllScreen extends StatelessWidget {
                                         ),);
                                       },
                                       child: BuildProductCard(
+                                        outOfStock:cubit.allProducts[index].qntInStock==0,
                                         id: cubit
                                             .allProducts[index].productsId!,
                                         inCart:

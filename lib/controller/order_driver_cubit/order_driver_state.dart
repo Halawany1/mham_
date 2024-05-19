@@ -50,3 +50,24 @@ class ErrorTakeTheOrderState extends OrderDriverState {
   final String error;
   ErrorTakeTheOrderState(this.error);
 }
+
+class LoadingGetAssignedOrderState extends OrderDriverState {}
+
+class SuccessGetAssignedOrderState extends OrderDriverState {}
+
+class ErrorGetAssignedOrderState extends OrderDriverState {
+
+  final String error;
+  ErrorGetAssignedOrderState(this.error);
+}
+
+
+class LoadingUpdateOrderItemState extends OrderDriverState {}
+
+class SuccessUpdateOrderItemState extends OrderDriverState {}
+
+class ErrorUpdateOrderItemState extends OrderDriverState {
+
+  final String error;
+  ErrorUpdateOrderItemState(this.error);
+}

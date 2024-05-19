@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mham/controller/order_driver_cubit/order_driver_cubit.dart';
+import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/helper/helper.dart';
+import 'package:mham/core/network/local.dart';
 import 'package:mham/views/driver/map_screen/map_screen.dart';
 
-Future<Position> _determinePosition() async {
+Future<Position> determinePosition() async {
   bool serviceEnabled;
   LocationPermission permission;
 
@@ -43,8 +45,13 @@ Future<Position> _determinePosition() async {
 }
 
 class BuildGoToLinkRow extends StatelessWidget {
-  const BuildGoToLinkRow({super.key});
-
+  const BuildGoToLinkRow({super.key,
+     this.assign=false,
+     this.index,
+    required this.link,});
+  final String link;
+  final bool assign;
+  final int ?index;
   @override
   Widget build(BuildContext context) {
     var font = Theme.of(context).textTheme;
@@ -57,16 +64,17 @@ class BuildGoToLinkRow extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () async {
-            // Define the Google Maps URL
-            String googleMapsUrl = 'https://maps.app.goo.gl/LCUHzLvmpePdVXmB9';
-
-            _determinePosition().then((value) async {
+            if(assign) {
+              CacheHelper.saveData(key: AppConstant.timeLineProcess,
+                  value: index!);
+            }
+            determinePosition().then((value) async {
               final currentLocation = await Geolocator.getCurrentPosition(
                   desiredAccuracy: LocationAccuracy.high);
               Helper.push(
                   context: context,
                   widget: MapScreen(
-                      currentLocation.latitude, currentLocation.longitude + 2),
+                      currentLocation.latitude, currentLocation.longitude),
                   withAnimate: true);
             });
           },
@@ -75,7 +83,7 @@ class BuildGoToLinkRow extends StatelessWidget {
             child: FittedBox(
               fit: BoxFit.contain,
               child: Text(
-                cubit.driverOrderByIdModel!.order!.location!,
+                link,
                 style: font.bodyMedium!.copyWith(
                     color: Colors.blue,
                     decoration: TextDecoration.underline,

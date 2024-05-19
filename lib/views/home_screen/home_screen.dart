@@ -251,8 +251,8 @@ class HomeScreen extends StatelessWidget {
                   ? Center(
                       child: BuildImageLoader(assetName: ImageConstant.logo))
                   : RefreshIndicator(
-                backgroundColor: color.backgroundColor,
-                color: color.primaryColor,
+                color: color.backgroundColor,
+                backgroundColor: color.primaryColor,
                 onRefresh: () async {
                   HomeCubit.get(context).getAllProduct();
                   HomeCubit.get(context).getNotification();
@@ -342,6 +342,8 @@ class HomeScreen extends StatelessWidget {
                                              widget: DetailsScreen());
                                         },
                                         child: BuildProductCard(
+                                          outOfStock:cubit
+                                              .homeProducts[index].qntInStock==0 ,
                                           id: cubit
                                               .homeProducts[index]
                                               .productsId!,

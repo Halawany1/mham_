@@ -87,9 +87,9 @@ class HomeCubit extends Cubit<HomeState> {
 
         productModel!.products!.forEach((element) {
           allProducts.add(element);
-          // if (element.inFavourite!) {
-          //   favoriteProducts.add(element);
-          // }
+          if (element.inFavourite!) {
+            favoriteProducts.add(element);
+          }
         });
 
         emit(SuccessGetAllProduct());
@@ -342,17 +342,17 @@ class HomeCubit extends Cubit<HomeState> {
             recentPurchases.add(element);
           }
         });
-        // recentPurchases.forEach((element) {
-        //   bool flag = false;
-        //   element.orderItems!.forEach((element) {
-        //     if (!element.returnProduct!.isEmpty) {
-        //       flag = true;
-        //     }
-        //   });
-        //   if (!flag) {
-        //     returnsOrder.add(element);
-        //   }
-        // });
+        recentPurchases.forEach((element) {
+          bool flag = false;
+          element.orderItems!.forEach((element) {
+            if (element.returnProducts!.isNotEmpty) {
+              flag = true;
+            }
+          });
+          if (flag) {
+            returnsOrder.add(element);
+          }
+        });
         emit(SuccessGetAllOrdersState());
       }).catchError((error) {
         print(error.toString());
@@ -490,11 +490,12 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  void returnOrder({required List<Map<String, dynamic>> returns}) async {
+  void returnOrder({required List<Map<String, dynamic>> returns,
+    required int orderId}) async {
     if (await Helper.hasConnection()) {
       emit(LoadingReturnOrderState());
       DioHelper.postData(
-        url: ApiConstant.returnOrder,
+        url: ApiConstant.returnOrder(orderId),
         data: {"returnData": returns},
         token: CacheHelper.getData(key: AppConstant.token),
       ).then((value) {

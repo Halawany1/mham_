@@ -12,6 +12,7 @@ import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
+import 'package:mham/models/driver_order_model.dart';
 import 'package:mham/views/driver/home_screen/widget/quantity_container.dart';
 import 'package:mham/views/order_details_screen/order_details_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -21,10 +22,14 @@ class BuildCardOrderGrid extends StatelessWidget {
   const BuildCardOrderGrid({
     super.key,
     required this.index,
+    required this.orders,
+     this.assigned=false,
 
   });
 
   final int index;
+  final List<Orders> orders;
+  final bool assigned;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +47,7 @@ class BuildCardOrderGrid extends StatelessWidget {
         borderRadius: BorderRadius.circular(15.r),
       ),
       child: Container(
-        height: 230.h,
+        height: assigned?210.h:230.h,
         width: 155.w,
         decoration: BoxDecoration(
           color:  LayoutCubit.get(context).theme==true?
@@ -71,8 +76,8 @@ class BuildCardOrderGrid extends StatelessWidget {
                 height: 12.h,
               ),
               Text(
-                Helper.formatDate(cubit.driverOrderModel!
-                    .orders![index].createdAt!),
+                Helper.formatDate(orders
+                [index].createdAt!),
                 overflow: TextOverflow.ellipsis,
                 style: font.bodyMedium!.copyWith(fontSize: 15.sp),
               ),
@@ -82,7 +87,8 @@ class BuildCardOrderGrid extends StatelessWidget {
               FittedBox(
                 fit: BoxFit.contain,
                 child: Text(
-                  cubit.driverOrderModel!.orders![index].totalPrice!.toStringAsFixed(2)+
+                  orders
+                [index].totalPrice!.toStringAsFixed(2)+
                       ' ${locale.kd}',
                   style: font.bodyMedium!.copyWith(
                       fontWeight: FontWeight.bold,
@@ -97,26 +103,37 @@ class BuildCardOrderGrid extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    cubit.driverOrderModel!.orders![index].status!,
+                    orders
+                [index].status!,
                     style: font.bodyMedium!.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: 12.sp,
                         color: Colors.green),
                   ),
-                 BuildQuantityContainer(quantity: 5),
+                 BuildQuantityContainer(quantity:
+                 orders[index].orderItems!.length),
                 ],
+
               ),
               SizedBox(
                 height:12.h,
               ),
+            if(!assigned)
             BuildDefaultButton(text: 'Take the order',
                 height: 18.h,
                 fontSize: 11.sp,
                 onPressed: () {
-              cubit.takeTheOrder(id:cubit.driverOrderModel!
-                  .orders![index].id!,
-                  driverId: CacheHelper.getData(key: AppConstant.driverId));
-                }, backgorundColor: color.backgroundColor
+              if(cubit.driverOrders[index].status!="Delivered"&&
+                  cubit.driverOrders[index].status!="Cancelled"){
+                cubit.takeTheOrder(id:orders
+                [index].id!,
+                    driverId:
+                    CacheHelper.getData(key: AppConstant.driverId));
+              }
+                }, backgorundColor:
+                cubit.driverOrders[index].status=="Delivered"||
+                    cubit.driverOrders[index].status=="Cancelled"?
+                Colors.grey:color.backgroundColor
                 , colorText: ColorConstant.brown)
             ],
           ),

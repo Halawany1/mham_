@@ -155,7 +155,7 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (opened)
+                if (opened&&!notClosed)
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -170,12 +170,15 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                           crossAxisCount: 2,
                           childAspectRatio: 2.6,
                         ),
-                        itemBuilder: (context, index) => BuildCheckBoxListTile(
-                          text: cubit.checkboxListTiles[index].title,
-                          value: cubit.checkboxListTiles[index].value,
+                        itemBuilder: (context, i) => BuildCheckBoxListTile(
+                          text: cubit.checkboxListTiles[i].title,
+                          value: cubit.checkStatus[index!][i],
                           changeValue: (value) {
                             cubit.changeCheckboxListTile(
-                                index: index, value: value!);
+                              id:
+                              cubit.driverOrderByIdModel!.order!.
+                              orderItems![this.index!].id!,
+                                index: i, value: cubit.checkStatus[index!][i]);
                           },
                         ),
                       ),
@@ -231,7 +234,7 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                                   SizedBox(
                                     height: 3.h,
                                   ),
-                                  BuildGoToLinkRow(),
+                                  BuildGoToLinkRow(link: cubit.driverOrderByIdModel!.order!.location! ,),
                                 ],
                               ),
                             )

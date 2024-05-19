@@ -78,6 +78,7 @@ class SearchScreen extends StatelessWidget {
                         ));
                       },
                       child: BuildProductCard(
+                        outOfStock:cubit.allProducts[index].qntInStock==0,
                         id: cubit.allProducts[index].productsId!,
                         inFavorite: cubit.allProducts[index].inFavourite??false,
                         inCart: cubit.allProducts[index].inCart??false,

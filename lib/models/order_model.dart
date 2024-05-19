@@ -146,7 +146,7 @@ class OrderItems {
   String? cancelImage;
   Product? product;
 
-
+  List<ReturnProducts>? returnProducts;
 
   OrderItems.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -166,6 +166,12 @@ class OrderItems {
     cancelImage = json['cancelImage'];
     product =
     json['product'] != null ? new Product.fromJson(json['product']) : null;
+    if (json['returnProducts'] != null) {
+      returnProducts = <ReturnProducts>[];
+      json['returnProducts'].forEach((v) {
+        returnProducts!.add(new ReturnProducts.fromJson(v));
+      });
+    }
   }
 
 
@@ -370,4 +376,34 @@ class ProductRating {
     ratingNum = json['ratingNum'];
   }
 
+}class ReturnProducts {
+  int? id;
+  int? customerId;
+  int? orderItemId;
+  int? quantity;
+  String? reason;
+  String? response;
+  String? createdAt;
+  String? updatedAt;
+  String? approvedAt;
+  String? arrivedAt;
+  String? rejectedAt;
+  String? status;
+
+
+
+  ReturnProducts.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    customerId = json['customerId'];
+    orderItemId = json['orderItemId'];
+    quantity = json['quantity'];
+    reason = json['reason'];
+    response = json['response'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    approvedAt = json['approvedAt'];
+    arrivedAt = json['arrivedAt'];
+    rejectedAt = json['rejectedAt'];
+    status = json['status'];
+  }
 }

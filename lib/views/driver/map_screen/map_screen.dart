@@ -53,7 +53,11 @@ class _NavigationScreenState extends State<MapScreen> {
     var locale=AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(Icons.arrow_back,color: color.primaryColor,),
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+            child: Icon(Icons.arrow_back,color: color.primaryColor,)),
         title: Text(locale.customerLocation,style:font.bodyMedium ,),
       ),
       body: sourcePosition == null||

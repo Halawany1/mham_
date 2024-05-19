@@ -67,7 +67,7 @@ class ReturnsScreen extends StatelessWidget {
                 padding: EdgeInsets.all(20.h),
                 child: Column(
                   children: [
-                    if (cubit.recentPurchases.length > 0)
+                    if (cubit.returnsOrder.length > 0)
                       ListView.separated(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
@@ -76,7 +76,7 @@ class ReturnsScreen extends StatelessWidget {
                             List<Map<String, dynamic>> returnData = [];
                             int returnQuantity = 0;
                             int productQuantity = 0;
-                            cubit.recentPurchases[index].orderItems!
+                            cubit.returnsOrder[index].orderItems!
                                 .forEach((element) {
                               totalPrice += element.product!.price! *
                                   element.quantity!;
@@ -87,9 +87,9 @@ class ReturnsScreen extends StatelessWidget {
                                 "quantity": element.quantity
                               });
                               productQuantity += element.quantity!;
-                              // element.returnProduct!.forEach((element) {
-                              //   returnQuantity += element.quantity!;
-                              // });
+                              element.returnProducts!.forEach((element) {
+                                returnQuantity += element.quantity!;
+                              });
                             });
                             bool hideReturnButton = false;
                             if (productQuantity == returnQuantity) {
@@ -100,6 +100,7 @@ class ReturnsScreen extends StatelessWidget {
                                 onTap: () {
                                   Helper.push(context: context,widget:
                                   DetailsRecentPurchasesScreen(
+                                    orderId:  cubit.returnsOrder[index].id!,
                                     hideReturnButton:
                                     hideReturnButton,
                                     returns: returnData,

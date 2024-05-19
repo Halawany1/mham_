@@ -35,7 +35,16 @@ class ProfileDriverScreen extends StatelessWidget {
     var font = Theme
         .of(context)
         .textTheme;
-    return BlocBuilder<ProfileCubit, ProfileState>(
+    if(ProfileCubit.get(context).driverProfileModel==null){
+      ProfileCubit.get(context).getProfile(driver: true);
+    }
+    return BlocConsumer<ProfileCubit, ProfileState>(
+      listener: (context, state) {
+        if (state is SuccessUpdateProfileDriverState) {
+          showMessageResponse(message: locale.successUpdateProfile,
+              context: context, success: true);
+        }
+      },
       builder: (context, state) {
         var cubit = ProfileCubit.get(context);
         return Scaffold(
@@ -91,7 +100,8 @@ class ProfileDriverScreen extends StatelessWidget {
                             cubit.driverProfileModel!.driver!.user!.userName!;
                             phoneController.text =
                             cubit.driverProfileModel!.driver!.user!.mobile!;
-
+                            driverLicenseController.text=cubit.
+                            driverProfileModel!.driver!.drivingLicence!;
                             Helper.push(
                                 context: context,
                                 widget: EditProfileScreen(

@@ -68,12 +68,12 @@ class LoginScreen extends StatelessWidget {
                 value: cubit.driverModel!.token);
             CacheHelper.saveData(key: AppConstant.driver,
                 value: true);
-            CacheHelper.saveData(key: AppConstant.driverId,
-                value: cubit.driverModel!.user!.id!);
             Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (context) =>
               const DriverLayoutScreen())
               ,(route) => false,);
+            CacheHelper.saveData(key: AppConstant.driverId,
+                value: cubit.driverModel!.user!.driver!.id);
           }
           if (state is ErrorLoginUserState) {
             showMessageResponse(message: state.error,
