@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -66,15 +67,17 @@ void main() async {
   }
 //  print(token);
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    String title = message.notification!.title ?? 'Default Title';
-    String value = message.notification!.body ?? 'Default Value';
-    LocalNotificationService().showNotificationAndroid(title, value);
+    List<dynamic> title = jsonDecode(message.notification!.title!) ;
+    List<dynamic> value =  jsonDecode(message.notification!.title!);
+    LocalNotificationService().showNotificationAndroid(title[CacheHelper.getData(key: AppConstant.lang)??'en']
+        , value[CacheHelper.getData(key: AppConstant.lang)??'en']);
     //ShowToast(message: 'on Message', state: ToastState.SUCCESS);
   });
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    String title = message.notification!.title ?? 'Default Title';
-    String value = message.notification!.body ?? 'Default Value';
-    LocalNotificationService().showNotificationAndroid(title, value);
+    List<dynamic> title = jsonDecode(message.notification!.title!) ;
+    List<dynamic> value =  jsonDecode(message.notification!.title!);
+    LocalNotificationService().showNotificationAndroid(title[CacheHelper.getData(key: AppConstant.lang)??'en']
+        , value[CacheHelper.getData(key: AppConstant.lang)??'en']);
     // ShowToast(message: 'on Message', state: ToastState.SUCCESS);
   });
   FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);

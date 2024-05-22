@@ -44,12 +44,14 @@ class User {
   int? countryId;
   String? role;
   Country? country;
+  String? avatar;
 
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userName = json['user_name'];
     mobile = json['mobile'];
+    avatar = json['avatar'];
     password = json['password'];
     countryId = json['country_id'];
     role = json['role'];

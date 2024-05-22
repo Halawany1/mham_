@@ -136,7 +136,8 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                                     child: Text(
                                       style: font.bodyMedium!
                                           .copyWith(fontSize: 13.sp),
-                                      5.toString(),
+                                      cubit.driverOrderByIdModel!
+                                          .order!.orderItems![index!].quantity.toString(),
                                     ),
                                   ),
                                 )

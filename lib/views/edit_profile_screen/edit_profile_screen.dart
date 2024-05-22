@@ -324,6 +324,7 @@ class EditProfileScreen extends StatelessWidget {
                                         if (_formKey.currentState!.validate()) {
                                           if (driver) {
                                             profileCubit.updateProfileForDriver(
+                                              avatar: profileCubit.image!=null?profileCubit.image!.path:'',
                                                 lang: LayoutCubit.get(context)
                                                     .lang,
                                                 address: addressController.text,

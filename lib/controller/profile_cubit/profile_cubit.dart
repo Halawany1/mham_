@@ -13,6 +13,7 @@ import 'package:mham/core/network/remote.dart';
 import 'package:mham/models/client_profile_model.dart';
 import 'package:mham/models/driver_profile_model.dart';
 import 'package:mham/models/user_model.dart';
+import 'package:http_parser/http_parser.dart';
 
 part 'profile_state.dart';
 
@@ -82,6 +83,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     required int country,
     required String lang,
     required String address,
+    required String avatar,
   }) async {
     if (await Helper.hasConnection()) {
       emit(LoadingUpdateProfileDriverState());
@@ -94,9 +96,15 @@ class ProfileCubit extends Cubit<ProfileState> {
         };
         FormData formData = FormData.fromMap({
           "name": userName,
-          if (image != '')"driverAvatar": await MultipartFile.fromFile(image!.path),
-          if (drivingLicence != '')
-            "driverLicense": await MultipartFile.fromFile(drivingLicence),
+          if (avatar.isNotEmpty)"driverAvatar": await MultipartFile.
+          fromFile(avatar,
+              filename: drivingLicence.split('/').last,
+              contentType: MediaType("image","jpeg")),
+          if (drivingLicence.isNotEmpty)
+            "driverLicense": await MultipartFile.
+            fromFile(drivingLicence,
+                filename: drivingLicence.split('/').last,
+                contentType: MediaType("image","jpeg")),
           "mobile": mobile,
           "countryId": country,
           if (address != '') "address": address,
@@ -109,6 +117,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         emit(SuccessUpdateProfileDriverState());
         getProfile(driver: true);
       } catch (error) {
+        print(error.toString());
         if (error is DioError) {
           print(error.response!.data);
           emit(ErrorUpdateProfileDriverState(error.response!.data['message'][0]));

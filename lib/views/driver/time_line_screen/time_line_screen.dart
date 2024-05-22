@@ -449,7 +449,11 @@ class TimeLineScreen extends StatelessWidget {
                                                                       .copyWith(
                                                                           fontSize:
                                                                               13.sp),
-                                                                  5.toString(),
+                                                                  cubit
+                                                                      .timeLineOrderModel!
+                                                                      .activeOrder!
+                                                                      .orderItems![
+                                                                  index].quantity.toString(),
                                                                 ),
                                                               ),
                                                             )

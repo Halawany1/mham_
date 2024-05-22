@@ -12,6 +12,7 @@ import 'package:mham/models/check_box_tile_model.dart';
 import 'package:mham/models/driver_order_model.dart';
 import 'package:mham/models/order_by_id.dart';
 import 'package:mham/models/time_line_order_model.dart';
+import 'package:http_parser/http_parser.dart';
 
 part 'order_driver_state.dart';
 
@@ -190,10 +191,50 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
         };
         FormData formData = FormData.fromMap({
           "reason": reason,
-          if (image != '') "cancelImage": await MultipartFile.fromFile(image),
+          if (image != '') "cancelImage": await MultipartFile.fromFile(image,
+              filename: image.split('/').last,
+          contentType: MediaType("image","jpeg")),
         });
 
         await dio.patch(ApiConstant.baseUrl + ApiConstant.cancelOrder(id),
+            data: formData);
+        emit(SuccessCancelOrderDriverState());
+      } catch (error) {
+        if (error is DioError) {
+          print(error.response!.data);
+          print(error.response!.data['message'][0]);
+          emit(ErrorCancelOrderDriverState(error.response!.data['message'][0]));
+        } else {
+          emit(ErrorCancelOrderDriverState(error.toString()));
+        }
+      }
+    } else {
+      emit(NoInternetHomeState());
+    }
+  }
+  void cancelItemOrder(
+      {required int id,
+      required String image,
+      required String lang,
+      required String reason}) async {
+    if (await Helper.hasConnection()) {
+      emit(LoadingCancelOrderDriverState());
+
+      try {
+        Dio dio = Dio();
+        dio.options.headers = {
+          'Content-Type': 'multipart/form-data',
+          'lang': lang,
+          "authorization": CacheHelper.getData(key: AppConstant.token),
+        };
+        FormData formData = FormData.fromMap({
+          "reason": reason,
+          if (image.isNotEmpty) "cancelImage": await MultipartFile.fromFile(image,
+              filename: image.split('/').last,
+              contentType: MediaType("image","jpeg")),
+        });
+
+        await dio.patch(ApiConstant.baseUrl + ApiConstant.cancelProduct(id),
             data: formData);
         emit(SuccessCancelOrderDriverState());
       } catch (error) {
