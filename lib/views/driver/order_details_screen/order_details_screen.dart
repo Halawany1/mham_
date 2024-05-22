@@ -83,7 +83,8 @@ class OrderDetailsDriverScreen extends StatelessWidget {
               ),
             ),
             body: cubit.driverOrderByIdModel == null ||
-                    state is LoadingGetOrderByIdState
+                    state is LoadingGetOrderByIdState ||
+              state is LoadingUpdateOrderItemState
                 ? Center(child: BuildImageLoader(assetName: ImageConstant.logo))
                 : SafeArea(
                     child: SingleChildScrollView(
@@ -331,15 +332,16 @@ class OrderDetailsDriverScreen extends StatelessWidget {
                                                   height: 10.h,
                                                 ),
                                                 BuildTextFormField(
-                                                    title: 'Image',
-                                                    hint: 'enter reasong image',
+                                                    title: locale.image,
+                                                    hint: locale.enterReasonImage,
                                                     cubit:
                                                         AuthenticationCubit.get(
                                                             context),
                                                     controller: imageController,
                                                     withBorder: true,
                                                     validator: (value) {
-                                                      return null;
+                                                      return Validation.validateField(value,
+                                                          locale.image, context);
                                                     },
                                                     onTap: () async {
                                                       final ImagePicker picker =

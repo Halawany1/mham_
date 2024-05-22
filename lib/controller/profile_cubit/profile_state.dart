@@ -18,6 +18,7 @@ class ErrorProfileState extends ProfileState {
 
 
 class LoadingUpdateProfileState extends ProfileState {}
+class SuccessPickImageState extends ProfileState {}
 
 class SuccessUpdateProfileState extends ProfileState {}
 

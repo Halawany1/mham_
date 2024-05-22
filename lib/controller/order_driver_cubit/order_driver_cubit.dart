@@ -28,16 +28,18 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
   ];
 
   void changeCheckboxListTile(
-      {required int index, required int id, required bool value}) {
+      {required int index, required int id,
+        required int orderId,
+        required bool value}) {
 
     if (index == 0) {
-      updateOrderItemStatus(id: id, status: "Ordered");
+      updateOrderItemStatus(id: id, status: "Ordered",orderId: orderId);
     } else if (index == 1) {
-      updateOrderItemStatus(id: id, status: "Processing");
+      updateOrderItemStatus(id: id, status: "Processing",orderId: orderId);
     } else if (index == 2) {
-      updateOrderItemStatus(id: id, status: "Shipped");
+      updateOrderItemStatus(id: id, status: "Shipped",orderId: orderId);
     } else if(index==3) {
-      updateOrderItemStatus(id: id, status: "Delivered");
+      updateOrderItemStatus(id: id, status: "Delivered",orderId: orderId);
     }
 
     emit(ChangeCheckBoxListTileState());
@@ -70,7 +72,6 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
         token: CacheHelper.getData(key: AppConstant.token),
       ).then((value) {
         driverOrders.clear();
-        historyOrders.clear();
         driverOrderModel = DriverOrderModel.fromJson(value.data);
         driverOrderModel!.orders!.forEach((element) {
           driverOrders.add(element);
@@ -96,10 +97,6 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
         // });
         emit(SuccessGetAllOrdersState());
       }).catchError((error) {
-        print(error.toString());
-        if (error is DioError) {
-          print(error.response!.data);
-        }
         emit(ErrorGetAllOrdersState(error.toString()));
       });
     } else {
@@ -146,11 +143,8 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
         //   }
         // });
         emit(SuccessGetOrderByIdState());
+        getAssignedOrder(driverId: CacheHelper.getData(key: AppConstant.driverId));
       }).catchError((error) {
-        if (error is DioError) {
-          print(error.response!.data);
-        }
-        print(error.toString());
         emit(ErrorGetOrderByIdState(error.toString()));
       });
     } else {
@@ -168,6 +162,7 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
       emit(SuccessTakeTheOrderState());
       getAllOrders();
       getDriverOrdersById(driverId: driverId);
+      getAssignedOrder(driverId: driverId);
     }).catchError((error) {
       print(error.toString());
       if (error is DioError) {
@@ -185,6 +180,7 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
       required String reason}) async {
     if (await Helper.hasConnection()) {
       emit(LoadingCancelOrderDriverState());
+
       try {
         Dio dio = Dio();
         dio.options.headers = {
@@ -198,6 +194,40 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
         });
 
         await dio.patch(ApiConstant.baseUrl + ApiConstant.cancelOrder(id),
+            data: formData);
+        emit(SuccessCancelOrderDriverState());
+      } catch (error) {
+        if (error is DioError) {
+          emit(ErrorCancelOrderDriverState(error.response!.data['message'][0]));
+        } else {
+          emit(ErrorCancelOrderDriverState(error.toString()));
+        }
+      }
+    } else {
+      emit(NoInternetHomeState());
+    }
+  }
+  void cancelItemOrder(
+      {required int id,
+      required String image,
+      required String lang,
+      required String reason}) async {
+    if (await Helper.hasConnection()) {
+      emit(LoadingCancelOrderDriverState());
+
+      try {
+        Dio dio = Dio();
+        dio.options.headers = {
+          'Content-Type': 'multipart/form-data',
+          'lang': lang,
+          "authorization": CacheHelper.getData(key: AppConstant.token),
+        };
+        FormData formData = FormData.fromMap({
+          "reason": reason,
+          if (image != '') "cancelImage": await MultipartFile.fromFile(image),
+        });
+
+        await dio.patch(ApiConstant.baseUrl + ApiConstant.cancelProduct(id),
             data: formData);
         emit(SuccessCancelOrderDriverState());
       } catch (error) {
@@ -312,19 +342,23 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
         //   }
         // });
         emit(SuccessGetAssignedOrderState());
+        emptyTimeLineAndAssign=false;
       }).catchError((error) {
-        print(error.toString());
         if (error is DioError) {
-          print(error.response!.data);
+          emptyTimeLineAndAssign=true;
+          emit(ErrorGetAssignedOrderState(error.response!.data['message'][0]));
+        }else{
+          emit(ErrorGetAssignedOrderState(error.toString()));
         }
-        emit(ErrorGetAssignedOrderState(error.toString()));
       });
     } else {
       emit(NoInternetHomeState());
     }
   }
-
-  void updateOrderItemStatus({required int id, required String status}) {
+  bool emptyTimeLineAndAssign=false;
+  void updateOrderItemStatus({required int id,
+    required int orderId,
+    required String status}) {
     emit(LoadingUpdateOrderItemState());
     DioHelper.patchData(
             url: ApiConstant.updateOrderItemStatus + '/$id',
@@ -333,9 +367,12 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
         .then((value) {
       emit(SuccessUpdateOrderItemState());
       CacheHelper.removeData(key: AppConstant.timeLineProcess);
-      getOrderById(id: id);
-      getAssignedOrder(driverId: CacheHelper.getData(key: AppConstant.driverId));
-    }).catchError((error) {
+      assignOrderModel=null;
+      driverOrderModel=null;
+      getOrderById(id: orderId);
+
+
+        }).catchError((error) {
       print(error.toString());
       if (error is DioError) {
         emit(ErrorUpdateOrderItemState(error.response!.data['message'][0]));

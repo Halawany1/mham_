@@ -85,11 +85,12 @@ class OrderScreen extends StatelessWidget {
                                             itemBuilder: (context, index) {
                                               double totalPrice = 0.0;
                                               List<Map<String, dynamic>> returnData = [];
-
+                                              int productCount = 0;
                                               cubit.allOrders[index].orderItems!
                                                   .forEach((element) {
-                                                totalPrice += element.product!.price! *
+                                                totalPrice +=element.unitPrice*
                                                     element.quantity!;
+                                                productCount += element.quantity!;
                                                 cubit.cardProductDetails.add(false);
                                                 returnData.add({
                                                   "cartProduct_id": element.productId,
@@ -105,10 +106,12 @@ class OrderScreen extends StatelessWidget {
                                                       if(element.status=="Cancelled"){
                                                         count++;
                                                       }
+
                                                     });
                                                     Helper.push(
                                                         context: context,
                                                       widget:   OrderDetailsScreen(
+                                                        quantity:productCount ,
                                                         hideCancelOrder:count==cubit.allOrders[index].orderItems
                                                         !.length ,
                                                         returns: returnData,
@@ -119,7 +122,7 @@ class OrderScreen extends StatelessWidget {
                                                   child: BuildCardOrderList(
                                                       returns:returnData,
                                                       status: cubit.allOrders[index].status!,
-                                                      quantity: cubit.allOrders.length,
+                                                      quantity:productCount,
                                                       createdAt: cubit.allOrders[index]
                                                           .createdAt!,
                                                       orderId: cubit.allOrders[index].id!,

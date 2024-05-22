@@ -18,7 +18,7 @@ class BuildAddRate extends StatelessWidget {
   Widget build(BuildContext context) {
     var color = Theme.of(context);
     var cubit = HomeCubit.get(context);
-    var locale = AppLocalizations.of(context)!;
+    var locale = AppLocalizations.of(context);
     var font = Theme
         .of(context)
         .textTheme;

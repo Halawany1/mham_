@@ -23,6 +23,7 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
     required this.totalPrice,
     required this.orderId,
     required this.returns,
+    required this.qunatity,
     this.hideNav = false,
     this.returnOrder = false,
     this.hideReturnButton = false,
@@ -35,6 +36,7 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
   final bool returnOrder;
   final bool hideReturnButton;
   final List<Map<String, dynamic>> returns;
+  final int qunatity;
 
   @override
   Widget build(BuildContext context) {
@@ -145,6 +147,8 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
           if (state is SuccessReturnOrderState) {
             cubit.cardProductDetails.clear();
             cubit.trackingContainer = false;
+            HomeCubit.get(context).orderModel=null;
+            HomeCubit.get(context).getAllOrders();
             Navigator.pop(context);
           }
           if (state is ErrorReturnOrderState) {
@@ -179,8 +183,7 @@ class DetailsRecentPurchasesScreen extends StatelessWidget {
                         height: 12.h,
                       ),
                       BuildOrderDetails(
-                          lenght: cubit
-                              .recentPurchases[currentIndex].orderItems!.length,
+                          lenght: qunatity,
                           createdAt:
                               cubit.recentPurchases[currentIndex].createdAt!,
                           status: cubit.recentPurchases[currentIndex].status!,

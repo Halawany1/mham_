@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/views/details_product_screen/widget/card_reviews.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 
 class AllReviewsScreen extends StatelessWidget {
@@ -14,6 +16,7 @@ class AllReviewsScreen extends StatelessWidget {
     var font = Theme
         .of(context)
         .textTheme;
+    var locale = AppLocalizations.of(context);
 
     var color = Theme.of(context);
     return BlocBuilder<HomeCubit, HomeState>(
@@ -23,7 +26,7 @@ class AllReviewsScreen extends StatelessWidget {
           appBar: AppBar(
             centerTitle: true,
             title: Text(
-              "All Reviews",
+              locale.allReviews,
               style: font.bodyLarge!.copyWith(
                   fontSize: 20.sp
               ),
@@ -65,7 +68,7 @@ class AllReviewsScreen extends StatelessWidget {
                     if(state is LoadingGetProductRatingState)
                       Center(child: CircularProgressIndicator()),
                     if(cubit.productRating.isEmpty)
-                      Center(child: Text("No Reviews Yet",
+                      Center(child: Text(locale.noReviews,
                         style: font.bodyMedium,))
                   ],
                 ),

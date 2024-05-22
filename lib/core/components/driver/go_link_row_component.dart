@@ -79,16 +79,14 @@ class BuildGoToLinkRow extends StatelessWidget {
             });
           },
           child: SizedBox(
-            width: 210.w,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: Text(
-                link,
-                style: font.bodyMedium!.copyWith(
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
-                    decorationColor: Colors.blue),
-              ),
+            width: 200.w,
+            child: Text(
+              link,
+              overflow: TextOverflow.ellipsis,
+              style: font.bodyMedium!.copyWith(
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                  decorationColor: Colors.blue),
             ),
           ),
         ),

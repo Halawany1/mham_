@@ -211,12 +211,18 @@
   "asDriver": "As Driver",
   "asClient": "As Client",
   "enterAddress": "Enter Your Address",
-
-
   "timeLine":"TimeLine",
   "assignOrder":"Assigned Orders",
   "history":"History",
   "niceToSeeYouAgain":"Nice To See You Again",
   "hi": "Hi",
-  "customerLocation": "Customer Location"
+  "customerLocation": "Customer Location",
+
+  "allReviews":"All Reviews",
+  "noReviews":"No Reviews Yet",
+  "image":"Image",
+  "enterReasonImage":"enter reason image",
+
+  "orderCreatedSuccess":"Order Created Successfully",
+  "outOfStock":"out of stock"
 }

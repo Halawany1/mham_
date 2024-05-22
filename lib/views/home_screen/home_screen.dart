@@ -61,7 +61,7 @@ class HomeScreen extends StatelessWidget {
         return BlocConsumer<HomeCubit, HomeState>(
           listener: (context, state) {
             if(state is SuccessCreateOrderState){
-              showMessageResponse(message: 'Order Created Successfully',
+              showMessageResponse(message: locale.orderCreatedSuccess,
                   context: context, success: true);
             }
             if (state is SuccessAddScrapState) {
@@ -136,11 +136,11 @@ class HomeScreen extends StatelessWidget {
                                 width: 5.w,
                               ),
                               SizedBox(
-                                width: 120.w,
+                                width: 90.w,
                                 child: FittedBox(
                                   fit: BoxFit.contain,
                                   child: Text(
-                                    '+965 1234 5678',
+                                    '0096550538386',
                                     style: font.bodyMedium!.copyWith(
                                         fontSize: 15.sp,
                                         fontWeight: FontWeight.bold),
@@ -167,6 +167,10 @@ class HomeScreen extends StatelessWidget {
               appBar: AppBar(
                 toolbarHeight: 52.h,
                 surfaceTintColor: Colors.transparent,
+                leading: Container(
+
+                ),
+                leadingWidth: 0,
                 actions: [
                   Padding(
                     padding: EdgeInsets.only(right: 15.w,

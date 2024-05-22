@@ -30,7 +30,7 @@ class SeeAllScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var color = Theme.of(context);
     var font = Theme.of(context).textTheme;
-    final locale = AppLocalizations.of(context);
+
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         var cubit = context.read<HomeCubit>();
@@ -39,6 +39,8 @@ class SeeAllScreen extends StatelessWidget {
             cubit.productModel = null;
             CacheHelper.removeData(
                 key: AppConstant.businessId);
+            CacheHelper.removeData(
+                key: AppConstant.carId);
             Helper.pop(context);
             cubit.getAllProduct();
             return true;
@@ -51,11 +53,20 @@ class SeeAllScreen extends StatelessWidget {
                   if (cubit.productModel!.totalPages! >
                       cubit.productModel!.currentPage!) {
                     if (context.mounted) {
-                      cubit.getAllProduct(
-                        busniessId:
-                            CacheHelper.getData(key: AppConstant.businessId),
-                        page: cubit.productModel!.currentPage! + 1,
-                      );
+                      if(!carType){
+                        cubit.getAllProduct(
+                          busniessId:
+                          CacheHelper.getData(key: AppConstant.businessId),
+                          page: cubit.productModel!.currentPage! + 1,
+                        );
+                      }else{
+                        cubit.getAllProduct(
+                          carId:
+                          CacheHelper.getData(key: AppConstant.carId),
+                          page: cubit.productModel!.currentPage! + 1,
+                        );
+                      }
+
                     }
                   } else {
                     return false;
@@ -85,6 +96,8 @@ class SeeAllScreen extends StatelessWidget {
                                   cubit.productModel = null;
                                   CacheHelper.removeData(
                                       key: AppConstant.businessId);
+                                  CacheHelper.removeData(
+                                      key: AppConstant.carId);
                                   Helper.pop(context);
                                   cubit.getAllProduct();
                                 },
@@ -103,10 +116,19 @@ class SeeAllScreen extends StatelessWidget {
                                 cubit.productModel = null;
                                 cubit.allProducts.clear();
                                 if (value!.isNotEmpty) {
-                                  cubit.getAllProduct(
-                                      busniessId: CacheHelper.getData(
-                                          key: AppConstant.businessId),
-                                      search: value);
+                                  if(!carType){
+                                    cubit.getAllProduct(
+                                      busniessId:
+                                      CacheHelper.getData(key: AppConstant.businessId),
+                                      search: value,
+                                    );
+                                  }else{
+                                    cubit.getAllProduct(
+                                      carId:
+                                      CacheHelper.getData(key: AppConstant.carId),
+                                      search: value,
+                                    );
+                                  }
                                 }
                               },
                             ),
@@ -115,18 +137,18 @@ class SeeAllScreen extends StatelessWidget {
                         SizedBox(
                           height: 25.h,
                         ),
-                        if (CacheHelper.getData(key: AppConstant.businessId) ==
-                                1 ||
-                            CacheHelper.getData(key: AppConstant.businessId) ==
-                                6||carType)
-                          BuildCarFilter(),
-                        if (CacheHelper.getData(key: AppConstant.businessId) ==
-                                1 ||
-                            CacheHelper.getData(key: AppConstant.businessId) ==
-                                6||carType)
-                          SizedBox(
-                            height: 10.h,
-                          ),
+                        // if (CacheHelper.getData(key: AppConstant.businessId) ==
+                        //         1 ||
+                        //     CacheHelper.getData(key: AppConstant.businessId) ==
+                        //         6||carType)
+                        //   BuildCarFilter(),
+                        // if (CacheHelper.getData(key: AppConstant.businessId) ==
+                        //         1 ||
+                        //     CacheHelper.getData(key: AppConstant.businessId) ==
+                        //         6||carType)
+                        //   SizedBox(
+                        //     height: 10.h,
+                        //   ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

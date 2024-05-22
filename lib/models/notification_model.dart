@@ -6,8 +6,6 @@ class NotificationModel {
   int? pageCount;
   List<Notifications>? notifications;
 
-
-
   NotificationModel.fromJson(Map<String, dynamic> json) {
     unreadedCount = json['unreadedCount'];
     totalPages = json['totalPages'];
@@ -58,6 +56,9 @@ class User {
   String? password;
   int? countryId;
   String? role;
+  String? avatar;
+  String? email;
+  String? address;
 
 
 
@@ -68,7 +69,9 @@ class User {
     password = json['password'];
     countryId = json['country_id'];
     role = json['role'];
+    avatar = json['avatar'];
+    email = json['email'];
+    address = json['address'];
   }
-
 
 }

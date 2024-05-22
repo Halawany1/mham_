@@ -196,7 +196,7 @@ class BuildProductCard extends StatelessWidget {
               Positioned(
                 top: 210.h,
                 left: 28.w,
-                child: Text('out of stock',
+                child: Text(locale.outOfStock,
                   style: font.bodyMedium!.
                   copyWith(color:ColorConstant.brown,
                       fontSize: 15.sp),),
@@ -210,17 +210,20 @@ class BuildProductCard extends StatelessWidget {
                 backgorundColor:inCart?
                     Colors.grey:color.backgroundColor,
                 height: 17.h,
-                fontSize: 10.sp,
+                fontSize: 8.sp,
                 text: inCart?
                 locale.addedToCart: locale.addToCart,
                 width: 100.w,
                 onPressed: () {
                   if(!inCart){
                     if(CacheHelper.getData(key: AppConstant.token)==null){
-                      Helper.push(context: context,widget: GetStartScreen());
+                      Helper.push(context: context,
+                          widget: GetStartScreen(
+                          ));
                     }else{
                       CartCubit.get(context).addToCart(token: CacheHelper.getData(key: AppConstant.token),
-                          id: id, quantity: 1);
+                          id: id,
+                          quantity: 1);
                     }
 
                   }
@@ -243,10 +246,17 @@ class BuildProductCard extends StatelessWidget {
                     Helper.push(context: context,widget: GetStartScreen());
 
                   }else{
-                    Helper.push(context: context, widget: CheckoutScreen(
-                      totalPrice: double.parse(price.toString()),
+                    Helper.push(context: context,
+                        widget: CheckoutScreen(
+                          productsId:id ,
+                      oneProduct: true,
+                      totalPrice:isOffer?
+                      double.parse(offerPrice.toString()):
+                      double.parse(price.toString()),
                       oneProductName: title,
-                      price: double.parse(price.toString()),
+                          price:isOffer?
+                          double.parse(offerPrice.toString()):
+                          double.parse(price.toString()),
                     ),
                         withAnimate: true
                     );

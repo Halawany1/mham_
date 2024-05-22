@@ -12,9 +12,12 @@ import 'package:mham/core/network/local.dart';
 import 'package:mham/views/details_product_screen/details_product_screen.dart';
 
 class BuildCartCardProduct extends StatelessWidget {
-  const BuildCartCardProduct({super.key, required this.index});
+  const BuildCartCardProduct({super.key,
+     this.hideRate=false,
+    required this.index});
 
   final int index;
+  final bool hideRate;
 
   @override
   Widget build(BuildContext context) {
@@ -86,13 +89,15 @@ class BuildCartCardProduct extends StatelessWidget {
                 top: 35.h,
                 left: 110.w,
                 child: Text(
-                  '${cubit.cartModel!.cart!.cartProducts![index].product!.isOffer! ? cubit.cartModel!.cart!.cartProducts![index].product!.offerPrice : cubit.cartModel!.cart!.cartProducts![index].product!.price} KD',
+                  '${cubit.cartModel!.cart!.cartProducts![index].product!.isOffer! ?
+                  cubit.cartModel!.cart!.cartProducts![index].product!.offerPrice : cubit.cartModel!.cart!.cartProducts![index].product!.price} KD',
                   style: font.bodyMedium!.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 12.sp,
                       color: color.backgroundColor),
                 ),
               ),
+              if(!hideRate)
               Positioned(
                 top: 54.h,
                 left: 110.w,

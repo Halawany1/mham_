@@ -115,11 +115,7 @@ class BuildCardProductDetails extends StatelessWidget {
                                   fit: BoxFit.cover,
                                   child: Text(
                                     (orders.orderItems![index]
-                                                    .quantity! *
-                                                orders
-                                                    .orderItems![index]
-                                                    .product!
-                                                    .price)
+                                                    .unitPrice!)
                                             .toStringAsFixed(2) +
                                         ' ${locale.kd}',
                                     style: font.bodyMedium!.copyWith(

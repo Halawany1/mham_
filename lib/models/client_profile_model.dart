@@ -1,47 +1,84 @@
-class ProductRatingModel {
-  int? totalPages;
-  int? limit;
-  List<Rating>? products;
+class ProfileModel {
+  User? user;
+
+  ProfileModel.fromJson(Map<String, dynamic> json) {
+    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+  }
+
+}
+
+class User {
+  String? userName;
+  String? mobile;
+  String? role;
+  String? avatar;
+  String? email;
+  String? address;
+  String? createdAt;
+  Cart? cart;
+  Country? country;
 
 
-  ProductRatingModel.fromJson(Map<String, dynamic> json) {
-    totalPages = json['totalPages'];
-    limit = json['limit'];
-    if (json['products'] != null) {
-      products = <Rating>[];
-      json['products'].forEach((v) {
-        products!.add( Rating.fromJson(v));
+
+  User.fromJson(Map<String, dynamic> json) {
+    userName = json['user_name'];
+    mobile = json['mobile'];
+    role = json['role'];
+    avatar = json['avatar'];
+    email = json['email'];
+    address = json['address'];
+    createdAt = json['createdAt'];
+    cart = json['cart'] != null ? new Cart.fromJson(json['cart']) : null;
+    country =
+    json['country'] != null ? new Country.fromJson(json['country']) : null;
+  }
+
+}
+
+class Cart {
+  int? id;
+  int? userId;
+  String? createdAt;
+  String? updatedAt;
+  List<CartItems>? cartItems;
+
+  Cart.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    userId = json['userId'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    if (json['cartItems'] != null) {
+      cartItems = <CartItems>[];
+      json['cartItems'].forEach((v) {
+        cartItems!.add(new CartItems.fromJson(v));
       });
     }
   }
 
-
 }
 
-class Rating {
+class CartItems {
   int? id;
-  int? userId;
+  int? cartId;
   int? productId;
-  dynamic ratingNum;
-  String? review;
   String? createdAt;
   String? updatedAt;
+  int? quantity;
   Product? product;
-  User? user;
 
 
-  Rating.fromJson(Map<String, dynamic> json) {
+
+  CartItems.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    userId = json['user_id'];
-    productId = json['product_id'];
-    ratingNum = json['ratingNum'];
-    review = json['review'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
+    cartId = json['cartId'];
+    productId = json['productId'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    quantity = json['quantity'];
     product =
     json['product'] != null ? new Product.fromJson(json['product']) : null;
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
   }
+
 
 }
 
@@ -49,7 +86,7 @@ class Product {
   int? productsId;
   int? traderId;
   String? description;
-  String? manufacturerPartNumber;
+  int? manufacturerPartNumber;
   String? brandName;
   String? address;
   String? productsImg;
@@ -88,8 +125,8 @@ class Product {
   String? warranty;
   String? disabledAt;
   String? updatedAt;
-
-
+  String? status;
+  int? qtyInStock;
 
   Product.fromJson(Map<String, dynamic> json) {
     productsId = json['products_id'];
@@ -134,29 +171,22 @@ class Product {
     warranty = json['warranty'];
     disabledAt = json['disabled_at'];
     updatedAt = json['updated_at'];
+    status = json['status'];
+    qtyInStock = json['qtyInStock'];
   }
 
 }
 
-class User {
-  int? id;
-  String? userName;
-  String? mobile;
-  String? password;
+class Country {
   int? countryId;
-  String? role;
-  String? fcmToken;
+  String? countryNameEn;
+  String? countryNameAr;
 
 
-
-  User.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userName = json['user_name'];
-    mobile = json['mobile'];
-    password = json['password'];
+  Country.fromJson(Map<String, dynamic> json) {
     countryId = json['country_id'];
-    role = json['role'];
-    fcmToken = json['fcmToken'];
+    countryNameEn = json['country_name_en'];
+    countryNameAr = json['country_name_ar'];
   }
 
 

@@ -24,62 +24,72 @@ class AssignOrdersDriverScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var font = Theme.of(context).textTheme;
-    var color = Theme.of(context);
     var locale = AppLocalizations.of(context);
-    var layoutCubit = LayoutCubit.get(context);
-
-    if (OrderDriverCubit.get(context).driverOrderModel == null) {
-      OrderDriverCubit.get(context).getDriverOrdersById(
+    var color = Theme.of(context);
+    if (OrderDriverCubit.get(context).assignOrderModel == null) {
+      OrderDriverCubit.get(context).getAssignedOrder(
           driverId: CacheHelper.getData(key: AppConstant.driverId));
     }
+
     return BlocBuilder<OrderDriverCubit, OrderDriverState>(
       builder: (context, state) {
         var cubit = OrderDriverCubit.get(context);
         return Scaffold(
           appBar: topAppBar(context),
-          body: cubit.assignOrderModel == null ||
-                  state is LoadingGetAssignedOrderState
+          body:
+              cubit.emptyTimeLineAndAssign?
+                  Center(child: Text(locale.noOrdersFound))
+                  :
+          cubit.assignOrderModel == null
               ? Center(child: BuildImageLoader(assetName: ImageConstant.logo))
               : SafeArea(
                   child: SingleChildScrollView(
                     physics: BouncingScrollPhysics(),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                  Padding(
-                    padding: EdgeInsets.all(15.h),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          locale.assignOrder,
-                          style: font.bodyMedium,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(12.h),
-                    child: GestureDetector(
-                      onTap: () async {
-                        cubit.getOrderById(
-                            id: cubit.assignOrder[0]
-                                .id!);
-                        Helper.push(
-                            context: context,
-                            widget: OrderDetailsDriverScreen(
-                            ));
+                    child: RefreshIndicator(
+                      color: color.backgroundColor,
+                      backgroundColor: color.primaryColor,
+                      onRefresh: () async{
+                        OrderDriverCubit.get(context).getAssignedOrder(
+                            driverId: CacheHelper.getData(key: AppConstant.driverId));
                       },
-                      child: SizedBox(
-                        height: 200.h,
-                        child: BuildCardOrderGrid(
-                          index: 0,
-                          assigned: true,
-                          orders:cubit.assignOrder,),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                                        Padding(
+                      padding: EdgeInsets.all(15.h),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            locale.assignOrder,
+                            style: font.bodyMedium,
+                          ),
+                        ],
                       ),
+                                        ),
+                                        Padding(
+                      padding: EdgeInsets.all(12.h),
+                      child: GestureDetector(
+                        onTap: () async {
+                          cubit.getOrderById(
+                              id: cubit.assignOrder[0]
+                                  .id!);
+                          Helper.push(
+                              context: context,
+                              widget: OrderDetailsDriverScreen(
+                              ));
+                        },
+                        child: SizedBox(
+                          height: 200.h,
+                          child: BuildCardOrderGrid(
+                            index: 0,
+                            assigned: true,
+                            orders:cubit.assignOrder,),
+                        ),
+                      ),
+                                        ),
+                                        ]),
                     ),
-                  ),
-                                      ]),
                                     ),
                 ),
         );

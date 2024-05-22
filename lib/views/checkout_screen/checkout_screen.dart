@@ -13,6 +13,7 @@ import 'package:mham/models/cart_model.dart';
 import 'package:mham/views/checkout_screen/widget/credit_card_info.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/views/checkout_screen/widget/info_card.dart';
+import 'package:mham/views/driver/home_screen/widget/quantity_container.dart';
 
 
 var addressController = TextEditingController();
@@ -28,6 +29,8 @@ var formKey = GlobalKey<FormState>();
 class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({super.key, this.products, this.oneProductName,
     this.price,
+    this.productsId,
+    this.oneProduct=false,
     required this.totalPrice
   });
 
@@ -35,6 +38,8 @@ class CheckoutScreen extends StatelessWidget {
   final String ?oneProductName;
   final double ?price;
   final double totalPrice;
+  final int? productsId;
+  final bool oneProduct;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +68,7 @@ class CheckoutScreen extends StatelessWidget {
       child: BlocConsumer<HomeCubit, HomeState>(
         listener: (context, state) {
           if(state is SuccessCreateOrderState){
+            clearAllData();
             Helper.pushReplacement(context: context, widget:
             LayoutScreen());
           }
@@ -183,17 +189,29 @@ class CheckoutScreen extends StatelessWidget {
                                               ),
                                             ),
                                           ),
-                                          Text(
-                                            products != null ?
-                                            products![index].product!.price!.
-                                            toString() : price.toString() +
-                                                ' ' + locale.kd,
-                                            style: font.bodyMedium!.copyWith(
-                                                fontSize: 16.sp,
-                                                fontWeight: FontWeight.w600,
-                                                color:
-                                                ColorConstant.backgroundAuth),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                products != null ?
+                                                products![index].product!.price!.
+                                                toString()+' '+ locale.kd :
+                                                price.toString() +
+                                                    ' ' + locale.kd,
+                                                style: font.bodyMedium!.copyWith(
+                                                    fontSize: 16.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    color:
+                                                    ColorConstant.backgroundAuth),
+                                              ),
+                                              SizedBox(width: 20.w,),
+                                              BuildQuantityContainer(
+                                                  quantity: products != null
+                                                      ?
+                                                  products![index]
+                                                      .quantity!:1)
+                                            ],
                                           ),
+
                                         ],
                                       )
                                     ],
@@ -206,18 +224,18 @@ class CheckoutScreen extends StatelessWidget {
                         SizedBox(
                           height: 20.h,
                         ),
-                        Text(
-                          locale.payment,
-                          style: font.bodyLarge!.copyWith(fontSize: 22.sp),
-                        ),
-                        SizedBox(
-                          height: 10.h,
-                        ),
+                        // Text(
+                        //   locale.payment,
+                        //   style: font.bodyLarge!.copyWith(fontSize: 22.sp),
+                        // ),
+                        // SizedBox(
+                        //   height: 10.h,
+                        // ),
 
-                        BuildCreditCardInformation(),
-                        SizedBox(
-                          height: 15.h,
-                        ),
+                        // BuildCreditCardInformation(),
+                        // SizedBox(
+                        //   height: 15.h,
+                        // ),
                         BuildTotalCardPrice(
                             lenghtItems: products != null ?
                             products!.length : 1,
@@ -227,15 +245,28 @@ class CheckoutScreen extends StatelessWidget {
                           height: 20.h,
                         ),
                        state is LoadingCreateOrderState?
-                        Center(child: CircularProgressIndicator())
+                        Center(child: CircularProgressIndicator(color: color.primaryColor,))
                         :BuildDefaultButton(
                             text: locale.placeOrder,
                             borderRadius: 10.r,
                             onPressed: () {
-                              // if (formKey.currentState!.validate()) {
-                              //
-                              // }
-                              cubit.createOrder();
+                              if (formKey.currentState!.validate()) {
+                                if(!oneProduct){
+                                  cubit.createOrder(
+                                    address: addressController.text,
+                                    anotherMobile: mobileController.text,
+                                    location: locationController.text,
+                                  );
+                                }else{
+                                  cubit.createOrderForOneProduct(
+                                      address: addressController.text,
+                                      anotherMobile: mobileController.text,
+                                      location: locationController.text,
+                                      id: productsId!);
+                                }
+                              }
+
+
                             },
                             backgorundColor: color.backgroundColor,
                             colorText: ColorConstant.brown),

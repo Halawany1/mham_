@@ -93,6 +93,7 @@ class RecentPurchasesScreen extends StatelessWidget {
                                       onTap: () {
                                         Helper.push(context: context,widget:
                                         DetailsRecentPurchasesScreen(
+                                          qunatity: productQuantity,
                                           orderId: cubit.recentPurchases[index].id! ,
                                           hideReturnButton:
                                           hideReturnButton,
@@ -103,13 +104,13 @@ class RecentPurchasesScreen extends StatelessWidget {
                                           totalPrice: totalPrice,
                                         ),withAnimate: true);
                                       },
-                                      child: BuildCardOrderList(
+                                        child: BuildCardOrderList(
                                           returns: returnData,
                                           returnOrder: true,
                                           status: cubit
                                               .recentPurchases[index].status!,
                                           quantity:
-                                              cubit.recentPurchases.length,
+                                              productQuantity,
                                           createdAt: cubit
                                               .recentPurchases[index]
                                               .createdAt!,

@@ -3,16 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
+import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/controller/order_driver_cubit/order_driver_cubit.dart';
 import 'package:mham/core/components/driver/go_link_row_component.dart';
 import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/components/small_container_for_type_component.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mham/core/components/text_form_field_component.dart';
 import 'package:mham/core/constent/color_constant.dart';
+import 'package:mham/core/error/validation.dart';
 import 'package:mham/views/driver/order_details_screen/check_box_list_tile.dart';
+import 'package:mham/views/driver/order_details_screen/order_details_screen.dart';
 
 var reasonController = TextEditingController();
-
+var formKey = GlobalKey<FormState>();
 class BuildCardProductDetailsForDriver extends StatelessWidget {
   const BuildCardProductDetailsForDriver({
     super.key,
@@ -89,7 +95,8 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                                     width: 140.w,
                                     child: Text(
                                       overflow: TextOverflow.ellipsis,
-                                      cubit.driverOrderByIdModel!.order!.orderItems![index!].product!.productsName!,
+                                      cubit.driverOrderByIdModel!.order!
+                                          .orderItems![index!].product!.productsName!,
                                       style: font.bodyMedium!.copyWith(
                                         fontSize: 15.sp,
                                       ),
@@ -104,7 +111,8 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                                     child: FittedBox(
                                       fit: BoxFit.cover,
                                       child: Text(
-                                        cubit.driverOrderByIdModel!.order!.orderItems![index!].product!.price!.toString() + ' ${locale.kd}',
+                                        cubit.driverOrderByIdModel!
+                                            .order!.orderItems![index!].unitPrice!.toString() + ' ${locale.kd}',
                                         style: font.bodyMedium!.copyWith(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12.sp,
@@ -175,6 +183,7 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                           value: cubit.checkStatus[index!][i],
                           changeValue: (value) {
                             cubit.changeCheckboxListTile(
+                              orderId:cubit.driverOrderByIdModel!.order!.id! ,
                               id:
                               cubit.driverOrderByIdModel!.order!.
                               orderItems![this.index!].id!,
@@ -249,7 +258,144 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                           height: 26.h,
                           fontSize: 12.sp,
                           borderRadius: 8.r,
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Form(
+                                  key: formKey,
+                                  child: AlertDialog(
+                                    backgroundColor:
+                                    color.scaffoldBackgroundColor,
+                                    title: Text(
+                                      locale.cancelOrder,
+                                      style: font.bodyMedium!.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: ColorConstant.error),
+                                    ),
+                                    content: SingleChildScrollView(
+                                      child: Column(
+                                        children: [
+                                          BuildTextFormField(
+                                            cubit:
+                                            AuthenticationCubit.get(
+                                                context),
+                                            title: locale.cancelOrder,
+                                            contentPadding: true,
+                                            hint: locale.reason,
+                                            validator: (String? value) {
+                                              return Validation
+                                                  .validateField(
+                                                  value,
+                                                  locale.reason,
+                                                  context);
+                                            },
+                                            controller: reasonController,
+                                            keyboardType:
+                                            TextInputType.text,
+                                            maxLength: 1000,
+                                            maxLines: 5,
+                                          ),
+                                          SizedBox(
+                                            height: 10.h,
+                                          ),
+                                          BuildTextFormField(
+                                              title: locale.image,
+                                              hint: locale.enterReasonImage,
+                                              cubit:
+                                              AuthenticationCubit.get(
+                                                  context),
+                                              controller: imageController,
+                                              withBorder: true,
+                                              validator: (value) {
+                                                return Validation.validateField(value,
+                                                    locale.image, context);
+                                              },
+                                              onTap: () async {
+                                                final ImagePicker picker =
+                                                ImagePicker();
+                                                imageFileOne =
+                                                await picker
+                                                    .pickImage(
+                                                  source:
+                                                  ImageSource.gallery,
+                                                  // alternatively, use ImageSource.gallery
+                                                  maxWidth: 400,
+                                                );
+                                                if (imageFileOne == null)
+                                                  return;
+                                                final String imagePath =
+                                                    imageFileOne!.path;
+                                                final String imageName =
+                                                imagePath.substring(
+                                                    imagePath
+                                                        .lastIndexOf(
+                                                        '/') +
+                                                        1);
+
+// Set the image filename to the imageController
+                                                imageController.text =
+                                                    imageName;
+                                              },
+                                              readOnly: true,
+                                              keyboardType:
+                                              TextInputType.text,
+                                              maxLength: 100)
+                                        ],
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          reasonController.clear();
+                                          imageController.clear();
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text(
+                                          locale.cancel,
+                                          style: font.bodyMedium!
+                                              .copyWith(
+                                              color:
+                                              color.primaryColor),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          if (formKey.currentState!
+                                              .validate()) {
+                                            cubit.cancelOrder(
+                                                image: imageFileOne ==
+                                                    null
+                                                    ? ''
+                                                    : imageFileOne!.path,
+                                                lang: LayoutCubit.get(
+                                                    context)
+                                                    .lang,
+                                                reason:
+                                                reasonController.text,
+                                                id: cubit
+                                                    .driverOrderByIdModel!
+                                                    .order!
+                                                    .id!);
+                                            reasonController.clear();
+                                            imageController.clear();
+                                            Navigator.pop(context);
+                                          }
+                                        },
+                                        child: Text(
+                                          locale.ok,
+                                          style: font.bodyMedium!
+                                              .copyWith(
+                                              color: ColorConstant
+                                                  .error),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
                           backgorundColor: color.backgroundColor,
                           colorText: ColorConstant.brown)
                     ],

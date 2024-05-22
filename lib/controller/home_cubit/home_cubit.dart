@@ -44,6 +44,7 @@ class HomeCubit extends Cubit<HomeState> {
     int? busniessId,
     String? search,
   }) async {
+    print(carId);
     if (await Helper.hasConnection()) {
       if (page == 1) {
         homeProducts.clear();
@@ -94,10 +95,6 @@ class HomeCubit extends Cubit<HomeState> {
 
         emit(SuccessGetAllProduct());
       }).catchError((error) {
-        print(error.toString());
-        if (error is DioError) {
-          print(error.response!.data);
-        }
         emit(ErrorGetAllProduct(error.toString()));
       });
     } else {
@@ -355,7 +352,6 @@ class HomeCubit extends Cubit<HomeState> {
         });
         emit(SuccessGetAllOrdersState());
       }).catchError((error) {
-        print(error.toString());
         emit(ErrorGetAllOrdersState(error.toString()));
       });
     } else {
@@ -389,7 +385,6 @@ class HomeCubit extends Cubit<HomeState> {
         emit(SuccessCancelProductState());
       }).catchError((error) {
         if (error is DioError) {
-          print(error.response!.data);
           emit(ErrorCancelProductState(error.response!.data['message'][0]));
         } else {
           emit(ErrorCancelProductState(error));
@@ -585,7 +580,6 @@ class HomeCubit extends Cubit<HomeState> {
     if (await Helper.hasConnection()) {
       emit(LoadingGetProductRatingState());
       DioHelper.getData(
-              token: CacheHelper.getData(key: AppConstant.token),
               query: {"page": page, "limit": limit, "product-id": id},
               url: ApiConstant.productRating)
           .then((value) {
@@ -649,14 +643,43 @@ class HomeCubit extends Cubit<HomeState> {
     });
   }
 
-  void createOrder(){
+  void createOrder({
+    required String anotherMobile,
+    required String address,
+    required String location,
+}){
     emit(LoadingCreateOrderState());
     DioHelper.postData(
         url: '/${ApiConstant.updateOrder}',
       data: {
-        "anotherMobile": "+201003083521",
-        "address": "Ismailia",
-        "location": "www.ismailia.com"
+        "anotherMobile": anotherMobile,
+        "address": address,
+        "location": location
+      },
+      token: CacheHelper.getData(key: AppConstant.token),
+    ).then((value) {
+      emit(SuccessCreateOrderState());
+      getAllOrders();
+    }).catchError((error){
+    if(error is DioError){
+      emit(ErrorCreateOrderState(error.response!.data['message'][0]));
+    }else{
+      emit(ErrorCreateOrderState(error.toString()));
+    }
+    });
+  }
+  void createOrderForOneProduct({required int id,
+    required String anotherMobile,
+    required String address,
+    required String location,}){
+    emit(LoadingCreateOrderState());
+    DioHelper.postData(
+        url: '/products/$id/place-order',
+      data: {
+        "quantity": 1,
+        "anotherMobile": anotherMobile,
+        "address": address,
+        "location": location
       },
       token: CacheHelper.getData(key: AppConstant.token),
     ).then((value) {

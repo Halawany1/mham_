@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
+import 'package:mham/controller/order_driver_cubit/order_driver_cubit.dart';
 import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/color_constant.dart';
@@ -34,6 +35,7 @@ class BuildTrackingOrder extends StatelessWidget {
     var cubit = HomeCubit.get(context);
     var font = Theme.of(context).textTheme;
     final locale = AppLocalizations.of(context);
+    var orderCubit = OrderDriverCubit.get(context);
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -75,8 +77,9 @@ class BuildTrackingOrder extends StatelessWidget {
                           borderRadius: 8.r,
                           fontSize: 12.sp,
                           onPressed:() {
-                        if(shiped){
-
+                        if(!shiped){
+                          orderCubit.updateOrderItemStatus(id: orderId,
+                              orderId: orderId, status: "Delivered");
                         }
                           },
                           backgorundColor:

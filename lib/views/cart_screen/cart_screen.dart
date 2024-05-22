@@ -127,6 +127,7 @@ class CartScreen extends StatelessWidget {
                                             ));
                                       },
                                       child: BuildCartCardProduct(
+                                        hideRate: true,
                                         index: index,
                                       ),
                                     ),

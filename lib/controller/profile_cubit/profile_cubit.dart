@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:mham/core/constent/api_constant.dart';
 import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/core/network/remote.dart';
+import 'package:mham/models/client_profile_model.dart';
 import 'package:mham/models/driver_profile_model.dart';
 import 'package:mham/models/user_model.dart';
 
@@ -17,7 +21,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   static ProfileCubit get(context) => BlocProvider.of(context);
 
-  UserModel? userModel;
+  ProfileModel? profileModel;
   DriverProfileModel? driverProfileModel;
 
   void getProfile({required bool driver}) async {
@@ -31,7 +35,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         if (driver) {
           driverProfileModel = DriverProfileModel.fromJson(value.data);
         } else {
-          userModel = UserModel.fromJson(value.data);
+          profileModel = ProfileModel.fromJson(value.data);
         }
         emit(SuccessProfileState());
       }).catchError((error) {
@@ -90,6 +94,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         };
         FormData formData = FormData.fromMap({
           "name": userName,
+          if (image != '')"driverAvatar": await MultipartFile.fromFile(image!.path),
           if (drivingLicence != '')
             "driverLicense": await MultipartFile.fromFile(drivingLicence),
           "mobile": mobile,
@@ -105,6 +110,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         getProfile(driver: true);
       } catch (error) {
         if (error is DioError) {
+          print(error.response!.data);
           emit(ErrorUpdateProfileDriverState(error.response!.data['message'][0]));
         } else {
           emit(ErrorUpdateProfileDriverState(error.toString()));
@@ -112,6 +118,17 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     } else {
       emit(NoInternetProfileState());
+    }
+  }
+
+  final ImagePicker _picker = ImagePicker();
+  File? image;
+  Future<void> pickImage() async {
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      image = File(pickedFile.path);
+      emit(SuccessPickImageState());
     }
   }
 }

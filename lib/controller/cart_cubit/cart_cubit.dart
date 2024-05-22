@@ -28,7 +28,9 @@ class CartCubit extends Cubit<CartState> {
         totalPrice = 0.0;
         cartModel = CartModel.fromJson(value.data);
         cartModel!.cart!.cartProducts!.forEach((element) {
-          totalPrice += element.quantity! * element.product!.price!;
+          totalPrice += element.quantity! * (element.product!.isOffer!?
+          element.product!.offerPrice
+          :element.product!.price!);
         });
         emit(CartSuccessState());
       }).catchError((error) {

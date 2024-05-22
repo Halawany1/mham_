@@ -9,4 +9,5 @@ class   AppConstant {
   static String driver="driver";
   static String driverId="driverId";
   static String timeLineProcess="timeLineProcess";
+  static String carId="carId";
 }

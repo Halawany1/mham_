@@ -6,9 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mham/core/components/laoding_animation_component.dart';
 import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/components/snak_bar_component.dart';
 import 'package:mham/core/constent/color_constant.dart';
+import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/views/order_details_screen/widget/card_product_details.dart';
 import 'package:mham/views/order_details_screen/widget/order_details.dart';
@@ -20,6 +22,7 @@ class OrderDetailsScreen extends StatelessWidget {
     super.key,
     required this.currentIndex,
     required this.totalPrice,
+    required this.quantity,
     required this.returns,
     this.hideNav = false,
     this.returnOrder = false,
@@ -27,6 +30,7 @@ class OrderDetailsScreen extends StatelessWidget {
   });
 
   final int currentIndex;
+  final int quantity;
   final double totalPrice;
   final bool hideNav;
   final bool returnOrder;
@@ -139,6 +143,12 @@ class OrderDetailsScreen extends StatelessWidget {
             cubit.getAllOrders();
             Navigator.pop(context);
           }
+          if(state is SuccessCancelOrderState){
+            cubit.cardProductDetails.clear();
+            cubit.trackingContainer = false;
+            cubit.getAllOrders();
+            Navigator.pop(context);
+          }
           if (state is ErrorCancelProductState) {
             showMessageResponse(
                 message: state.error, context: context, success: false);
@@ -161,8 +171,9 @@ class OrderDetailsScreen extends StatelessWidget {
                 style: font.bodyLarge!.copyWith(fontSize: 22.sp),
               ),
             ),
-            body:state is LoadingCreateOrderState?
-              Center(child: CircularProgressIndicator())
+            body:state is LoadingCreateOrderState ||
+                state is LoadingGetAllOrdersState?
+              Center(child: BuildImageLoader(assetName: ImageConstant.logo))
               :SafeArea(
               child: SingleChildScrollView(
                 child: Padding(
@@ -173,7 +184,7 @@ class OrderDetailsScreen extends StatelessWidget {
                         height: 12.h,
                       ),
                       BuildOrderDetails(
-                          lenght: cubit.allOrders[currentIndex].orderItems!.length,
+                          lenght: quantity,
                           createdAt: cubit.allOrders[currentIndex].createdAt!,
                           status: cubit.allOrders[currentIndex].status!,
                           totalPrice: totalPrice),

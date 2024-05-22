@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,7 +36,7 @@ class ProfileScreen extends StatelessWidget {
     var font = Theme
         .of(context)
         .textTheme;
-    if(ProfileCubit.get(context).userModel==null){
+    if(ProfileCubit.get(context).profileModel==null){
       ProfileCubit.get(context).getProfile(driver: false);
     }
     return BlocConsumer<ProfileCubit, ProfileState>(
@@ -48,7 +50,7 @@ class ProfileScreen extends StatelessWidget {
         var cubit = context.read<ProfileCubit>();
         return Scaffold(
 
-          body: cubit.userModel != null
+          body: cubit.profileModel != null
               ? SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: SafeArea(
@@ -75,7 +77,7 @@ class ProfileScreen extends StatelessWidget {
                         height: 12.h,
                       ),
                       Text(
-                        cubit.userModel!.user!.userName!,
+                        cubit.profileModel!.user!.userName!,
                         style: font.bodyLarge!.copyWith(
                             color: color.backgroundColor,
                             fontSize: 18.sp),
@@ -88,10 +90,11 @@ class ProfileScreen extends StatelessWidget {
                         text: locale.profile,
                         onTap: () {
                           AuthenticationCubit.get(context).getCountries();
+                         // List<dynamic> addressList = jsonDecode(cubit.profileModel!.user!.address!);
                           userNameController.text =
-                          cubit.userModel!.user!.userName!;
-                          phoneController.text = cubit.userModel!.user!.mobile!;
-
+                          cubit.profileModel!.user!.userName!;
+                          phoneController.text = cubit.profileModel!.user!.mobile!;
+                        // addressController.text=addressList[0];
                           Helper.push(context: context,widget:
                               EditProfileScreen(driver: false,),withAnimate: true);
                         },
@@ -116,7 +119,6 @@ class ProfileScreen extends StatelessWidget {
                         onTap: () {
                           HomeCubit.get(context).orderModel=null;
                           HomeCubit.get(context).getAllOrders();
-
                           Helper.push(context: context,widget:
                           ReturnsScreen(),withAnimate: true);
                         },
@@ -201,6 +203,7 @@ class ProfileScreen extends StatelessWidget {
                                   userNameController.clear();
                                   phoneController.clear();
                                   passwordController.clear();
+                                  HomeCubit.get(context).myScrapModel=null;
                                   CacheHelper.removeData(key: AppConstant.token);
                                   LayoutCubit.get(context).changeTheme(true);
                                   LayoutCubit.get(context).changeIndex(0);

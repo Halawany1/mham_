@@ -43,7 +43,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheHelper.init();
   await DioHelper.init();
-  await CacheHelper.deleteAllData();
+  //await CacheHelper.deleteAllData();
   // CacheHelper.saveData(
   //     key: AppConstant.token,
   //     value:

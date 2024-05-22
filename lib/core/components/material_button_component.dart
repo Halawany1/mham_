@@ -40,17 +40,14 @@ class BuildDefaultButton extends StatelessWidget {
         ),
         color: backgorundColor,
         onPressed:onPressed,
-        child: SizedBox(
-          width:width.w ,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(text,style: font.titleMedium!.copyWith(
-                fontSize: fontSize.sp,
-                color: colorText
-              ),),
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(text,style: font.titleMedium!.copyWith(
+              fontSize: fontSize.sp,
+              color: colorText
+            ),),
+          ],
         ),
       ),
     );

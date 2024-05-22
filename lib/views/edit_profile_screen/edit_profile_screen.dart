@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,6 +36,7 @@ class EditProfileScreen extends StatelessWidget {
 
     final locale = AppLocalizations.of(context);
 
+
     return BlocConsumer<AuthenticationCubit, AuthenticationState>(
       listener: (context, state) {
         if (state is NoInternetProfileState) {
@@ -61,12 +65,12 @@ class EditProfileScreen extends StatelessWidget {
             AuthenticationCubit.get(context).countryId =
                 LayoutCubit.get(context).lang == 'en'
                     ? ProfileCubit.get(context)
-                        .userModel!
+                        .profileModel!
                         .user!
                         .country!
                         .countryNameEn!
                     : ProfileCubit.get(context)
-                        .userModel!
+                        .profileModel!
                         .user!
                         .country!
                         .countryNameAr!;
@@ -107,6 +111,14 @@ class EditProfileScreen extends StatelessWidget {
                 return true;
               },
               child: Scaffold(
+                appBar: AppBar(
+                  toolbarHeight: 0.h,
+
+                  systemOverlayStyle: SystemUiOverlayStyle(
+                    statusBarColor: color.backgroundColor,
+                    statusBarIconBrightness: Brightness.dark,
+                  ),
+                ),
                 body: Form(
                   key: _formKey,
                   child: SingleChildScrollView(
@@ -114,11 +126,12 @@ class EditProfileScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         Container(
-                          height: 220.h,
+                          height: 190.h,
                           child: Stack(
+
                             children: [
                               Container(
-                                height: 180.h,
+                                height: 150.h,
                                 width: double.infinity,
                                 decoration: BoxDecoration(
                                     color: color.backgroundColor,
@@ -128,7 +141,7 @@ class EditProfileScreen extends StatelessWidget {
                                     )),
                               ),
                               Positioned(
-                                top: 50.h,
+                                top: 20.h,
                                 left: LayoutCubit.get(context).lang == 'en'
                                     ? 20.w
                                     : null,
@@ -147,7 +160,7 @@ class EditProfileScreen extends StatelessWidget {
                                 ),
                               ),
                               Positioned(
-                                  top: 50.h,
+                                  top: 20.h,
                                   left: LayoutCubit.get(context).lang == 'en'
                                       ? 123.w
                                       : 90.w,
@@ -156,17 +169,42 @@ class EditProfileScreen extends StatelessWidget {
                                     style: font.bodyLarge!
                                         .copyWith(fontSize: 20.sp),
                                   )),
+
                               Positioned(
-                                top: 130.h,
+                                top: 95.h,
                                 left: 123.w,
-                                child: CircleAvatar(
+                                child: profileCubit.image!=null?
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(40.r),
+                                  child: Image.file(profileCubit.image!,
+                                    width: 90.w,
+                                    fit: BoxFit.cover,
+                                    height: 90.w,
+                                  ),
+                                )
+                                :CircleAvatar(
                                   radius: 45.r,
+                                  backgroundColor: Colors.grey.shade300,
                                   child: Icon(
                                     FontAwesomeIcons.user,
                                     size: 30.r,
                                   ),
                                 ),
                               ),
+                              Positioned(
+                                top: 145.h,
+                                right: 140.w,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    profileCubit.pickImage();
+                                  },
+                                  child: CircleAvatar(
+                                    backgroundColor:color.primaryColor,
+                                    child: Icon(Icons.camera_alt_outlined,
+                                      color: color.backgroundColor,),
+                                  ),
+                                ),
+                              )
                             ],
                           ),
                         ),

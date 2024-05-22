@@ -100,6 +100,7 @@ class ReturnsScreen extends StatelessWidget {
                                 onTap: () {
                                   Helper.push(context: context,widget:
                                   DetailsRecentPurchasesScreen(
+                                    qunatity: productQuantity,
                                     orderId:  cubit.returnsOrder[index].id!,
                                     hideReturnButton:
                                     hideReturnButton,
@@ -117,7 +118,7 @@ class ReturnsScreen extends StatelessWidget {
                                     status: cubit
                                         .returnsOrder[index].status!,
                                     quantity:
-                                    cubit.returnsOrder.length,
+                                    productQuantity,
                                     createdAt: cubit
                                         .returnsOrder[index]
                                         .createdAt!,

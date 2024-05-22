@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
-import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/views/notification_screen/widget/card_notification.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -17,6 +16,7 @@ class NotificationScreen extends StatelessWidget {
     var font = Theme.of(context).textTheme;
     var color = Theme.of(context);
     final locale = AppLocalizations.of(context);
+
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         var cubit = HomeCubit.get(context);

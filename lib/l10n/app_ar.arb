@@ -217,6 +217,13 @@
   "history":"تاريخ",
   "niceToSeeYouAgain":"جميل ان اراك مرة اخرى",
   "hi": "مرحبا",
-  "customerLocation": "موقع العميل"
+  "customerLocation": "موقع العميل",
+
+  "allReviews":"جميع التقييمات",
+  "noReviews":"لا توجد تقييمات",
+  "image":"صورة",
+  "enterReasonImage":"ادخل الصورة",
+  "orderCreatedSuccess":"تمت انشاء الطلب بنجاح",
+  "outOfStock":"إنتهى من المخزن"
 
 }

@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
+import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/core/helper/helper.dart';
+import 'package:mham/core/network/local.dart';
 
 class BuildCardNotification extends StatelessWidget {
   const BuildCardNotification({super.key, required this.index});
@@ -16,6 +20,10 @@ class BuildCardNotification extends StatelessWidget {
     var font = Theme.of(context).textTheme;
     var color = Theme.of(context);
     var cubit = HomeCubit.get(context);
+
+    Map<String, dynamic> title= jsonDecode(cubit.notifications[index].title!);
+    Map<String, dynamic> body= jsonDecode(cubit.notifications[index].body!);
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(8.h),
@@ -63,7 +71,7 @@ class BuildCardNotification extends StatelessWidget {
                     SizedBox(
                       width: 165.w,
                       child: Text(
-                        cubit.notifications[index].title!,
+                        title[LayoutCubit.get(context).lang],
                         style: font.bodyLarge!.copyWith(
                             fontSize: 18.sp, fontWeight: FontWeight.bold),
                       ),
@@ -81,7 +89,7 @@ class BuildCardNotification extends StatelessWidget {
                   SizedBox(
                     width: 185.w,
                     child: Text(
-                      cubit.notifications[index].body!,
+                      body[LayoutCubit.get(context).lang],
                       style: font.bodyMedium!.copyWith(fontSize: 15.sp),
                     ),
                   ),

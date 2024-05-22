@@ -134,21 +134,22 @@ class BuildOrderDetails extends StatelessWidget {
                      fontSize: 13.sp,
                    ),
                  ),
-                 if (cubit.checkboxListTiles[3].value ||
-                     cubit.checkboxListTiles[2].value)
+                 if ( cubit.driverOrderByIdModel!.order!.status=='Delivered'
+                 || cubit.driverOrderByIdModel!.order!.status=='Shipped' )
                    Container(
                      width: 220.w,
                      height: 1.h,
                      color: color.primaryColor.withOpacity(0.2),
                    ),
-                 if (cubit.checkboxListTiles[3].value ||
-                     cubit.checkboxListTiles[2].value)
+                   if ( cubit.driverOrderByIdModel!.order!.status=='Delivered'
+                       || cubit.driverOrderByIdModel!.order!.status=='Shipped' )
                    SizedBox(
                      height: 8.h,
                    ),
-                 if (cubit.checkboxListTiles[3].value ||
-                     cubit.checkboxListTiles[2].value)
-                   BuildGoToLinkRow(link: cubit.driverOrderByIdModel!.order!.location! ,),
+                   if ( cubit.driverOrderByIdModel!.order!.status=='Delivered'
+                       || cubit.driverOrderByIdModel!.order!.status=='Shipped' )
+                   BuildGoToLinkRow(link:
+                   cubit.driverOrderByIdModel!.order!.location! ,),
                  SizedBox(
                    height: 5.h,
                  ),

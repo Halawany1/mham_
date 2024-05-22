@@ -1,4 +1,5 @@
 class MyScrapModel {
+  int? totalItems;
   int? totalPages;
   int? page;
   int? pageSize;
@@ -7,6 +8,7 @@ class MyScrapModel {
 
 
   MyScrapModel.fromJson(Map<String, dynamic> json) {
+    totalItems = json['totalItems'];
     totalPages = json['totalPages'];
     page = json['page'];
     pageSize = json['pageSize'];
@@ -19,6 +21,7 @@ class MyScrapModel {
     }
   }
 
+
 }
 
 class Scraps {
@@ -30,8 +33,6 @@ class Scraps {
   String? createdAt;
   String? responseAt;
   User? user;
-
-
 
   Scraps.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -54,6 +55,9 @@ class User {
   String? password;
   int? countryId;
   String? role;
+  String? avatar;
+  String? email;
+  String? address;
   Country? country;
 
 
@@ -65,6 +69,9 @@ class User {
     password = json['password'];
     countryId = json['country_id'];
     role = json['role'];
+    avatar = json['avatar'];
+    email = json['email'];
+    address = json['address'];
     country =
     json['country'] != null ? new Country.fromJson(json['country']) : null;
   }
@@ -76,6 +83,7 @@ class Country {
   int? countryId;
   String? countryNameEn;
   String? countryNameAr;
+
 
   Country.fromJson(Map<String, dynamic> json) {
     countryId = json['country_id'];

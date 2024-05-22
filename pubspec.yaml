@@ -67,6 +67,7 @@ dependencies:
   url_launcher: ^6.2.6
   geolocator: ^11.0.0
 
+
   #firebase for FCM
   firebase_messaging: ^14.7.20
   firebase_core: ^2.25.4
