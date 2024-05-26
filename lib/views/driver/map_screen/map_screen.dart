@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -8,31 +7,19 @@ import 'package:location/location.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:math' show cos, sqrt, asin;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-
-
-import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:location/location.dart' as loc;
-import 'package:location/location.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'dart:math' show cos, sqrt, asin;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:http/http.dart' as http;
 
 class MapScreen extends StatefulWidget {
+  final double lat;
+  final double lng;
   final String link;
 
-  MapScreen(this.link);
+  MapScreen(this.lat, this.lng, this.link);
 
   @override
-  State<MapScreen> createState() => _MapScreenState();
+  State<MapScreen> createState() => _NavigationScreenState();
 }
 
-class _MapScreenState extends State<MapScreen> {
-
+class _NavigationScreenState extends State<MapScreen> {
   final Completer<GoogleMapController?> _controller = Completer();
   Map<PolylineId, Polyline> polylines = {};
   PolylinePoints polylinePoints = PolylinePoints();
@@ -40,19 +27,12 @@ class _MapScreenState extends State<MapScreen> {
   Marker? sourcePosition, destinationPosition;
   loc.LocationData? _currentPosition;
   LatLng curLocation = LatLng(23.0525, 72.5667);
-  LatLng? destinationLocation;
   StreamSubscription<loc.LocationData>? locationSubscription;
 
   @override
   void initState() {
     super.initState();
-    extractLatLng(widget.link).then((latLng) {
-      setState(() {
-        destinationLocation = latLng;
-      });
-      getNavigation();
-      addMarker();
-    });
+    getNavigation();
   }
 
   @override
@@ -110,7 +90,7 @@ class _MapScreenState extends State<MapScreen> {
                     color: Colors.white,
                   ),
                   onPressed: () async {
-                    await launchUrl(Uri.parse("https://maps.app.goo.gl/WV63a6Zifh6GquMbA"));
+                    await launchUrl(Uri.parse(widget.link));
                   },
                 ),
               ),
@@ -119,32 +99,6 @@ class _MapScreenState extends State<MapScreen> {
         ],
       ),
     );
-  }
-
-  Future<LatLng> extractLatLng(String url) async {
-    final Uri uri = Uri.parse(url);
-    final RegExp latLngExp = RegExp(r'@(-?\d+\.\d+),(-?\d+\.\d+)');
-
-    if (latLngExp.hasMatch(uri.toString())) {
-      final match = latLngExp.firstMatch(uri.toString());
-      if (match != null) {
-        final double lat = double.parse(match.group(1)!);
-        final double lng = double.parse(match.group(2)!);
-        return LatLng(lat, lng);
-      }
-    }
-
-    final response = await http.get(uri);
-    if (response.statusCode == 200) {
-      final redirectedUrl = response.request!.url.toString();
-      final match = latLngExp.firstMatch(redirectedUrl);
-      if (match != null) {
-        final double lat = double.parse(match.group(1)!);
-        final double lng = double.parse(match.group(2)!);
-        return LatLng(lat, lng);
-      }
-    }
-    throw Exception('No valid lat/lng found in the URL');
   }
 
   getNavigation() async {
@@ -168,10 +122,23 @@ class _MapScreenState extends State<MapScreen> {
         return;
       }
     }
-
     if (_permissionGranted == loc.PermissionStatus.granted) {
       _currentPosition = await location.getLocation();
       curLocation = LatLng(_currentPosition!.latitude!, _currentPosition!.longitude!);
+
+      setState(() {
+        sourcePosition = Marker(
+          markerId: MarkerId('source'),
+          position: curLocation,
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+        );
+        destinationPosition = Marker(
+          markerId: MarkerId('destination'),
+          position: LatLng(widget.lat, widget.lng),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
+        );
+      });
+
       locationSubscription = location.onLocationChanged.listen((LocationData currentLocation) {
         controller?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
           target: LatLng(currentLocation.latitude!, currentLocation.longitude!),
@@ -186,14 +153,14 @@ class _MapScreenState extends State<MapScreen> {
               icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
               position: LatLng(currentLocation.latitude!, currentLocation.longitude!),
               infoWindow: InfoWindow(
-                title: '${double.parse((getDistance(destinationLocation!).toStringAsFixed(2)))} km',
+                title: '${double.parse((getDistance(LatLng(widget.lat, widget.lng)).toStringAsFixed(2)))} km',
               ),
-              onTap: () {},
+              onTap: () {
+                //print('market tapped');
+              },
             );
           });
-          if (destinationLocation != null) {
-            getDirections(destinationLocation!);
-          }
+          getDirections(LatLng(widget.lat, widget.lng));
         }
       });
     }
@@ -203,7 +170,7 @@ class _MapScreenState extends State<MapScreen> {
     List<LatLng> polylineCoordinates = [];
     List<dynamic> points = [];
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-        'YOUR_API_KEY',
+        'AIzaSyBSbijFbso7PP86Xx68KbeBmlBevq_rwj8',
         PointLatLng(curLocation.latitude, curLocation.longitude),
         PointLatLng(dst.latitude, dst.longitude),
         travelMode: TravelMode.driving);
@@ -243,22 +210,4 @@ class _MapScreenState extends State<MapScreen> {
     return calculateDistance(curLocation.latitude, curLocation.longitude,
         destposition.latitude, destposition.longitude);
   }
-
-  addMarker() {
-    setState(() {
-      sourcePosition = Marker(
-        markerId: MarkerId('source'),
-        position: curLocation,
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-      );
-      if (destinationLocation != null) {
-        destinationPosition = Marker(
-          markerId: MarkerId('destination'),
-          position: destinationLocation!,
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
-        );
-      }
-    });
-  }
 }
-

@@ -346,6 +346,8 @@ class HomeScreen extends StatelessWidget {
                                              widget: DetailsScreen());
                                         },
                                         child: BuildProductCard(
+                                          image:cubit
+                                              .homeProducts[index].image ,
                                           outOfStock:cubit
                                               .homeProducts[index].qntInStock==0 ,
                                           id: cubit

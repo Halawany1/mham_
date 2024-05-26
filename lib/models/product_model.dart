@@ -52,6 +52,7 @@ class Products {
   bool? batteryReplacementAvailable;
   int? volt;
   int? ampere;
+  String? image;
   int? liter;
   String? color;
   int? numberSparkPulgs;
@@ -79,6 +80,7 @@ class Products {
     traderId = json['trader_id'];
     qntInStock = json['qtyInStock'];
     status = json['status'];
+    image = json['products_img'];
     rateCount = json['rateCount'];
     description = json['description'];
     manufacturerPartNumber = json['manufacturer_part_number'];

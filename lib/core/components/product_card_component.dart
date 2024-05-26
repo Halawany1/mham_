@@ -10,6 +10,7 @@ import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/components/small_container_for_type_component.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mham/core/constent/api_constant.dart';
 import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/helper/helper.dart';
@@ -32,6 +33,7 @@ class BuildProductCard extends StatelessWidget {
     required this.inFavorite,
     required this.id,
     required this.outOfStock,
+    required this.image,
   });
 
   final dynamic price;
@@ -46,6 +48,7 @@ class BuildProductCard extends StatelessWidget {
   final bool inFavorite;
   final int id;
   final bool outOfStock;
+  final String? image;
 
 
   @override
@@ -75,7 +78,14 @@ class BuildProductCard extends StatelessWidget {
           children: [
             ClipRRect(
                 borderRadius: BorderRadius.circular(15.r),
-                child: Image.asset(
+                child:image!=null?
+                    Image.network(
+                      'http://38.242.155.239:8000'+image!,
+                      fit: BoxFit.cover,
+                      width: 155.w,
+                      height: 84.h,
+                    )
+                :Image.asset(
                     fit: BoxFit.cover,
                     width: 155.w,
                     height: 84.h,

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -19,17 +21,18 @@ import 'package:mham/views/driver/order_details_screen/order_details_screen.dart
 
 var reasonController = TextEditingController();
 var formKey = GlobalKey<FormState>();
+
 class BuildCardProductDetailsForDriver extends StatelessWidget {
   const BuildCardProductDetailsForDriver({
     super.key,
     required this.opened,
-     this.index,
+    this.index,
     this.notClosed = false,
   });
 
   final bool opened;
   final bool notClosed;
-  final int ?index;
+  final int? index;
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +46,11 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
               border: Border.all(color: color.backgroundColor),
-              borderRadius:notClosed?
-              BorderRadius.circular(18.r)
-              :BorderRadius.only(
-                  topLeft: Radius.circular(20.r),
-                  topRight: Radius.circular(20.r))),
+              borderRadius: notClosed
+                  ? BorderRadius.circular(18.r)
+                  : BorderRadius.only(
+                      topLeft: Radius.circular(20.r),
+                      topRight: Radius.circular(20.r))),
           child: Padding(
             padding: EdgeInsets.all(12.h),
             child: Column(
@@ -85,7 +88,8 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                                     width: 35.w,
                                     height: 16.w,
                                     child: BuildContainerType(
-                                      type: cubit.driverOrderByIdModel!.order!.orderItems![index!].product!.type!,
+                                      type: cubit.driverOrderByIdModel!.order!
+                                          .orderItems![index!].product!.type!,
                                     ),
                                   ),
                                 ),
@@ -95,8 +99,12 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                                     width: 140.w,
                                     child: Text(
                                       overflow: TextOverflow.ellipsis,
-                                      cubit.driverOrderByIdModel!.order!
-                                          .orderItems![index!].product!.productsName!,
+                                      cubit
+                                          .driverOrderByIdModel!
+                                          .order!
+                                          .orderItems![index!]
+                                          .product!
+                                          .productsName!,
                                       style: font.bodyMedium!.copyWith(
                                         fontSize: 15.sp,
                                       ),
@@ -111,8 +119,10 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                                     child: FittedBox(
                                       fit: BoxFit.cover,
                                       child: Text(
-                                        cubit.driverOrderByIdModel!
-                                            .order!.orderItems![index!].unitPrice!.toString() + ' ${locale.kd}',
+                                        cubit.driverOrderByIdModel!.order!
+                                                .orderItems![index!].unitPrice!
+                                                .toString() +
+                                            ' ${locale.kd}',
                                         style: font.bodyMedium!.copyWith(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12.sp,
@@ -136,8 +146,9 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                                     child: Text(
                                       style: font.bodyMedium!
                                           .copyWith(fontSize: 13.sp),
-                                      cubit.driverOrderByIdModel!
-                                          .order!.orderItems![index!].quantity.toString(),
+                                      cubit.driverOrderByIdModel!.order!
+                                          .orderItems![index!].quantity
+                                          .toString(),
                                     ),
                                   ),
                                 )
@@ -153,18 +164,17 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                             ),
                           if (notClosed)
                             Text(
-                              cubit.driverOrderByIdModel!.order!.orderItems![index!].product!.status!,
+                              cubit.driverOrderByIdModel!.order!
+                                  .orderItems![index!].product!.status!,
                               style: font.bodyMedium!.copyWith(
-                                color: Colors.green,
-                                fontSize: 12.sp
-                              ),
+                                  color: Colors.green, fontSize: 12.sp),
                             )
                         ],
                       ),
                     ),
                   ),
                 ),
-                if (opened&&!notClosed)
+                if (opened && !notClosed)
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -184,11 +194,11 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                           value: cubit.checkStatus[index!][i],
                           changeValue: (value) {
                             cubit.changeCheckboxListTile(
-                              orderId:cubit.driverOrderByIdModel!.order!.id! ,
-                              id:
-                              cubit.driverOrderByIdModel!.order!.
-                              orderItems![this.index!].id!,
-                                index: i, value: cubit.checkStatus[index!][i]);
+                                orderId: cubit.driverOrderByIdModel!.order!.id!,
+                                id: cubit.driverOrderByIdModel!.order!
+                                    .orderItems![this.index!].id!,
+                                index: i,
+                                value: cubit.checkStatus[index!][i]);
                           },
                         ),
                       ),
@@ -221,7 +231,14 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    cubit.driverOrderByIdModel!.order!.customer!.userName!,
+                                    cubit
+                                        .driverOrderByIdModel!
+                                        .order!
+                                        .orderItems![index!]
+                                        .product!
+                                        .trader!
+                                        .user!
+                                        .userName!,
                                     style: font.bodyMedium!
                                         .copyWith(fontSize: 13.sp),
                                   ),
@@ -229,7 +246,14 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                                     height: 3.h,
                                   ),
                                   Text(
-                                    cubit.driverOrderByIdModel!.order!.customer!.mobile!,
+                                    cubit
+                                        .driverOrderByIdModel!
+                                        .order!
+                                        .orderItems![index!]
+                                        .product!
+                                        .trader!
+                                        .user!
+                                        .mobile!,
                                     style: font.bodyMedium!
                                         .copyWith(fontSize: 13.sp),
                                   ),
@@ -237,14 +261,21 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                                     height: 3.h,
                                   ),
                                   Text(
-                                    cubit.driverOrderByIdModel!.order!.address!,
-                                    style: font.bodyMedium!
-                                        .copyWith(fontSize: 13.sp),
+                                    cubit
+                                        .driverOrderByIdModel!
+                                        .order!
+                                        .orderItems![index!]
+                                        .product!.address![0].address!,
+                                    style: font.bodyMedium
+                                        !.copyWith(fontSize: 13.sp),
                                   ),
                                   SizedBox(
                                     height: 3.h,
                                   ),
-                                  BuildGoToLinkRow(link: cubit.driverOrderByIdModel!.order!.location! ,),
+                                  BuildGoToLinkRow(
+                                    link: cubit
+                                        .driverOrderByIdModel!.order!.location!,
+                                  ),
                                 ],
                               ),
                             )
@@ -267,7 +298,7 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                                   key: formKey,
                                   child: AlertDialog(
                                     backgroundColor:
-                                    color.scaffoldBackgroundColor,
+                                        color.scaffoldBackgroundColor,
                                     title: Text(
                                       locale.cancelOrder,
                                       style: font.bodyMedium!.copyWith(
@@ -278,22 +309,19 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                                       child: Column(
                                         children: [
                                           BuildTextFormField(
-                                            cubit:
-                                            AuthenticationCubit.get(
+                                            cubit: AuthenticationCubit.get(
                                                 context),
                                             title: locale.cancelOrder,
                                             contentPadding: true,
                                             hint: locale.reason,
                                             validator: (String? value) {
-                                              return Validation
-                                                  .validateField(
+                                              return Validation.validateField(
                                                   value,
                                                   locale.reason,
                                                   context);
                                             },
                                             controller: reasonController,
-                                            keyboardType:
-                                            TextInputType.text,
+                                            keyboardType: TextInputType.text,
                                             maxLength: 1000,
                                             maxLines: 5,
                                           ),
@@ -303,23 +331,22 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                                           BuildTextFormField(
                                               title: locale.image,
                                               hint: locale.enterReasonImage,
-                                              cubit:
-                                              AuthenticationCubit.get(
+                                              cubit: AuthenticationCubit.get(
                                                   context),
                                               controller: imageController,
                                               withBorder: true,
                                               validator: (value) {
-                                                return Validation.validateField(value,
-                                                    locale.image, context);
+                                                return Validation.validateField(
+                                                    value,
+                                                    locale.image,
+                                                    context);
                                               },
                                               onTap: () async {
                                                 final ImagePicker picker =
-                                                ImagePicker();
+                                                    ImagePicker();
                                                 imageFileOne =
-                                                await picker
-                                                    .pickImage(
-                                                  source:
-                                                  ImageSource.gallery,
+                                                    await picker.pickImage(
+                                                  source: ImageSource.gallery,
                                                   // alternatively, use ImageSource.gallery
                                                   maxWidth: 400,
                                                 );
@@ -328,19 +355,17 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                                                 final String imagePath =
                                                     imageFileOne!.path;
                                                 final String imageName =
-                                                imagePath.substring(
-                                                    imagePath
-                                                        .lastIndexOf(
-                                                        '/') +
-                                                        1);
+                                                    imagePath.substring(
+                                                        imagePath.lastIndexOf(
+                                                                '/') +
+                                                            1);
 
 // Set the image filename to the imageController
                                                 imageController.text =
                                                     imageName;
                                               },
                                               readOnly: true,
-                                              keyboardType:
-                                              TextInputType.text,
+                                              keyboardType: TextInputType.text,
                                               maxLength: 100)
                                         ],
                                       ),
@@ -354,10 +379,8 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                                         },
                                         child: Text(
                                           locale.cancel,
-                                          style: font.bodyMedium!
-                                              .copyWith(
-                                              color:
-                                              color.primaryColor),
+                                          style: font.bodyMedium!.copyWith(
+                                              color: color.primaryColor),
                                         ),
                                       ),
                                       TextButton(
@@ -365,19 +388,14 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                                           if (formKey.currentState!
                                               .validate()) {
                                             cubit.cancelOrder(
-                                                image: imageFileOne ==
-                                                    null
+                                                image: imageFileOne == null
                                                     ? ''
                                                     : imageFileOne!.path,
-                                                lang: LayoutCubit.get(
-                                                    context)
+                                                lang: LayoutCubit.get(context)
                                                     .lang,
-                                                reason:
-                                                reasonController.text,
-                                                id: cubit
-                                                    .driverOrderByIdModel!
-                                                    .order!
-                                                    .id!);
+                                                reason: reasonController.text,
+                                                id: cubit.driverOrderByIdModel!
+                                                    .order!.id!);
                                             reasonController.clear();
                                             imageController.clear();
                                             Navigator.pop(context);
@@ -385,10 +403,8 @@ class BuildCardProductDetailsForDriver extends StatelessWidget {
                                         },
                                         child: Text(
                                           locale.ok,
-                                          style: font.bodyMedium!
-                                              .copyWith(
-                                              color: ColorConstant
-                                                  .error),
+                                          style: font.bodyMedium!.copyWith(
+                                              color: ColorConstant.error),
                                         ),
                                       ),
                                     ],

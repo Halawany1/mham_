@@ -18,12 +18,23 @@ class BuildImageWithSelectImages extends StatelessWidget {
             borderRadius: BorderRadius.circular(15.r),
             child: Stack(
               children: [
+                if(cubit.oneProductModel!
+                    .product!.image==null)
                 Image.asset(
                   'assets/images/product.png',
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 210.h,
                 ),
+                if(cubit.oneProductModel!
+                    .product!.image!=null)
+                  Image.network(
+                    'http://38.242.155.239:8000'+cubit.oneProductModel!
+                        .product!.image!,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: 210.h,
+                  ),
                 Positioned(
                     top: 10.h,
                     left: 8.w,
@@ -31,54 +42,13 @@ class BuildImageWithSelectImages extends StatelessWidget {
                       type: cubit.oneProductModel!
                           .product!.type!,
                     )),
-                Positioned(
-                  bottom: 10.h,
-                  right: 8.w,
-                  child: Image.asset(
-                    'assets/images/hundia.png',
-                    width: 50.w,
-                    fit: BoxFit.cover,
-                  ),
-                )
+
               ],
             ),
           ),
         ),
         SizedBox(
           height: 10.h,
-        ),
-        SizedBox(
-          height: 90.w,
-          child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) =>
-                  Container(
-                    decoration: index == 0
-                        ? BoxDecoration(
-                        borderRadius:
-                        BorderRadius.circular(
-                            10.r),
-                        border: Border.all(
-                            color: color
-                                .backgroundColor,
-                            width: 2.w))
-                        : null,
-                    child: ClipRRect(
-                      borderRadius:
-                      BorderRadius.circular(10.r),
-                      child: Image.asset(
-                        'assets/images/product.png',
-                        fit: BoxFit.cover,
-                        width: 90.w,
-                        height: 90.w,
-                      ),
-                    ),
-                  ),
-              separatorBuilder: (context, index) =>
-                  SizedBox(
-                    width: 8.w,
-                  ),
-              itemCount: 5),
         ),
       ],
     );

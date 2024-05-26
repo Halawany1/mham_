@@ -124,6 +124,7 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
             element.status == "Delivered" ? true : false
           ]);
         });
+        print(checkStatus);
         // orderModel!.orders!.forEach((element) {
         //   allOrders.add(element);
         // });
@@ -248,40 +249,7 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
       emit(NoInternetHomeState());
     }
   }
-  void cancelItemOrder(
-      {required int id,
-      required String image,
-      required String lang,
-      required String reason}) async {
-    if (await Helper.hasConnection()) {
-      emit(LoadingCancelOrderDriverState());
 
-      try {
-        Dio dio = Dio();
-        dio.options.headers = {
-          'Content-Type': 'multipart/form-data',
-          'lang': lang,
-          "authorization": CacheHelper.getData(key: AppConstant.token),
-        };
-        FormData formData = FormData.fromMap({
-          "reason": reason,
-          if (image != '') "cancelImage": await MultipartFile.fromFile(image),
-        });
-
-        await dio.patch(ApiConstant.baseUrl + ApiConstant.cancelProduct(id),
-            data: formData);
-        emit(SuccessCancelOrderDriverState());
-      } catch (error) {
-        if (error is DioError) {
-          emit(ErrorCancelOrderDriverState(error.response!.data['message'][0]));
-        } else {
-          emit(ErrorCancelOrderDriverState(error.toString()));
-        }
-      }
-    } else {
-      emit(NoInternetHomeState());
-    }
-  }
 
   List<Orders> assignOrder = [];
 
@@ -345,6 +313,7 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
         url: ApiConstant.assignedOrder(driverId),
         token: CacheHelper.getData(key: AppConstant.token),
       ).then((value) {
+        print(driverId);
         assignOrder.clear();
         checkStatus.clear();
         timeLineOrderModel = TimeLineOrderModel.fromJson(value.data);
@@ -385,6 +354,7 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
         emit(SuccessGetAssignedOrderState());
         emptyTimeLineAndAssign=false;
       }).catchError((error) {
+        print(error.toString());
         if (error is DioError) {
           emptyTimeLineAndAssign=true;
           emit(ErrorGetAssignedOrderState(error.response!.data['message'][0]));

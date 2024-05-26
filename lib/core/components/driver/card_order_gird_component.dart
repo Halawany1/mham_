@@ -28,7 +28,7 @@ class BuildCardOrderGrid extends StatelessWidget {
   });
 
   final int index;
-  final List<Orders> orders;
+  final List<dynamic> orders;
   final bool assigned;
 
   @override

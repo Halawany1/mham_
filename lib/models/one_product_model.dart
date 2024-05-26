@@ -20,6 +20,7 @@ class Product {
   String? madeIn;
   dynamic price;
   bool? isOffer;
+  String? image;
   dynamic offerPrice;
   String? offerStartDate;
   String? offerEndDate;
@@ -68,6 +69,7 @@ class Product {
     traderId = json['trader_id'];
     qntInStock = json['qtyInStock'];
     status = json['status'];
+    image=json['products_img'];
     rateCount = json['rateCount'];
     description = json['description'];
     manufacturerPartNumber = json['manufacturer_part_number'];

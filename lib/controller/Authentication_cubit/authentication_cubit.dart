@@ -63,6 +63,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
             "fcmToken": CacheHelper.getData(key: AppConstant.fcmToken),
           }
       ).then((value) {
+
         if(driver){
           driverModel = DriverModel.fromJson(value.data);
         }else{

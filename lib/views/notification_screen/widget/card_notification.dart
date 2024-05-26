@@ -71,7 +71,7 @@ class BuildCardNotification extends StatelessWidget {
                     SizedBox(
                       width: 165.w,
                       child: Text(
-                        title[LayoutCubit.get(context).lang],
+                        title[LayoutCubit.get(context).lang]??cubit.notifications[index].title!,
                         style: font.bodyLarge!.copyWith(
                             fontSize: 18.sp, fontWeight: FontWeight.bold),
                       ),
@@ -89,7 +89,7 @@ class BuildCardNotification extends StatelessWidget {
                   SizedBox(
                     width: 185.w,
                     child: Text(
-                      body[LayoutCubit.get(context).lang],
+                      body[LayoutCubit.get(context).lang]??cubit.notifications[index].body!,
                       style: font.bodyMedium!.copyWith(fontSize: 15.sp),
                     ),
                   ),

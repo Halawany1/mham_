@@ -178,7 +178,7 @@ class Product {
   String? description;
   String? manufacturerPartNumber;
   String? brandName;
-  String? address;
+  List<Address>? address;
   String? productsImg;
   String? madeIn;
   dynamic price;
@@ -220,16 +220,24 @@ class Product {
   List<AvailableYears>? availableYears;
   BusinessCategory? businessCategory;
   List<ProductRating>? productRating;
+  Trader?   trader;
 
 
 
   Product.fromJson(Map<String, dynamic> json) {
     productsId = json['products_id'];
     traderId = json['trader_id'];
+    if (json['address'] != null) {
+      address = <Address>[];
+      json['address'].forEach((v) {
+        address!.add(new Address.fromJson(v));
+      });
+    }
+    trader =
+    json['trader'] != null ? new Trader.fromJson(json['trader']) : null;
     description = json['description'];
     manufacturerPartNumber = json['manufacturer_part_number'];
     brandName = json['brand_name'];
-    address = json['address'];
     productsImg = json['products_img'];
     madeIn = json['madeIn'];
     price = json['price'];
@@ -353,5 +361,48 @@ class ProductRating {
   ProductRating.fromJson(Map<String, dynamic> json) {
     ratingNum = json['ratingNum'];
   }
+
+}
+
+class Trader {
+  int? traderId;
+  int? userId;
+  int? businessId;
+  String? brandName;
+  String? brandImg;
+  String? commercialCertificate;
+  String? type;
+  String? createdAt;
+  String? status;
+  String? fcmToken;
+
+  Customer? user;
+
+
+  Trader.fromJson(Map<String, dynamic> json) {
+    traderId = json['trader_id'];
+    userId = json['user_id'];
+    businessId = json['business_id'];
+    brandName = json['brand_name'];
+    brandImg = json['brand_img'];
+    commercialCertificate = json['commercial_certificate'];
+    type = json['type'];
+    createdAt = json['createdAt'];
+    status = json['status'];
+    fcmToken = json['fcmToken'];
+    user = json['user'] != null ? new Customer.fromJson(json['user']) : null;
+  }
+
+
+}
+class Address {
+  String? address;
+  String? location;
+
+  Address.fromJson(Map<String, dynamic> json) {
+    address = json['address']??'No Address';
+    location = json['location']??'No Location';
+  }
+
 
 }

@@ -73,7 +73,7 @@ class BuildGoToLinkRow extends StatelessWidget {
                   desiredAccuracy: LocationAccuracy.high);
               Helper.push(
                   context: context,
-                  widget: MapScreen(link),
+                  widget: MapScreen(currentLocation.latitude,currentLocation.longitude,link),
                   withAnimate: true);
             });
           },

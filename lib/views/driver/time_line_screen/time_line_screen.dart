@@ -165,13 +165,15 @@ class TimeLineScreen extends StatelessWidget {
                                             subtitle: cubit
                                                             .timeLineOrderModel!
                                                             .activeOrder!
-                                                            .deliveredAt !=
-                                                        null &&
-                                                    cubit
-                                                            .timeLineOrderModel!
-                                                            .activeOrder!
-                                                            .processingAt !=
-                                                        null
+                                                            .status=="Shipped"||
+                                                cubit
+                                                    .timeLineOrderModel!
+                                                    .activeOrder!
+                                                    .status=="Delivered"||
+                                                cubit
+                                                    .timeLineOrderModel!
+                                                    .activeOrder!
+                                                    .status=="Processing"
                                                 ? StepperText(
                                                     locale.orderPrepared +
                                                         Helper.trackingTimeFormat(cubit
@@ -179,26 +181,23 @@ class TimeLineScreen extends StatelessWidget {
                                                             .activeOrder!
                                                             .processingAt!),
                                                     textStyle:
-                                                        font.bodySmall!.copyWith(color: Colors.grey))
+                                                        font.bodySmall!.copyWith(color: color.primaryColor.withOpacity(0.8)))
                                                 : null,
                                             iconWidget: Container(
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
                                                   color: cubit
-                                                                  .timeLineOrderModel!
-                                                                  .activeOrder!
-                                                                  .deliveredAt !=
-                                                              null ||
-                                                          cubit
-                                                                  .timeLineOrderModel!
-                                                                  .activeOrder!
-                                                                  .processingAt !=
-                                                              null ||
+                                                      .timeLineOrderModel!
+                                                      .activeOrder!
+                                                      .status=="Shipped"||
                                                       cubit
                                                           .timeLineOrderModel!
                                                           .activeOrder!
-                                                          .shippedAt !=
-                                                          null
+                                                          .status=="Delivered"||
+                                                      cubit
+                                                          .timeLineOrderModel!
+                                                          .activeOrder!
+                                                          .status=="Processing"
                                                       ? color.backgroundColor
                                                       : Colors.grey,
                                                   borderRadius: BorderRadius.all(
@@ -212,40 +211,36 @@ class TimeLineScreen extends StatelessWidget {
                                         StepperData(
                                             title: StepperText(locale.shipped,
                                                 textStyle: font.bodyMedium),
-                                            subtitle: cubit
-                                                            .timeLineOrderModel!
-                                                            .activeOrder!
-                                                            .deliveredAt !=
-                                                        null &&
-                                                    cubit
-                                                            .timeLineOrderModel!
-                                                            .activeOrder!
-                                                            .shippedAt !=
-                                                        null
+                                            subtitle:cubit
+                                                .timeLineOrderModel!
+                                                .activeOrder!
+                                                .status=="Shipped"||
+                                                cubit
+                                                    .timeLineOrderModel!
+                                                    .activeOrder!
+                                                    .status=="Delivered"
                                                 ? StepperText(
                                                     textStyle: font.bodySmall!
                                                         .copyWith(
-                                                            color: Colors.grey),
+                                                            color: color.primaryColor.withOpacity(0.8)),
                                                     locale.deliverItem +
                                                         Helper.trackingTimeFormat(
                                                             cubit
-                                                                .driverOrderByIdModel!
-                                                                .order!
+                                                                .timeLineOrderModel!
+                                                                .activeOrder!
                                                                 .shippedAt!))
                                                 : null,
                                             iconWidget: Container(
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
                                                   color: cubit
-                                                                  .timeLineOrderModel!
-                                                                  .activeOrder!
-                                                                  .deliveredAt !=
-                                                              null ||
-                                                          cubit
-                                                                  .timeLineOrderModel!
-                                                                  .activeOrder!
-                                                                  .shippedAt !=
-                                                              null
+                                                      .timeLineOrderModel!
+                                                      .activeOrder!
+                                                      .status=="Shipped"||
+                                                      cubit
+                                                          .timeLineOrderModel!
+                                                          .activeOrder!
+                                                          .status=="Delivered"
                                                       ? color.backgroundColor
                                                       : Colors.grey,
                                                   borderRadius: BorderRadius.all(
@@ -260,19 +255,18 @@ class TimeLineScreen extends StatelessWidget {
                                           iconWidget: Container(
                                             alignment: Alignment.center,
                                             decoration: BoxDecoration(
-                                                border: cubit
-                                                            .timeLineOrderModel!
-                                                            .activeOrder!
-                                                            .deliveredAt !=
-                                                        null
+                                                border:
+                                                    cubit
+                                                        .timeLineOrderModel!
+                                                        .activeOrder!
+                                                        .status=="Delivered"
                                                     ? Border.all(
                                                         color: color.primaryColor)
                                                     : null,
-                                                color: cubit
-                                                            .timeLineOrderModel!
-                                                            .activeOrder!
-                                                            .deliveredAt !=
-                                                        null
+                                                color:  cubit
+                                                    .timeLineOrderModel!
+                                                    .activeOrder!
+                                                    .status=="Delivered"
                                                     ? color.backgroundColor
                                                     : Colors.grey,
                                                 borderRadius: BorderRadius.all(
@@ -563,8 +557,8 @@ class TimeLineScreen extends StatelessWidget {
                                                                 cubit
                                                                     .timeLineOrderModel!
                                                                     .activeOrder!
-                                                                    .customer!
-                                                                    .userName!,
+                                                                    .orderItems![index].
+                                                                product!.trader!.user!.userName!,
                                                                 style: font
                                                                     .bodyMedium!
                                                                     .copyWith(
@@ -578,8 +572,8 @@ class TimeLineScreen extends StatelessWidget {
                                                                 cubit
                                                                     .timeLineOrderModel!
                                                                     .activeOrder!
-                                                                    .customer!
-                                                                    .mobile!,
+                                                                    .orderItems![index].
+                                                                product!.trader!.user!.mobile!,
                                                                 style: font
                                                                     .bodyMedium!
                                                                     .copyWith(
@@ -593,13 +587,13 @@ class TimeLineScreen extends StatelessWidget {
                                                                 cubit
                                                                     .timeLineOrderModel!
                                                                     .activeOrder!
-                                                                    .address!,
-                                                                style: font
-                                                                    .bodyMedium!
-                                                                    .copyWith(
-                                                                        fontSize:
-                                                                            13.sp),
+                                                                    .orderItems![index]
+                                                                    .product!
+                                                                    .address![0].address!,
+                                                                style: font.bodyMedium
+                                                                !.copyWith(fontSize: 13.sp),
                                                               ),
+
                                                               SizedBox(
                                                                 height: 3.h,
                                                               ),

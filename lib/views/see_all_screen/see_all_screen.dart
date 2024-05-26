@@ -207,6 +207,8 @@ class SeeAllScreen extends StatelessWidget {
                                         ),);
                                       },
                                       child: BuildProductCard(
+                                        image:cubit
+                                            .allProducts[index].image ,
                                         outOfStock:cubit.allProducts[index].qntInStock==0,
                                         id: cubit
                                             .allProducts[index].productsId!,

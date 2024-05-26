@@ -10,8 +10,10 @@ import 'package:mham/controller/order_driver_cubit/order_driver_cubit.dart';
 import 'package:mham/core/components/driver/card_order_gird_component.dart';
 import 'package:mham/core/components/laoding_animation_component.dart';
 import 'package:mham/core/components/snak_bar_component.dart';
+import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/helper/helper.dart';
+import 'package:mham/core/network/local.dart';
 import 'package:mham/views/driver/home_screen/widget/top_app_bar.dart';
 import 'package:mham/views/driver/order_details_screen/order_details_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -28,6 +30,7 @@ class DriverHomeScreen extends StatelessWidget {
     var locale = AppLocalizations.of(context);
     var layoutCubit = LayoutCubit.get(context);
 
+    print(CacheHelper.getData(key: AppConstant.driverId));
     if (OrderDriverCubit.get(context).driverOrderModel == null) {
       OrderDriverCubit.get(context).getAllOrders();
     }
