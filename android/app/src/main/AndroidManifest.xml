@@ -2,7 +2,7 @@
     <application
         android:allowBackup="false"
         android:fullBackupOnly="false"
-        android:label="mham"
+        android:label="Mham"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <meta-data

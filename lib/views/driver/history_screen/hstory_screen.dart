@@ -33,59 +33,59 @@ class HistoryDriverScreen extends StatelessWidget {
     return BlocBuilder<OrderDriverCubit, OrderDriverState>(
       builder: (context, state) {
         var cubit = OrderDriverCubit.get(context);
-        return RefreshIndicator(
-          color: color.backgroundColor,
-          backgroundColor: color.primaryColor,
-          onRefresh: () async{
-            OrderDriverCubit.get(context).getDriverOrdersById(driverId:CacheHelper.getData(key:
-            AppConstant.driverId));
-          },
-          child: Scaffold(
-            appBar: cubit.driverOrderModel == null ||
-                state is LoadingGetAllOrdersState?null:
-              topAppBar(context),
-            body:cubit.driverOrderModel == null ||
-                state is LoadingGetAllOrdersState?
-                Center(child: BuildImageLoader(assetName:
-                ImageConstant.logo))
-           :
-            cubit.historyOrders.isEmpty?
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+        return Scaffold(
+          appBar: cubit.driverOrderModel == null ||
+              state is LoadingGetAllOrdersState?null:
+            topAppBar(context),
+          body:cubit.driverOrderModel == null ||
+              state is LoadingGetAllOrdersState?
+              Center(child: BuildImageLoader(assetName:
+              ImageConstant.logo))
+         :
+          cubit.historyOrders.isEmpty?
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(FontAwesomeIcons.history, size: 60.sp,
+                        color: color.primaryColor.withOpacity(0.7)),
+                    SizedBox(height: 20.h,),
+                    Text('${locale.noOrdersFound}',
+                        style: font.bodyMedium,
+                        textAlign: TextAlign.center),
+                  ],
+                ),
+              )
+              :
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 10.h,
+                ),
+                Padding(
+                  padding: EdgeInsets.all(12.h),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(FontAwesomeIcons.history, size: 60.sp,
-                          color: color.primaryColor.withOpacity(0.7)),
-                      SizedBox(height: 20.h,),
-                      Text('${locale.noOrdersFound}',
-                          style: font.bodyMedium,
-                          textAlign: TextAlign.center),
+                      Text(
+                        locale.history,
+                        style: font.bodyMedium,
+                      ),
                     ],
                   ),
-                )
-                :
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(12.h),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          locale.history,
-                          style: font.bodyMedium,
-                        ),
-                      ],
-                    ),
-                  ),
+                ),
 
 
-                  Padding(
-                    padding: EdgeInsets.all(12.h),
+                Padding(
+                  padding: EdgeInsets.all(12.h),
+                  child: RefreshIndicator(
+                    color: color.backgroundColor,
+                    backgroundColor: color.primaryColor,
+                    onRefresh: () async{
+                      OrderDriverCubit.get(context).getDriverOrdersById(driverId:CacheHelper.getData(key:
+                      AppConstant.driverId));
+                    },
                     child: ListView.separated(
                         shrinkWrap: true,
                         separatorBuilder: (context, index) =>
@@ -107,10 +107,10 @@ class HistoryDriverScreen extends StatelessWidget {
                             orders: cubit.historyOrders,),
                           );
                         }),
-                  )
+                  ),
+                )
 
-                ],
-              ),
+              ],
             ),
           ),
         );

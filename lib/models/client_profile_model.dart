@@ -8,6 +8,7 @@ class ProfileModel {
 }
 
 class User {
+  int ?id;
   String? userName;
   String? mobile;
   String? role;
@@ -22,6 +23,7 @@ class User {
 
   User.fromJson(Map<String, dynamic> json) {
     userName = json['user_name'];
+    id = json['id'];
     mobile = json['mobile'];
     role = json['role'];
     avatar = json['avatar'];
@@ -41,6 +43,7 @@ class Cart {
   String? createdAt;
   String? updatedAt;
   List<CartItems>? cartItems;
+
 
   Cart.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -67,7 +70,6 @@ class CartItems {
   Product? product;
 
 
-
   CartItems.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     cartId = json['cartId'];
@@ -79,14 +81,13 @@ class CartItems {
     json['product'] != null ? new Product.fromJson(json['product']) : null;
   }
 
-
 }
 
 class Product {
   int? productsId;
   int? traderId;
   String? description;
-  int? manufacturerPartNumber;
+  String? manufacturerPartNumber;
   String? brandName;
   String? address;
   String? productsImg;
@@ -104,7 +105,7 @@ class Product {
   bool? assemblyKit;
   String? productLine;
   String? frontOrRear;
-  int? tyreSpeedRate;
+  String? tyreSpeedRate;
   int? maximumTyreLoad;
   int? tyreEngraving;
   int? rimDiameter;
@@ -174,6 +175,7 @@ class Product {
     status = json['status'];
     qtyInStock = json['qtyInStock'];
   }
+
 
 }
 

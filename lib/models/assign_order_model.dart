@@ -17,6 +17,7 @@ class ActiveOrder {
   int? customerId;
   int? driverId;
   String? createdAt;
+  String? type;
   String? updatedAt;
   bool? driverAssigned;
   String? anotherMobile;
@@ -39,6 +40,7 @@ class ActiveOrder {
     customerId = json['customerId'];
     driverId = json['driverId'];
     createdAt = json['createdAt'];
+    type = json['type'];
     updatedAt = json['updatedAt'];
     driverAssigned = json['driverAssigned'];
     anotherMobile = json['anotherMobile'];
@@ -252,7 +254,7 @@ class Product {
     if (json['address'] != null) {
       address = <Address>[];
       json['address'].forEach((v) {
-        address!.add(new Address.fromJson(v));
+        address!.add( Address.fromJson(v));
       });
     }
     productsId = json['products_id'];

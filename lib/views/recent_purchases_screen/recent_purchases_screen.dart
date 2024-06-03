@@ -7,6 +7,7 @@ import 'package:mham/core/components/snak_bar_component.dart';
 import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/helper/helper.dart';
 import 'package:mham/views/details_recent_purchases_screen/details_recent_purchases_screen.dart';
+import 'package:mham/views/driver/order_details_screen/card_products.dart';
 import 'package:mham/views/order_screen/widget/card_order_list_component.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -76,7 +77,7 @@ class RecentPurchasesScreen extends StatelessWidget {
                                     cubit.cardProductDetails.add(false);
                                     returnData.add({
                                       "orderItemId": element.id,
-                                      "reason": 'reason',
+                                      "reason":reasonController.text,
                                       "quantity": element.quantity
                                     });
                                     productQuantity += element.quantity!;

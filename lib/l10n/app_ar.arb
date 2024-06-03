@@ -218,12 +218,14 @@
   "niceToSeeYouAgain":"جميل ان اراك مرة اخرى",
   "hi": "مرحبا",
   "customerLocation": "موقع العميل",
-
+  "deleteAccount": "حذف الحساب",
   "allReviews":"جميع التقييمات",
   "noReviews":"لا توجد تقييمات",
+  "areYourSureToDeleteAccount":"هل انت متاكد من حذف حسابك؟",
   "image":"صورة",
   "enterReasonImage":"ادخل الصورة",
   "orderCreatedSuccess":"تمت انشاء الطلب بنجاح",
-  "outOfStock":"إنتهى من المخزن"
+  "outOfStock":"إنتهى من المخزن",
+  "orderIsReturn": "هذا الأمر هو أمر إرجاع يعني أنه يجب عليك الذهاب إلى العميل أولاً ومن ثم الذهاب إلى التجار"
 
 }

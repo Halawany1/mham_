@@ -58,6 +58,7 @@ class BuildProductCard extends StatelessWidget {
         .textTheme;
     var color = Theme.of(context);
     final locale = AppLocalizations.of(context);
+    print(inCart);
     return Card(
       elevation: 4,
       color:LayoutCubit.get(context).theme?
@@ -80,13 +81,13 @@ class BuildProductCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15.r),
                 child:image!=null?
                     Image.network(
-                      'http://38.242.155.239:8000'+image!,
-                      fit: BoxFit.cover,
+                      AppConstant.baseImage+image!,
+                      fit: BoxFit.fill,
                       width: 155.w,
                       height: 84.h,
                     )
                 :Image.asset(
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                     width: 155.w,
                     height: 84.h,
                     'assets/images/product.png')),
@@ -231,7 +232,8 @@ class BuildProductCard extends StatelessWidget {
                           widget: GetStartScreen(
                           ));
                     }else{
-                      CartCubit.get(context).addToCart(token: CacheHelper.getData(key: AppConstant.token),
+                      CartCubit.get(context).addToCart(
+                          token: CacheHelper.getData(key: AppConstant.token),
                           id: id,
                           quantity: 1);
                     }

@@ -219,10 +219,12 @@
   "customerLocation": "Customer Location",
 
   "allReviews":"All Reviews",
+  "areYourSureToDeleteAccount":"Are you sure to delete your account?",
   "noReviews":"No Reviews Yet",
   "image":"Image",
   "enterReasonImage":"enter reason image",
-
+  "deleteAccount": "Delete Account",
   "orderCreatedSuccess":"Order Created Successfully",
-  "outOfStock":"out of stock"
+  "outOfStock":"out of stock",
+  "orderIsReturn": "This order is a return order it means that you must go to the client first and then go to the traders"
 }

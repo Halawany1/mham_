@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/core/components/small_container_for_type_component.dart';
+import 'package:mham/core/constent/app_constant.dart';
 
 class BuildImageWithSelectImages extends StatelessWidget {
   const BuildImageWithSelectImages({super.key});
@@ -14,6 +15,7 @@ class BuildImageWithSelectImages extends StatelessWidget {
       children: [
         Card(
           elevation: 4,
+          color: color.cardColor,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15.r),
             child: Stack(
@@ -22,16 +24,16 @@ class BuildImageWithSelectImages extends StatelessWidget {
                     .product!.image==null)
                 Image.asset(
                   'assets/images/product.png',
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                   width: double.infinity,
                   height: 210.h,
                 ),
                 if(cubit.oneProductModel!
                     .product!.image!=null)
                   Image.network(
-                    'http://38.242.155.239:8000'+cubit.oneProductModel!
+                    AppConstant.baseImage+cubit.oneProductModel!
                         .product!.image!,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                     width: double.infinity,
                     height: 210.h,
                   ),

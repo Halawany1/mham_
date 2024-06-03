@@ -34,9 +34,11 @@ import 'package:page_transition/page_transition.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> backgroundMessageHandler(RemoteMessage message) async {
-  String title = message.notification!.title ?? 'Default Title';
-  String value = message.notification!.body ?? 'Default Value';
-  LocalNotificationService().showNotificationAndroid(title, value);
+  Map<String, dynamic> title = jsonDecode(message.notification!.title!) ;
+  Map<String, dynamic> value =  jsonDecode(message.notification!.title!);
+  LocalNotificationService().showNotificationAndroid(
+      title[CacheHelper.getData(key: AppConstant.lang)??'en']
+      , value[CacheHelper.getData(key: AppConstant.lang)??'en']);
   // ShowToast(message: 'on BackgroundMessage', state: ToastState.SUCCESS);
 }
 
@@ -44,7 +46,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheHelper.init();
   await DioHelper.init();
-  //await CacheHelper.deleteAllData();
+ // await CacheHelper.deleteAllData();
   // CacheHelper.saveData(
   //     key: AppConstant.token,
   //     value:
@@ -67,15 +69,16 @@ void main() async {
   }
 //  print(token);
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    List<dynamic> title = jsonDecode(message.notification!.title!) ;
-    List<dynamic> value =  jsonDecode(message.notification!.title!);
-    LocalNotificationService().showNotificationAndroid(title[CacheHelper.getData(key: AppConstant.lang)??'en']
+    Map<String, dynamic> title = jsonDecode(message.notification!.title!) ;
+    Map<String, dynamic> value =  jsonDecode(message.notification!.title!);
+    LocalNotificationService().showNotificationAndroid(
+        title[CacheHelper.getData(key: AppConstant.lang)??'en']
         , value[CacheHelper.getData(key: AppConstant.lang)??'en']);
     //ShowToast(message: 'on Message', state: ToastState.SUCCESS);
   });
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    List<dynamic> title = jsonDecode(message.notification!.title!) ;
-    List<dynamic> value =  jsonDecode(message.notification!.title!);
+    Map<String, dynamic> title = jsonDecode(message.notification!.title!) ;
+    Map<String, dynamic> value =  jsonDecode(message.notification!.title!);
     LocalNotificationService().showNotificationAndroid(title[CacheHelper.getData(key: AppConstant.lang)??'en']
         , value[CacheHelper.getData(key: AppConstant.lang)??'en']);
     // ShowToast(message: 'on Message', state: ToastState.SUCCESS);
@@ -132,7 +135,9 @@ class MyApp extends StatelessWidget {
                   driverId: CacheHelper.getData(key:
                   AppConstant.driverId))
               ..getDriverOrdersById(
-                  driverId: CacheHelper.getData(key: AppConstant.driverId));
+                  driverId: CacheHelper.getData(key: AppConstant.driverId))..
+              getReturnOrderAssigned(driverId:
+              CacheHelper.getData(key: AppConstant.driverId));
           } else {
             return OrderDriverCubit()..getAllOrders();
           }

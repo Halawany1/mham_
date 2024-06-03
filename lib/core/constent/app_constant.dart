@@ -10,4 +10,5 @@ class   AppConstant {
   static String driverId="driverId";
   static String timeLineProcess="timeLineProcess";
   static String carId="carId";
+  static String baseImage="http://38.242.155.239:8000";
 }

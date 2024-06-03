@@ -352,6 +352,10 @@ class HomeCubit extends Cubit<HomeState> {
         });
         emit(SuccessGetAllOrdersState());
       }).catchError((error) {
+        print(error.toString());
+        if (error is DioError) {
+          print(error.response!.data);
+        }
         emit(ErrorGetAllOrdersState(error.toString()));
       });
     } else {

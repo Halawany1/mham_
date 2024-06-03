@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
+import 'package:mham/controller/profile_cubit/profile_cubit.dart';
 import 'package:mham/core/components/3rd_party_services_component.dart';
 import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/components/snak_bar_component.dart';
@@ -146,7 +147,7 @@ class LoginScreen extends StatelessWidget {
                           GestureDetector(
                             onTap: () {
                               Navigator.push(context, MaterialPageRoute(builder:
-                              (context) => OtpScreen(),));
+                              (context) => OtpScreen(role: client?'user':'driver',),));
                             },
                             child: Text(
                               locale.forgotPassword,
@@ -169,9 +170,10 @@ class LoginScreen extends StatelessWidget {
                               text: locale.signIn,
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
+                                  ProfileCubit.get(context).profileModel=null;
                                   String countryCode =
                                       cubit.selectedCountry == null
-                                          ? '+985'
+                                          ? '+965'
                                           : cubit.selectedCountry!.dialCode;
 
                                     cubit.userLogin(
@@ -204,14 +206,14 @@ class LoginScreen extends StatelessWidget {
                       SizedBox(
                         height: 30.h,
                       ),
-                      Text(
-                        locale.orContinueWith,
-                        style: font.bodyMedium!.copyWith(fontSize: 12.sp),
-                      ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      const BuildThridPartyServices()
+                      // Text(
+                      //   locale.orContinueWith,
+                      //   style: font.bodyMedium!.copyWith(fontSize: 12.sp),
+                      // ),
+                      // SizedBox(
+                      //   height: 10.h,
+                      // ),
+                      // const BuildThridPartyServices()
                     ],
                   ),
                 ),

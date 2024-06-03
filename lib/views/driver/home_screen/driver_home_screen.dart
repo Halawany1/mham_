@@ -29,7 +29,8 @@ class DriverHomeScreen extends StatelessWidget {
     var color = Theme.of(context);
     var locale = AppLocalizations.of(context);
     var layoutCubit = LayoutCubit.get(context);
-
+    final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+        GlobalKey<RefreshIndicatorState>();
     print(CacheHelper.getData(key: AppConstant.driverId));
     if (OrderDriverCubit.get(context).driverOrderModel == null) {
       OrderDriverCubit.get(context).getAllOrders();
@@ -58,137 +59,139 @@ class DriverHomeScreen extends StatelessWidget {
                   state is LoadingGetAllOrdersState
               ? Center(child: BuildImageLoader(assetName: ImageConstant.logo))
               : SafeArea(
-                  child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    child: RefreshIndicator(
-                      onRefresh: () async {
-                        OrderDriverCubit.get(context).getAllOrders();
-
-                      },
-                      child: Column(children: [
-                        Padding(
-                          padding: EdgeInsets.all(12.h),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                locale.orders,
-                                style: font.bodyMedium,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  showMenu<String>(
-                                    context: context,
-                                    position: RelativeRect.fromLTRB(
-                                        layoutCubit.lang == 'en' ? 120.w : 20.w,
-                                        120.h,
-                                        layoutCubit.lang == 'en' ? 20.w : 120.w,
-                                        0),
-                                    elevation: 5,
-                                    color: color.scaffoldBackgroundColor,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    items: cubit.filter.map((item) {
-                                      return PopupMenuItem<String>(
-                                        value: item,
-                                        child: Container(
-                                          width: 140.w,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  if (item == cubit.filter[0]) {
-                                                    cubit.getAllOrders();
-                                                  }
-                                                  if (item == cubit.filter[1] ||
-                                                      item == cubit.filter[2]) {
-                                                    cubit.getAllOrders(
-                                                        status: item);
-                                                  }
-                                                  if (item == cubit.filter[3]) {
-                                                    cubit.getAllOrders(
-                                                        sort: 'DtotalPrice');
-                                                  }
-                                                  if (item == cubit.filter[4]) {
-                                                    cubit.getAllOrders(
-                                                        sort: 'AtotalPrice');
-                                                  }
-                                                  if (item == cubit.filter[5]) {
-                                                    cubit.getAllOrders(
-                                                        inCountry: true);
-                                                  } else if (item ==
-                                                      cubit.filter[6]) {
-                                                    cubit.getAllOrders(
-                                                        inCountry: false);
-                                                  }
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text(
-                                                  item,
-                                                  style: font.bodyMedium!
-                                                      .copyWith(fontSize: 14.sp),
-                                                ),
-                                              ),
-                                              if (item != cubit.filter[6])
-                                                Divider(),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                  );
-                                },
-                                child: Icon(
-                                  FontAwesomeIcons.filter,
-                                  color: color.backgroundColor,
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Column(children: [
+                    Padding(
+                      padding: EdgeInsets.all(12.h),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            locale.orders,
+                            style: font.bodyMedium,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              showMenu<String>(
+                                context: context,
+                                position: RelativeRect.fromLTRB(
+                                    layoutCubit.lang == 'en' ? 120.w : 20.w,
+                                    120.h,
+                                    layoutCubit.lang == 'en' ? 20.w : 120.w,
+                                    0),
+                                elevation: 5,
+                                color: color.scaffoldBackgroundColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
-                        if (cubit.driverOrders.isEmpty)
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 110.h),
-                            child: BuildEmptyOrder(
-                              withoutButton: true,
-                            ),
-                          ),
-                        if (cubit.driverOrders.isNotEmpty)
-                          Padding(
-                            padding: EdgeInsets.all(12.h),
-                            child: GridView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: cubit.driverOrders.length,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        mainAxisSpacing: 10.h,
-                                        crossAxisSpacing: 10.w,
-                                        mainAxisExtent: 220.h),
-                                itemBuilder: (context, index) {
-                                  return GestureDetector(
-                                    onTap: () async {
-                                      cubit.getOrderById(
-                                          id: cubit.driverOrders[index].id!);
-                                      Helper.push(
-                                          context: context,
-                                          widget: OrderDetailsDriverScreen());
-                                    },
-                                    child: BuildCardOrderGrid(
-                                      index: index,
-                                      orders: cubit.driverOrders,
+                                items: cubit.filter.map((item) {
+                                  return PopupMenuItem<String>(
+                                    value: item,
+                                    child: Container(
+                                      width: 140.w,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              if (item == cubit.filter[0]) {
+                                                cubit.getAllOrders();
+                                              }
+                                              if (item == cubit.filter[1] ||
+                                                  item == cubit.filter[2]) {
+                                                cubit.getAllOrders(
+                                                    status: item);
+                                              }
+                                              if (item == cubit.filter[3]) {
+                                                cubit.getAllOrders(
+                                                    sort: 'DtotalPrice');
+                                              }
+                                              if (item == cubit.filter[4]) {
+                                                cubit.getAllOrders(
+                                                    sort: 'AtotalPrice');
+                                              }
+                                              if (item == cubit.filter[5]) {
+                                                cubit.getAllOrders(
+                                                    inCountry: true);
+                                              } else if (item ==
+                                                  cubit.filter[6]) {
+                                                cubit.getAllOrders(
+                                                    inCountry: false);
+                                              }
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text(
+                                              item,
+                                              style: font.bodyMedium!
+                                                  .copyWith(
+                                                      fontSize: 14.sp),
+                                            ),
+                                          ),
+                                          if (item != cubit.filter[6])
+                                            Divider(),
+                                        ],
+                                      ),
                                     ),
                                   );
-                                }),
-                          ),
-                      ]),
+                                }).toList(),
+                              );
+                            },
+                            child: Icon(
+                              FontAwesomeIcons.filter,
+                              color: color.backgroundColor,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
+                    if (cubit.driverOrders.isEmpty)
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 110.h),
+                        child: BuildEmptyOrder(
+                          withoutButton: true,
+                        ),
+                      ),
+                    if (cubit.driverOrders.isNotEmpty)
+                      RefreshIndicator(
+                        color: color.backgroundColor,
+                        backgroundColor: color.primaryColor,
+                        onRefresh: () async {
+                          OrderDriverCubit.get(context).getAllOrders();
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(12.h),
+                          child: GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: cubit.driverOrders.length,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      mainAxisSpacing: 10.h,
+                                      crossAxisSpacing: 10.w,
+                                      mainAxisExtent: 220.h),
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () async {
+                                    cubit.getOrderById(
+                                        id: cubit.driverOrders[index].id!);
+                                    Helper.push(
+                                        context: context,
+                                        widget: OrderDetailsDriverScreen());
+                                  },
+                                  child: BuildCardOrderGrid(
+                                    index: index,
+                                    orders: cubit.driverOrders,
+                                  ),
+                                );
+                              }),
+                        ),
+                      ),
+                  ]),
                 ),
+              ),
         );
       },
     );

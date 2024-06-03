@@ -105,6 +105,7 @@ class CartCubit extends Cubit<CartState> {
       }).catchError((error) {
         if (error is DioError) {
           String data = error.response!.data['message'][0];
+          print(error.response!.data['message'][0]);
           emit(ErrorAddToCart(data));
         } else {
           emit(ErrorAddToCart(error.toString()));

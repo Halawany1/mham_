@@ -1,0 +1,4 @@
+storePassword=123456
+keyPassword=123456
+keyAlias=key.jks
+storeFile=C:/Users/Eng/StudioProjects/Kotobekia/android/app/key.jks

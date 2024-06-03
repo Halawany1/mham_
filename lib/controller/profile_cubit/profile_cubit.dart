@@ -40,6 +40,10 @@ class ProfileCubit extends Cubit<ProfileState> {
         }
         emit(SuccessProfileState());
       }).catchError((error) {
+        print(error.toString());
+        if(error is DioError){
+          print(error.response!.data());
+        }
         emit(ErrorProfileState(error.toString()));
       });
     } else {
@@ -87,6 +91,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   }) async {
     if (await Helper.hasConnection()) {
       emit(LoadingUpdateProfileDriverState());
+      print(avatar);
       try {
         Dio dio = Dio();
         dio.options.headers = {
@@ -98,7 +103,7 @@ class ProfileCubit extends Cubit<ProfileState> {
           "name": userName,
           if (avatar.isNotEmpty)"driverAvatar": await MultipartFile.
           fromFile(avatar,
-              filename: drivingLicence.split('/').last,
+              filename: avatar.split('/').last,
               contentType: MediaType("image","jpeg")),
           if (drivingLicence.isNotEmpty)
             "driverLicense": await MultipartFile.
@@ -139,5 +144,19 @@ class ProfileCubit extends Cubit<ProfileState> {
       image = File(pickedFile.path);
       emit(SuccessPickImageState());
     }
+  }
+  
+  void deleteAccount(int id){
+    emit(LoadingDeleteAccount());
+    DioHelper.deleteData(url: ApiConstant.deleteUser(id),
+    token: CacheHelper.getData(key: AppConstant.token)).then((value) {
+      emit(SuccessDeleteAccount());
+    }).catchError((error){
+      if(error is DioError){
+        emit(ErrorDeleteAccount(error.response!.data['message'][0]));
+      }else{
+        emit(ErrorDeleteAccount(error.toString()));
+      }
+    });
   }
 }

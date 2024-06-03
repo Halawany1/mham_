@@ -15,9 +15,11 @@ import 'package:mham/core/components/drop_down_menu.dart';
 import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/components/snak_bar_component.dart';
 import 'package:mham/core/components/text_form_field_component.dart';
+import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/error/validation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mham/core/network/local.dart';
 import 'package:mham/views/sign_up_screen/sign_up_screen.dart';
 
 import '../../core/helper/helper.dart';
@@ -61,6 +63,7 @@ class EditProfileScreen extends StatelessWidget {
                         .user!
                         .country!
                         .countryNameAr;
+            ProfileCubit.get(context).image=null;
           } else {
             AuthenticationCubit.get(context).countryId =
                 LayoutCubit.get(context).lang == 'en'
@@ -78,6 +81,7 @@ class EditProfileScreen extends StatelessWidget {
         }
         if (state is SuccessUpdateProfileState) {
           Helper.pop(context);
+          ProfileCubit.get(context).image=null;
         }
       },
       builder: (context, state) {
@@ -95,6 +99,7 @@ class EditProfileScreen extends StatelessWidget {
             }
             if (state is SuccessUpdateProfileDriverState) {
               Helper.pop(context);
+              ProfileCubit.get(context).image=null;
             }
             if (state is ErrorUpdateProfileDriverState) {
               showMessageResponse(
@@ -108,6 +113,7 @@ class EditProfileScreen extends StatelessWidget {
             return WillPopScope(
               onWillPop: () async {
                 Helper.pop(context);
+                ProfileCubit.get(context).image=null;
                 return true;
               },
               child: Scaffold(
@@ -150,6 +156,7 @@ class EditProfileScreen extends StatelessWidget {
                                     : null,
                                 child: InkWell(
                                   onTap: () {
+                                    ProfileCubit.get(context).image=null;
                                     Helper.pop(context);
                                   },
                                   child: Icon(
@@ -170,9 +177,26 @@ class EditProfileScreen extends StatelessWidget {
                                         .copyWith(fontSize: 20.sp),
                                   )),
 
+                              if(profileCubit.image==null&&ProfileCubit.get(context).driverProfileModel!=null)
+                                Positioned(
+                                  top: 95.h,
+                                  left: 130.w,
+                                  child:   ClipRRect(
+                                    borderRadius: BorderRadius.circular(40.r),
+                                    child: Image.network(
+                                     AppConstant.baseImage+ProfileCubit.get(context).
+                                      driverProfileModel!.driver!.user!.avatar!,
+                                      width: 90.w,
+                                      fit: BoxFit.cover,
+                                      height: 90.w,
+                                    ),
+                                  )
+                                ),
+                              if(profileCubit.image!=null ||
+                                  ProfileCubit.get(context).driverProfileModel==null)
                               Positioned(
                                 top: 95.h,
-                                left: 123.w,
+                                left: 130.w,
                                 child: profileCubit.image!=null?
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(40.r),
@@ -191,6 +215,7 @@ class EditProfileScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                              if(driver)
                               Positioned(
                                 top: 145.h,
                                 right: 140.w,
@@ -279,6 +304,7 @@ class EditProfileScreen extends StatelessWidget {
                               SizedBox(
                                 height: 20.h,
                               ),
+                              if(CacheHelper.getData(key: AppConstant.driverId)!=null)
                               BuildTextFormField(
                                   maxLength: 120,
                                   keyboardType: TextInputType.text,

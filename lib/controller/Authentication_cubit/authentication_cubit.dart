@@ -59,6 +59,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
           data: {
             if(driver)"mobile": phone,
             if(!driver)"phonenumber": phone,
+            if(driver)"role":"driver",
             "password": password,
             "fcmToken": CacheHelper.getData(key: AppConstant.fcmToken),
           }
@@ -249,7 +250,7 @@ String ?countryId;
         };
         FormData formData = FormData.fromMap({
           "username": userName,
-          if(drivingLicence!='') "drivingLicence": await MultipartFile.fromFile(drivingLicence),
+          if(drivingLicence!='') "driverLicense": await MultipartFile.fromFile(drivingLicence),
           "password": password,
           "mobile": phone,
           "countryId": country,
@@ -272,6 +273,27 @@ String ?countryId;
     }else{
       emit(NoInternetAuthState());
     }
+  }
+
+  void verifyOtp({required String mobile, required String role}) {
+    emit(LoadingGetOtpState());
+    print(role);
+    print(mobile);
+    DioHelper.postData(url: ApiConstant.verifyOtp,
+    data: {
+      "mobile": mobile,
+      "role": role // user,trader,admin,driver,superAdmin
+    }
+    ).then((value) {
+      emit(SuccessGetOtpState());
+    }).catchError((error){
+      if(error is DioError){
+        emit(ErrorGetOtpState(error.response!.data['message'][0]));
+      }else{
+        emit(ErrorGetOtpState(error.toString()));
+      }
+
+    });
   }
 
 

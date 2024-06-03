@@ -4,6 +4,7 @@ class ApiConstant{
   static const String register='/user/register';
   static const String registerDriver='/auth/driver/register';
   static const String login='/user/login';
+  static  String deleteUser(int id)=>'/user/$id';
   static const String loginDriver='/auth/login';
   static const String profile='/user/profile';
   static const String profileDriver='/drivers/me';
@@ -11,6 +12,7 @@ class ApiConstant{
   static String cancelOrder(int id)=>'/orders/$id/cancel';
   static String cancelProduct(int id)=>'/order-items/$id/cancel';
   static const String updateProfile='/user/updateProfile';
+  static const String verifyOtp='/auth/forget-password';
   static const String returnsMe='/users/me/return-products';
   static const String productRating='/product-ratings';
   static const String product='/products/getAll';
@@ -34,6 +36,8 @@ class ApiConstant{
       '/drivers/$driverId/orders';
   static  String assignedOrder(int driverId)=>
       '/drivers/$driverId/active-order';
+  static  String returnAssignedOrder(int driverId)=>
+      '/drivers/$driverId/active-return';
   static  String cancelOrderDriver(int id)=>
       '/api/orders/$id/cancel';
   static const String addAndRemoveFavorite='/products/addAndRemoveFromFavourite/';

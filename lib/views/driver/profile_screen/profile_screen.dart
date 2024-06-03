@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
+import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/controller/profile_cubit/profile_cubit.dart';
 import 'package:mham/core/components/laoding_animation_component.dart';
@@ -41,6 +42,28 @@ class ProfileDriverScreen extends StatelessWidget {
               context: context,
               success: true);
         }
+        if(state is SuccessDeleteAccount){
+          userNameController.clear();
+          phoneController.clear();
+          passwordController.clear();
+          addressController.clear();
+          driverLicenseController.clear();
+          CacheHelper.removeData(
+              key: AppConstant.token);
+          CacheHelper.removeData(
+              key: AppConstant.driver);
+          CacheHelper.removeData(
+              key: AppConstant.driverId);
+          LayoutCubit.get(context)
+              .changeTheme(true);
+          Navigator.pop(context);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    LayoutScreen()),
+          );
+        }
       },
       builder: (context, state) {
         var cubit = ProfileCubit.get(context);
@@ -70,9 +93,9 @@ class ProfileDriverScreen extends StatelessWidget {
                               SizedBox(
                                 height: 40.h,
                               ),
-                              // if (cubit.driverProfileModel!.driver!.user!
-                              //         .avatar ==
-                              //     null)
+                              if (cubit.driverProfileModel!.driver!.user!
+                                      .avatar ==
+                                  null)
                                 CircleAvatar(
                                   radius: 45.r,
                                   backgroundColor: Colors.grey.shade300,
@@ -81,16 +104,21 @@ class ProfileDriverScreen extends StatelessWidget {
                                     size: 30.r,
                                   ),
                                 ),
-                              // if (cubit.driverProfileModel!.driver!.user!
-                              //         .avatar !=
-                              //     null)
-                              //   CircleAvatar(
-                              //       radius: 45.r,
-                              //       child: Image.asset(ApiConstant.baseUrl+cubit
-                              //           .driverProfileModel!
-                              //           .driver!
-                              //           .user!
-                              //           .avatar!)),
+                              if (cubit.driverProfileModel!.driver!.user!
+                                      .avatar !=
+                                  null)
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(40.r),
+                                  child: Image.network(
+                                    width: 80.w,
+                                      height: 80.w,
+                                      fit: BoxFit.cover,
+                                      AppConstant.baseImage+cubit
+                                      .driverProfileModel!
+                                      .driver!
+                                      .user!
+                                      .avatar!),
+                                ),
                               SizedBox(
                                 height: 12.h,
                               ),
@@ -182,13 +210,13 @@ class ProfileDriverScreen extends StatelessWidget {
                               SizedBox(
                                 height: 10.h,
                               ),
-                              BuildCards(
-                                icon: FontAwesomeIcons.sync,
-                                text: locale.appUpdate,
-                                onTap: () {},
-                              ),
+                              // BuildCards(
+                              //   icon: FontAwesomeIcons.sync,
+                              //   text: locale.appUpdate,
+                              //   onTap: () {},
+                              // ),
                               SizedBox(
-                                height: 30.h,
+                                height: 40.h,
                               ),
                               BuildCards(
                                 icon: FontAwesomeIcons.signOut,
@@ -224,6 +252,25 @@ class ProfileDriverScreen extends StatelessWidget {
                                           title: locale.logout,
                                           content: locale.areYouSureToLogout),
                                       context: context);
+                                },
+                              ),
+                              SizedBox(
+                                height: 25.h,
+                              ),
+                              BuildCards(
+                                icon: FontAwesomeIcons.trash,
+                                text: locale.deleteAccount,
+                                onTap: () {
+                                  showDialog(
+                                      builder: (context) =>
+                                          confirmPopUp(context: context,
+                                              onPress: () {
+                                                cubit.deleteAccount(cubit.profileModel!.user!.id!);
+                                                Navigator.pop(context);
+                                              }, title: locale.deleteAccount,
+                                              content: locale.areYourSureToDeleteAccount),
+                                      context: context
+                                  );
                                 },
                               ),
                               SizedBox(

@@ -29,10 +29,23 @@ class ErrorUpdateProfileState extends ProfileState {
 }
 class LoadingUpdateProfileDriverState extends ProfileState {}
 
+
 class SuccessUpdateProfileDriverState extends ProfileState {}
 
 class ErrorUpdateProfileDriverState extends ProfileState {
   final String message;
 
   ErrorUpdateProfileDriverState(this.message);
+}
+
+class LoadingDeleteAccount extends ProfileState {}
+
+
+class SuccessDeleteAccount extends ProfileState {}
+
+
+class ErrorDeleteAccount extends ProfileState {
+  final String message;
+
+  ErrorDeleteAccount(this.message);
 }

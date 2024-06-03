@@ -11,6 +11,7 @@ import 'package:mham/models/assign_order_model.dart';
 import 'package:mham/models/check_box_tile_model.dart';
 import 'package:mham/models/driver_order_model.dart';
 import 'package:mham/models/order_by_id.dart';
+import 'package:mham/models/rerurn_order_model.dart';
 import 'package:mham/models/time_line_order_model.dart';
 import 'package:http_parser/http_parser.dart';
 
@@ -147,6 +148,10 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
         emit(SuccessGetOrderByIdState());
         getAssignedOrder(driverId: CacheHelper.getData(key: AppConstant.driverId));
       }).catchError((error) {
+        print(error.toString());
+        if(error is DioError){
+          print(error.response!.data);
+        }
         emit(ErrorGetOrderByIdState(error.toString()));
       });
     } else {
@@ -301,6 +306,7 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
 
   AssignedOrderModel? assignOrderModel;
   TimeLineOrderModel? timeLineOrderModel;
+  ReturnOrderModel? returnOrderModel;
   bool allIsShipped = true;
 
   List<List<bool>> checkStatus = [];
@@ -332,6 +338,9 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
           ]);
         });
         assignOrder.add(assignOrderModel!.activeOrder!);
+
+
+
         // orderModel!.orders!.forEach((element) {
         //   allOrders.add(element);
         // });
@@ -356,6 +365,73 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
       }).catchError((error) {
         print(error.toString());
         if (error is DioError) {
+          print(error.response!.data);
+          emptyTimeLineAndAssign=true;
+          emit(ErrorGetAssignedOrderState(error.response!.data['message'][0]));
+        }else{
+          emit(ErrorGetAssignedOrderState(error.toString()));
+        }
+      });
+    } else {
+      emit(NoInternetHomeState());
+    }
+  }
+
+  void getReturnOrderAssigned({required int driverId}) async {
+    if (await Helper.hasConnection()) {
+      emit(LoadingGetAssignedOrderState());
+      assignOrder.clear();
+      DioHelper.getData(
+        url: ApiConstant.returnAssignedOrder(driverId),
+        token: CacheHelper.getData(key: AppConstant.token),
+      ).then((value) {
+        print(driverId);
+        assignOrder.clear();
+        checkStatus.clear();
+        returnOrderModel = ReturnOrderModel.fromJson(value.data);
+        assignOrderModel = AssignedOrderModel.fromJson(value.data);
+        returnOrderModel!.activeOrder!.orderItems!.forEach((element) {
+          if (element.status != "Shipped") {
+            allIsShipped = false;
+          }
+        });
+        returnOrderModel!.activeOrder!.orderItems!.forEach((element) {
+          checkStatus.add([
+            element.status == "Ordered" ? true : false,
+            element.status == "Processing" ? true : false,
+            element.status == "Shipped" ? true : false,
+            element.status == "Delivered" ? true : false
+          ]);
+        });
+        assignOrder.add(assignOrderModel!.activeOrder!);
+
+
+
+        // orderModel!.orders!.forEach((element) {
+        //   allOrders.add(element);
+        // });
+        // orderModel!.orders!.forEach((element) {
+        //   if (element.status == 'Delivered') {
+        //     recentPurchases.add(element);
+        //   }
+        // });
+        // recentPurchases.forEach((element) {
+        //   bool flag = false;
+        //   element.orderItems!.forEach((element) {
+        //     if (!element.returnProduct!.isEmpty) {
+        //       flag = true;
+        //     }
+        //   });
+        //   if (!flag) {
+        //     returnsOrder.add(element);
+        //   }
+        // });
+        emit(SuccessGetAssignedOrderState());
+        emptyTimeLineAndAssign=false;
+      }).catchError((error) {
+        print(error.toString());
+        if (error is DioError) {
+          print(error.response!.data);
           emptyTimeLineAndAssign=true;
           emit(ErrorGetAssignedOrderState(error.response!.data['message'][0]));
         }else{

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
 import 'package:mham/core/components/material_button_component.dart';
+import 'package:mham/core/components/snak_bar_component.dart';
 import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/error/validation.dart';
 import 'package:mham/views/change_password_screen/change_password_screen.dart';
@@ -14,8 +15,8 @@ var phoneOtpController = TextEditingController();
 var formKey = GlobalKey<FormState>();
 
 class OtpScreen extends StatelessWidget {
-  const OtpScreen({super.key});
-
+  const OtpScreen({super.key, required this.role});
+  final String role;
   @override
   Widget build(BuildContext context) {
     var font = Theme
@@ -23,7 +24,16 @@ class OtpScreen extends StatelessWidget {
         .textTheme;
     final locale = AppLocalizations.of(context);
     var color = Theme.of(context);
-    return BlocBuilder<AuthenticationCubit, AuthenticationState>(
+    return BlocConsumer<AuthenticationCubit, AuthenticationState>(
+      listener: (context, state) {
+        if(state is SuccessGetOtpState){
+          AuthenticationCubit.get(context).changeIndexOtpVerification(1);
+        }
+        if(state is ErrorGetOtpState){
+          showMessageResponse(message: state.error,
+              context: context, success: false);
+        }
+      },
       builder: (context, state) {
         var cubit = context.read<AuthenticationCubit>();
         return Scaffold(
@@ -76,7 +86,7 @@ class OtpScreen extends StatelessWidget {
                         Text(
                           textAlign: TextAlign.center,
                           '${locale.enterOtp} ${cubit.selectedCountry == null
-                              ? '+985'
+                              ? '+965'
                               : cubit.selectedCountry!.dialCode +
                               phoneOtpController.text}',
                           style: font.bodyMedium!.copyWith(
@@ -140,13 +150,21 @@ class OtpScreen extends StatelessWidget {
                             )
                           ],),
                       SizedBox(height: 40.h,),
-                      BuildDefaultButton(
+                    state is LoadingGetOtpState?
+                      Center(child: CircularProgressIndicator(color: color.primaryColor,))
+                      :BuildDefaultButton(
                           text: cubit.currentIndexOtpVerification == 0 ?
                           locale.getOtp : locale.verify,
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
+                              String countryCode =
+                              cubit.selectedCountry == null
+                                  ? '+965'
+                                  : cubit.selectedCountry!.dialCode;
                               if (cubit.currentIndexOtpVerification == 0) {
-                                cubit.changeIndexOtpVerification(1);
+                                cubit.verifyOtp(
+                                    mobile: countryCode+phoneOtpController.text,
+                                    role: role);
                               } else {
                                 Navigator.push(context, MaterialPageRoute(
                                   builder: (context) =>

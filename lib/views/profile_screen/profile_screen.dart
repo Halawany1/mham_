@@ -45,12 +45,25 @@ class ProfileScreen extends StatelessWidget {
           showMessageResponse(message: locale.successUpdateProfile,
               context: context, success: true);
         }
+        if (state is ErrorDeleteAccount) {
+          showMessageResponse(message: state.message,
+              context: context, success: false);
+        }
+        if(state is SuccessDeleteAccount){
+          userNameController.clear();
+          phoneController.clear();
+          passwordController.clear();
+          HomeCubit.get(context).myScrapModel=null;
+          CacheHelper.removeData(key: AppConstant.token);
+          LayoutCubit.get(context).changeTheme(true);
+          LayoutCubit.get(context).changeIndex(0);
+        }
       },
       builder: (context, state) {
         var cubit = context.read<ProfileCubit>();
         return Scaffold(
 
-          body: cubit.profileModel != null
+          body: cubit.profileModel != null || state is LoadingDeleteAccount
               ? SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: SafeArea(
@@ -68,6 +81,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       CircleAvatar(
                         radius: 45.r,
+                        backgroundColor: Colors.grey[300],
                         child: Icon(
                           FontAwesomeIcons.user,
                           size: 30.r,
@@ -181,13 +195,13 @@ class ProfileScreen extends StatelessWidget {
                       SizedBox(
                         height: 10.h,
                       ),
-                      BuildCards(
-                        icon: FontAwesomeIcons.sync,
-                        text: locale.appUpdate,
-                        onTap: () {},
-                      ),
+                      // BuildCards(
+                      //   icon: FontAwesomeIcons.sync,
+                      //   text: locale.appUpdate,
+                      //   onTap: () {},
+                      // ),
                       SizedBox(
-                        height: 30.h,
+                        height: 40.h,
                       ),
                       BuildCards(
                         icon: FontAwesomeIcons.signOut,
@@ -211,6 +225,26 @@ class ProfileScreen extends StatelessWidget {
                                 }, title: locale.logout,
                                 content: locale.areYouSureToLogout),
                             context: context
+                          );
+                        },
+                      ),
+                      SizedBox(
+                        height: 25.h,
+                      ),
+                      BuildCards(
+                        icon: FontAwesomeIcons.trash,
+                        text: locale.deleteAccount,
+                        onTap: () {
+                          showDialog(
+                              builder: (context) =>
+                                  confirmPopUp(context: context,
+                                  onPress: () {
+                                    cubit.deleteAccount(
+                                        cubit.profileModel!.user!.id!);
+                                    Navigator.pop(context);
+                                  }, title: locale.deleteAccount,
+                                  content:locale.areYourSureToDeleteAccount),
+                              context: context
                           );
                         },
                       ),

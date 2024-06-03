@@ -51,3 +51,14 @@ class ErrorGetCountriesState extends AuthenticationState {
   ErrorGetCountriesState(this.error);
 }
 
+class LoadingGetOtpState extends AuthenticationState {}
+
+class SuccessGetOtpState extends AuthenticationState {}
+
+class ErrorGetOtpState extends AuthenticationState {
+  final String error;
+
+  ErrorGetOtpState(this.error);
+}
+
+

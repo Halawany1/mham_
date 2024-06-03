@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
+import 'package:mham/controller/profile_cubit/profile_cubit.dart';
 import 'package:mham/core/components/3rd_party_services_component.dart';
 import 'package:mham/core/components/drop_down_menu.dart';
 import 'package:mham/core/components/material_button_component.dart';
@@ -277,6 +278,7 @@ void clearAllData() {
                               cubit.selectedCountry == null
                                   ? '+985'
                                   : cubit.selectedCountry!.dialCode;
+                              ProfileCubit.get(context).profileModel=null;
                               if(client){
                                 cubit.userSignUp(
                                     phone: countryCode + phoneController.text,
@@ -315,17 +317,17 @@ void clearAllData() {
                           text: locale.alreadyHaveAccount,
                           textLink: locale.signIn,
                         ),
-                        SizedBox(
-                          height: 30.h,
-                        ),
-                        Text(
-                          locale.orContinueWith,
-                          style: font.bodyMedium!.copyWith(fontSize: 12.sp),
-                        ),
-                        SizedBox(
-                          height: 10.h,
-                        ),
-                        const BuildThridPartyServices()
+                        // SizedBox(
+                        //   height: 30.h,
+                        // ),
+                        // Text(
+                        //   locale.orContinueWith,
+                        //   style: font.bodyMedium!.copyWith(fontSize: 12.sp),
+                        // ),
+                        // SizedBox(
+                        //   height: 10.h,
+                        // ),
+                        // const BuildThridPartyServices()
                       ],
                     ),
                   ),

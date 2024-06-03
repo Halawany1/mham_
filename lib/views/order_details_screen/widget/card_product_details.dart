@@ -10,6 +10,7 @@ import 'package:mham/core/components/pop_up_sure_component.dart';
 import 'package:mham/core/components/small_container_for_type_component.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/core/components/text_form_field_component.dart';
+import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/error/validation.dart';
 import 'package:mham/core/helper/helper.dart';
@@ -71,13 +72,27 @@ class BuildCardProductDetails extends StatelessWidget {
                         height: 45.h,
                         child: Stack(
                           children: [
+                            if(orders.orderItems![index]
+                                .product!.productsImg!=null)
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10.r),
+                                child: Image.network(
+                                  AppConstant.baseImage+orders.orderItems![index]
+                                      .product!.productsImg!,
+                                  height: 80.h,
+                                  width: 80.w,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                              if(orders.orderItems![index]
+                                  .product!.productsImg==null)
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10.r),
                               child: Image.asset(
                                 'assets/images/product.png',
                                 height: 80.h,
                                 width: 80.w,
-                                fit: BoxFit.cover,
+                                fit: BoxFit.fill,
                               ),
                             ),
                             Positioned(

@@ -47,7 +47,28 @@ class BuildReturnOrderPopUp extends StatelessWidget {
                   fontSize: 14.sp
               ),),
             SizedBox(height: 20.h,),
-            Row(
+          BuildTextFormField(
+              withBorder: true,
+              title: locale.reason,
+              hint: locale.writeReason,
+              controller:
+              reasonController,
+              contentPadding: true,
+              cubit:
+              AuthenticationCubit.get(
+                  context),
+              validator: (value) {
+                return Validation
+                    .validateField(
+                    value,
+                    locale.reason,
+                    context);
+              },
+              maxLines: 5,
+              keyboardType:
+              TextInputType.text,
+              maxLength: 1000),
+           Row(
               mainAxisAlignment: MainAxisAlignment
                   .spaceBetween,
               children: [
