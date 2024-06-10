@@ -10,6 +10,7 @@ import 'package:mham/core/network/remote.dart';
 import 'package:mham/models/countries_model.dart';
 import 'package:mham/models/driverDataModel.dart';
 import 'package:mham/models/user_model.dart';
+import 'package:http_parser/http_parser.dart';
 
 part 'authentication_state.dart';
 
@@ -64,9 +65,11 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
             "fcmToken": CacheHelper.getData(key: AppConstant.fcmToken),
           }
       ).then((value) {
-
-        if(driver){
+        print(value.data);
+        if(driver) {
           driverModel = DriverModel.fromJson(value.data);
+          CacheHelper.saveData(key: AppConstant.driverName,
+              value: driverModel!.user!.userName!);
         }else{
           userModel = UserModel.fromJson(value.data);
         }
@@ -250,7 +253,11 @@ String ?countryId;
         };
         FormData formData = FormData.fromMap({
           "username": userName,
-          if(drivingLicence!='') "driverLicense": await MultipartFile.fromFile(drivingLicence),
+          if(drivingLicence!='') "driverLicense":
+          await MultipartFile.
+          fromFile(drivingLicence,
+              filename: drivingLicence.split('/').last,
+              contentType: MediaType("image","jpeg")),
           "password": password,
           "mobile": phone,
           "countryId": country,
@@ -264,8 +271,7 @@ String ?countryId;
         emit(SuccessRegisterUserState());
       } catch (error) {
         if (error is DioError) {
-          print(error.response!.data);
-          emit(ErrorRegisterUserState(error.response!.data.toString()));
+          emit(ErrorRegisterUserState(error.response!.data['message'][0]));
         } else {
           emit(ErrorRegisterUserState(error.toString()));
         }

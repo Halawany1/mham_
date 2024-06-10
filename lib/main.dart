@@ -15,6 +15,7 @@ import 'package:mham/controller/internet_cubit/internet_cubit.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/controller/order_driver_cubit/order_driver_cubit.dart';
 import 'package:mham/controller/profile_cubit/profile_cubit.dart';
+import 'package:mham/controller/transiaction_cubit/transiaction_cubit.dart';
 import 'package:mham/core/components/show_toast.dart';
 import 'package:mham/core/constent/api_constant.dart';
 import 'package:mham/core/constent/app_constant.dart';
@@ -126,6 +127,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => LayoutCubit(),
+        ),
+        BlocProvider(
+          create: (context) => TransiactionCubit()..getTransiaction(),
         ),
         BlocProvider(create: (context) {
           if (CacheHelper.getData(key: AppConstant.driver) != null) {

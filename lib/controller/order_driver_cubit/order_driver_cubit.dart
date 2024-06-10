@@ -385,26 +385,26 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
         url: ApiConstant.returnAssignedOrder(driverId),
         token: CacheHelper.getData(key: AppConstant.token),
       ).then((value) {
-        print(driverId);
-        assignOrder.clear();
-        checkStatus.clear();
-        returnOrderModel = ReturnOrderModel.fromJson(value.data);
-        assignOrderModel = AssignedOrderModel.fromJson(value.data);
-        returnOrderModel!.activeOrder!.orderItems!.forEach((element) {
-          if (element.status != "Shipped") {
-            allIsShipped = false;
-          }
-        });
-        returnOrderModel!.activeOrder!.orderItems!.forEach((element) {
-          checkStatus.add([
-            element.status == "Ordered" ? true : false,
-            element.status == "Processing" ? true : false,
-            element.status == "Shipped" ? true : false,
-            element.status == "Delivered" ? true : false
-          ]);
-        });
-        assignOrder.add(assignOrderModel!.activeOrder!);
-
+        if(value.statusCode==200){
+          print(value.data);
+          assignOrder.clear();
+          checkStatus.clear();
+          returnOrderModel = ReturnOrderModel.fromJson(value.data);
+          returnOrderModel!.activeOrder!.orderItems!.forEach((element) {
+            if (element.status != "Shipped") {
+              allIsShipped = false;
+            }
+          });
+          returnOrderModel!.activeOrder!.orderItems!.forEach((element) {
+            checkStatus.add([
+              element.status == "Ordered" ? true : false,
+              element.status == "Processing" ? true : false,
+              element.status == "Shipped" ? true : false,
+              element.status == "Delivered" ? true : false
+            ]);
+          });
+          assignOrder.add(assignOrderModel!.activeOrder!);
+        }
 
 
         // orderModel!.orders!.forEach((element) {

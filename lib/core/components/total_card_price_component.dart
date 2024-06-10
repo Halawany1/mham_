@@ -8,11 +8,13 @@ class BuildTotalCardPrice extends StatelessWidget {
   const BuildTotalCardPrice({super.key,
   required this.lenghtItems,
   required this.totalPrice,
+  required this.shippingFee,
   required this.totalPriceWithShippingFee,
   });
 
   final int lenghtItems;
   final double totalPrice;
+  final int shippingFee ;
   final double totalPriceWithShippingFee;
   @override
   Widget build(BuildContext context) {
@@ -75,7 +77,7 @@ class BuildTotalCardPrice extends StatelessWidget {
                   ),
                   Spacer(),
                   Text(
-                    '10' + ' ${locale.kd}',
+                    shippingFee.toString() + ' ${locale.kd}',
                     style: font.bodyMedium!.copyWith(
                       fontSize: 12.sp,
                     ),

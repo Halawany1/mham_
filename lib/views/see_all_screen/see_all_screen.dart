@@ -36,7 +36,6 @@ class SeeAllScreen extends StatelessWidget {
         var cubit = context.read<HomeCubit>();
         return WillPopScope(
           onWillPop: ()async {
-            cubit.productModel = null;
             CacheHelper.removeData(
                 key: AppConstant.businessId);
             CacheHelper.removeData(
@@ -93,7 +92,6 @@ class SeeAllScreen extends StatelessWidget {
                           children: [
                             InkWell(
                                 onTap: () {
-                                  cubit.productModel = null;
                                   CacheHelper.removeData(
                                       key: AppConstant.businessId);
                                   CacheHelper.removeData(

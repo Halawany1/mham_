@@ -147,6 +147,7 @@ class CartScreen extends StatelessWidget {
                           ),
                           if (cubit.cartModel!.cart!.cartProducts!.length > 0)
                             BuildTotalCardPrice(
+                              shippingFee: 10,
                                 lenghtItems:
                                     cubit.cartModel!.cart!.cartProducts!.length,
                                 totalPrice: cubit.totalPrice,

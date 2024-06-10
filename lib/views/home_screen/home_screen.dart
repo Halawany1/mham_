@@ -305,8 +305,8 @@ class HomeScreen extends StatelessWidget {
                                 state is LoadingGetAllProduct ||
                                     cartState is CartLoadingState
                                     ? Center(
-                                    child: CircularProgressIndicator(
-                                      color: color.primaryColor,
+                                    child:CircularProgressIndicator.adaptive(
+                                        valueColor: AlwaysStoppedAnimation<Color>(color.primaryColor)
                                     ))
                                     : cubit.homeProducts.isEmpty
                                     ? BuildNotFoundProduct()

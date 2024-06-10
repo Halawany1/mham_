@@ -60,10 +60,11 @@ class TimeLineScreen extends StatelessWidget {
           return Scaffold(
             appBar: topAppBar(context),
             body:
-            cubit.emptyTimeLineAndAssign?
+            cubit.timeLineOrderModel == null&&
+                cubit.returnOrderModel == null?
             Center(child: Text(locale.noOrdersFound))
                 :
-            cubit.timeLineOrderModel == null
+            cubit.timeLineOrderModel == null && cubit.returnOrderModel == null
                     ? Center(
                         child: BuildImageLoader(assetName: ImageConstant.logo))
                     : RefreshIndicator(
@@ -74,10 +75,10 @@ class TimeLineScreen extends StatelessWidget {
                 AppConstant.driverId));
               },
                       child:
-                      // cubit.returnOrderModel!=null?
-                      // buildWithReturn(cubit, locale, font,
-                      //     color, formKey, reasonController, context)
-                      //     :
+                      cubit.returnOrderModel!=null?
+                      buildWithReturn(cubit, locale, font,
+                          color, formKey, reasonController, context)
+                          :
                       buildWithNoReturn(cubit, locale,
                           font, color, formKey, reasonController, context),
                     ),

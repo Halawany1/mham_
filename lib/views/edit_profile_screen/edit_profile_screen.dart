@@ -176,15 +176,31 @@ class EditProfileScreen extends StatelessWidget {
                                     style: font.bodyLarge!
                                         .copyWith(fontSize: 20.sp),
                                   )),
-
-                              if(profileCubit.image==null&&ProfileCubit.get(context).driverProfileModel!=null)
+                              if(driver&&ProfileCubit.get(context).driverProfileModel
+                              !.driver!.user!.avatar==null)
+                              Positioned(
+                                top: 95.h,
+                                left: 130.w,
+                                child: CircleAvatar(
+                                  radius: 45.r,
+                                  backgroundColor: Colors.grey[300],
+                                  child: Icon(
+                                    FontAwesomeIcons.user,
+                                    size: 30.r,
+                                  ),
+                                ),
+                              ),
+                              if(driver&&
+                                  ProfileCubit.get(context).driverProfileModel
+                                      !.driver!.user!.avatar!=null)
                                 Positioned(
                                   top: 95.h,
                                   left: 130.w,
-                                  child:   ClipRRect(
+                                  child: ClipRRect(
                                     borderRadius: BorderRadius.circular(40.r),
                                     child: Image.network(
-                                     AppConstant.baseImage+ProfileCubit.get(context).
+                                     AppConstant.baseImage+
+                                         ProfileCubit.get(context).
                                       driverProfileModel!.driver!.user!.avatar!,
                                       width: 90.w,
                                       fit: BoxFit.cover,
@@ -192,8 +208,7 @@ class EditProfileScreen extends StatelessWidget {
                                     ),
                                   )
                                 ),
-                              if(profileCubit.image!=null ||
-                                  ProfileCubit.get(context).driverProfileModel==null)
+                              if(!driver)
                               Positioned(
                                 top: 95.h,
                                 left: 130.w,
@@ -340,9 +355,9 @@ class EditProfileScreen extends StatelessWidget {
                               state is LoadingUpdateProfileState ||
                                       state is LoadingUpdateProfileDriverState
                                   ? Center(
-                                      child: CircularProgressIndicator(
-                                      color: color.primaryColor,
-                                    ))
+                                      child: CircularProgressIndicator.adaptive(
+                                          valueColor: AlwaysStoppedAnimation<Color>(color.primaryColor)
+                                      ))
                                   : BuildDefaultButton(
                                       text: locale.save,
                                       borderRadius: 10.r,

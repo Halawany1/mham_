@@ -66,7 +66,9 @@ class AllReviewsScreen extends StatelessWidget {
                     if(state is LoadingGetProductRatingState)
                       SizedBox(height: 20.h,),
                     if(state is LoadingGetProductRatingState)
-                      Center(child: CircularProgressIndicator()),
+                      Center(child: CircularProgressIndicator.adaptive(
+                          valueColor: AlwaysStoppedAnimation<Color>(color.primaryColor)
+                      )),
                     if(cubit.productRating.isEmpty)
                       Center(child: Text(locale.noReviews,
                         style: font.bodyMedium,))

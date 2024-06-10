@@ -6,6 +6,7 @@ class ApiConstant{
   static const String login='/user/login';
   static  String deleteUser(int id)=>'/user/$id';
   static const String loginDriver='/auth/login';
+  static const String transactions='/transactions';
   static const String profile='/user/profile';
   static const String profileDriver='/drivers/me';
   static const String notifications='/notifications';

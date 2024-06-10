@@ -95,8 +95,8 @@ class BuildAddRate extends StatelessWidget {
             children: [
               state is LoadingAddRateState
                   ? Center(
-                  child: CircularProgressIndicator(
-                    color: color.primaryColor,
+                  child: CircularProgressIndicator.adaptive(
+                      valueColor: AlwaysStoppedAnimation<Color>(color.primaryColor)
                   ))
                   : BuildDefaultButton(
                   text: locale.addRate,

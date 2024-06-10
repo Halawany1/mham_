@@ -38,10 +38,25 @@ class BuildCartCardProduct extends StatelessWidget {
           textDirection: TextDirection.ltr,
           child: Stack(
             children: [
+              if(cubit.cartModel!.cart!.cartProducts![index].product!
+                  .productsImg!=null)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12.r),
+                child: Image.network(
+                  AppConstant.baseImage+
+                      cubit.cartModel!.cart!.cartProducts![index].product!
+                      .productsImg!,
+                  height: 100.h,
+                  width: 100.w,
+                  fit: BoxFit.fill,
+                ),
+              ),
+              if(cubit.cartModel!.cart!.cartProducts![index].product!
+                  .productsImg==null)
               ClipRRect(
                 borderRadius: BorderRadius.circular(12.r),
                 child: Image.asset(
-                  'assets/images/product.png',
+                  'assets/images/logo.png',
                   height: 100.h,
                   width: 100.w,
                   fit: BoxFit.cover,

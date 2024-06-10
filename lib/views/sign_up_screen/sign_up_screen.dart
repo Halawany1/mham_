@@ -61,6 +61,7 @@ void clearAllData() {
         if(client){
           if (state is SuccessRegisterUserState) {
             clearAllData();
+            LayoutCubit.get(context).changeIndex(0);
             CacheHelper.saveData(
                 key: AppConstant.token,
                 value: cubit.userModel!.token);
@@ -75,6 +76,7 @@ void clearAllData() {
           }
         }else{
           if (state is SuccessRegisterUserState) {
+
             clearAllData();
            // HomeCubit.get(context).getNotification();
             showMessageResponse(message: 'your account requires approval from our admin team',
@@ -267,7 +269,9 @@ void clearAllData() {
                           height: 35.h,
                         ),
                         state is LoadingRegisterUserState
-                            ? Center(child: CircularProgressIndicator(color: color.primaryColor,))
+                            ? Center(child: CircularProgressIndicator.adaptive(
+                            valueColor: AlwaysStoppedAnimation<Color>(color.primaryColor)
+                        ))
                             : BuildDefaultButton(
                           colorText: color.cardColor,
                           backgorundColor: color.primaryColor,

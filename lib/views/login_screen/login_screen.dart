@@ -49,6 +49,7 @@ class LoginScreen extends StatelessWidget {
         if(client){
           if (state is SuccessLoginUserState) {
             clearAllData();
+            LayoutCubit.get(context).changeIndex(0);
             CacheHelper.saveData(
                 key: AppConstant.token, value: cubit.userModel!.token);
             Navigator.pushAndRemoveUntil(context,
@@ -66,7 +67,7 @@ class LoginScreen extends StatelessWidget {
             clearAllData();
             CacheHelper.saveData(
                 key: AppConstant.token,
-                value: cubit.driverModel!.token);
+                value: cubit.driverModel!.refreshToken);
             CacheHelper.saveData(key: AppConstant.driver,
                 value: true);
             Navigator.pushAndRemoveUntil(context,
@@ -161,9 +162,9 @@ class LoginScreen extends StatelessWidget {
                       ),
                       state is LoadingLoginUserState
                           ? Center(
-                              child: CircularProgressIndicator(
-                              color: color.primaryColor,
-                            ))
+                              child: CircularProgressIndicator.adaptive(
+                                  valueColor: AlwaysStoppedAnimation<Color>(color.primaryColor)
+                              ))
                           : BuildDefaultButton(
                         colorText: color.cardColor,
                         backgorundColor: color.primaryColor,

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -8,12 +9,15 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:math' show cos, sqrt, asin;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+
+
+
 class MapScreen extends StatefulWidget {
   final double lat;
   final double lng;
   final String link;
 
-  MapScreen(this.lat, this.lng, this.link);
+  MapScreen(this.lat, this.lng,this.link);
 
   @override
   State<MapScreen> createState() => _NavigationScreenState();
@@ -31,8 +35,10 @@ class _NavigationScreenState extends State<MapScreen> {
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
     getNavigation();
+    addMarker();
   }
 
   @override
@@ -43,21 +49,19 @@ class _NavigationScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var font = Theme.of(context).textTheme;
-    var color = Theme.of(context);
-    var locale = AppLocalizations.of(context);
+    var font=Theme.of(context).textTheme;
+    var color=Theme.of(context);
+    var locale=AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(Icons.arrow_back, color: color.primaryColor),
-        ),
-        title: Text(locale.customerLocation, style: font.bodyMedium),
+        leading: Icon(Icons.arrow_back,color: color.primaryColor,),
+        title: Text('Trader Location',style:font.bodyMedium ,),
       ),
-      body: sourcePosition == null || destinationPosition == null
-          ? Center(child: CircularProgressIndicator())
+      body: sourcePosition == null||
+          destinationPosition == null
+          ? Center(child: CircularProgressIndicator.adaptive(
+          valueColor: AlwaysStoppedAnimation<Color>(color.primaryColor)
+      ))
           : Stack(
         children: [
           GoogleMap(
@@ -76,26 +80,25 @@ class _NavigationScreenState extends State<MapScreen> {
             },
           ),
           Positioned(
-            bottom: 10,
-            right: 10,
-            child: Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: Colors.blue),
-              child: Center(
-                child: IconButton(
-                  icon: Icon(
-                    Icons.navigation_outlined,
-                    color: Colors.white,
+              bottom: 10,
+              right: 10,
+              child: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle, color: Colors.blue),
+                child: Center(
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.navigation_outlined,
+                      color: Colors.white,
+                    ),
+                    onPressed: () async {
+                      await launchUrl(Uri.parse(widget.link));
+                    },
                   ),
-                  onPressed: () async {
-                    await launchUrl(Uri.parse(widget.link));
-                  },
                 ),
-              ),
-            ),
-          ),
+              ))
         ],
       ),
     );
@@ -124,45 +127,37 @@ class _NavigationScreenState extends State<MapScreen> {
     }
     if (_permissionGranted == loc.PermissionStatus.granted) {
       _currentPosition = await location.getLocation();
-      curLocation = LatLng(_currentPosition!.latitude!, _currentPosition!.longitude!);
-
-      setState(() {
-        sourcePosition = Marker(
-          markerId: MarkerId('source'),
-          position: curLocation,
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-        );
-        destinationPosition = Marker(
-          markerId: MarkerId('destination'),
-          position: LatLng(widget.lat, widget.lng),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
-        );
-      });
-
-      locationSubscription = location.onLocationChanged.listen((LocationData currentLocation) {
-        controller?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-          target: LatLng(currentLocation.latitude!, currentLocation.longitude!),
-          zoom: 16,
-        )));
-        if (mounted) {
-          controller?.showMarkerInfoWindow(MarkerId(sourcePosition!.markerId.value));
-          setState(() {
-            curLocation = LatLng(currentLocation.latitude!, currentLocation.longitude!);
-            sourcePosition = Marker(
-              markerId: MarkerId(currentLocation.toString()),
-              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-              position: LatLng(currentLocation.latitude!, currentLocation.longitude!),
-              infoWindow: InfoWindow(
-                title: '${double.parse((getDistance(LatLng(widget.lat, widget.lng)).toStringAsFixed(2)))} km',
-              ),
-              onTap: () {
-                //print('market tapped');
-              },
-            );
+      curLocation =
+          LatLng(_currentPosition!.latitude!, _currentPosition!.longitude!);
+      locationSubscription =
+          location.onLocationChanged.listen((LocationData currentLocation) {
+            controller?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+              target: LatLng(currentLocation.latitude!, currentLocation.longitude!),
+              zoom: 16,
+            )));
+            if (mounted) {
+              controller
+                  ?.showMarkerInfoWindow(MarkerId(sourcePosition!.markerId.value));
+              setState(() {
+                curLocation =
+                    LatLng(currentLocation.latitude!, currentLocation.longitude!);
+                sourcePosition = Marker(
+                  markerId: MarkerId(currentLocation.toString()),
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueBlue),
+                  position:
+                  LatLng(currentLocation.latitude!, currentLocation.longitude!),
+                  infoWindow: InfoWindow(
+                      title:
+                      '${double.parse((getDistance(LatLng(widget.lat, widget.lng)).toStringAsFixed(2)))} km'),
+                  onTap: () {
+                    //print('market tapped');
+                  },
+                );
+              });
+              getDirections(LatLng(widget.lat, widget.lng));
+            }
           });
-          getDirections(LatLng(widget.lat, widget.lng));
-        }
-      });
     }
   }
 
@@ -209,5 +204,20 @@ class _NavigationScreenState extends State<MapScreen> {
   double getDistance(LatLng destposition) {
     return calculateDistance(curLocation.latitude, curLocation.longitude,
         destposition.latitude, destposition.longitude);
+  }
+
+  addMarker() {
+    setState(() {
+      sourcePosition = Marker(
+        markerId: MarkerId('source'),
+        position: curLocation,
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+      );
+      destinationPosition = Marker(
+        markerId: MarkerId('destination'),
+        position: LatLng(widget.lat, widget.lng),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
+      );
+    });
   }
 }

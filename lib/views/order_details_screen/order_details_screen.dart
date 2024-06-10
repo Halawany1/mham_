@@ -45,83 +45,112 @@ class OrderDetailsScreen extends StatelessWidget {
     var cubit = HomeCubit.get(context);
     List<StepperData> stepperData = [
       StepperData(
-          title: StepperText(locale.ordered, textStyle: font.bodyMedium),
+          title: StepperText(locale.ordered,
+              textStyle: font.bodyMedium),
           subtitle: StepperText(
             locale.orderPlaced +
-                Helper.trackingTimeFormat(
-                    cubit.allOrders[currentIndex].createdAt!),
+                Helper.trackingTimeFormat(cubit
+                    .allOrders[currentIndex]
+                    .createdAt!),
             textStyle: font.bodyMedium!.copyWith(
-                fontSize: 12.sp, color: color.primaryColor.withOpacity(0.7)),
+                fontSize: 12.sp,
+                color: color.primaryColor
+                    .withOpacity(0.7)),
           ),
           iconWidget: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 color: color.backgroundColor,
-                borderRadius: BorderRadius.all(Radius.circular(15.r))),
+                borderRadius: BorderRadius.all(
+                    Radius.circular(15.r))),
             child: Text('1',
-                style: font.bodyMedium!.copyWith(color: ColorConstant.brown)),
+                style: font.bodyMedium!.copyWith(
+                    color: ColorConstant.brown)),
           )),
       StepperData(
-          title: StepperText(locale.processing, textStyle: font.bodyMedium),
-          subtitle: cubit.allOrders[currentIndex].deliveredAt != null &&
-                  cubit.allOrders[currentIndex].processingAt != null
+          title: StepperText(locale.processing,
+              textStyle: font.bodyMedium),
+          subtitle: cubit.allOrders[currentIndex].deliveredAt !=
+              null &&
+              cubit.allOrders[currentIndex]
+                  .processingAt !=
+                  null
               ? StepperText(
-                  locale.orderPrepared +
-                      Helper.trackingTimeFormat(
-                          cubit.allOrders[currentIndex].processingAt!),
-                  textStyle: font.bodySmall!.copyWith(color: Colors.grey))
+              locale.orderPrepared +
+                  Helper.trackingTimeFormat(
+                      cubit
+                          .allOrders[currentIndex]
+                          .processingAt!),
+              textStyle: font.bodySmall!
+                  .copyWith(color: Colors.grey))
               : null,
           iconWidget: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                color: cubit.allOrders[currentIndex].deliveredAt != null ||
-                        cubit.allOrders[currentIndex].processingAt != null
+                color: cubit.allOrders[currentIndex].deliveredAt !=
+                    null ||
+                    cubit
+                        .allOrders[currentIndex]
+                        .processingAt !=
+                        null
                     ? color.backgroundColor
                     : Colors.grey,
-                borderRadius: BorderRadius.all(Radius.circular(15.r))),
+                borderRadius: BorderRadius.all(
+                    Radius.circular(15.r))),
             child: Text('2',
                 style: font.bodyMedium!.copyWith(
-                    color: cubit.allOrders[currentIndex].deliveredAt != null
-                        ? ColorConstant.brown
-                        : Colors.grey)),
+                    color:ColorConstant.brown)),
           )),
       StepperData(
-          title: StepperText(locale.shipped, textStyle: font.bodyMedium),
-          subtitle: cubit.allOrders[currentIndex].deliveredAt != null &&
-                  cubit.allOrders[currentIndex].shippedAt != null
+          title: StepperText(locale.shipped,
+              textStyle: font.bodyMedium),
+          subtitle: cubit.allOrders[currentIndex].deliveredAt !=
+              null &&
+              cubit.allOrders[currentIndex]
+                  .shippedAt !=
+                  null
               ? StepperText(
-                  textStyle: font.bodySmall!.copyWith(color: Colors.grey),
-                  locale.deliverItem +
-                      Helper.trackingTimeFormat(
-                          cubit.allOrders[currentIndex].shippedAt!))
+              textStyle: font.bodySmall!
+                  .copyWith(color: Colors.grey),
+              locale.deliverItem +
+                  Helper.trackingTimeFormat(
+                      cubit
+                          .allOrders[currentIndex]
+                          .shippedAt!))
               : null,
           iconWidget: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                color: cubit.allOrders[currentIndex].deliveredAt != null ||
-                        cubit.allOrders[currentIndex].shippedAt != null
+                color: cubit.allOrders[currentIndex].deliveredAt !=
+                    null ||
+                    cubit.allOrders[currentIndex].shippedAt !=
+                        null
                     ? color.backgroundColor
                     : Colors.grey,
-                borderRadius: BorderRadius.all(Radius.circular(15.r))),
+                borderRadius: BorderRadius.all(
+                    Radius.circular(15.r))),
             child: Text('3',
                 style: font.bodyMedium!.copyWith(
-                    color: cubit.allOrders[currentIndex].deliveredAt != null
-                        ? ColorConstant.brown
-                        : Colors.grey)),
+                    color: ColorConstant.brown)),
           )),
       StepperData(
         iconWidget: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-              border: cubit.allOrders[currentIndex].deliveredAt != null
-                  ? Border.all(color: color.primaryColor)
+              border: cubit.allOrders[currentIndex].deliveredAt !=
+                  null
+                  ? Border.all(
+                  color: color.primaryColor)
                   : null,
-              color: cubit.allOrders[currentIndex].deliveredAt != null
+              color: cubit.allOrders[currentIndex].deliveredAt !=
+                  null
                   ? color.backgroundColor
                   : Colors.grey,
-              borderRadius: BorderRadius.all(Radius.circular(15.r))),
+              borderRadius: BorderRadius.all(
+                  Radius.circular(15.r))),
         ),
-        title: StepperText(locale.delivered, textStyle: font.bodyMedium),
+        title: StepperText(locale.delivered,
+            textStyle: font.bodyMedium),
       ),
     ];
     return WillPopScope(
@@ -192,11 +221,12 @@ class OrderDetailsScreen extends StatelessWidget {
                         height: 20.h,
                       ),
                       BuildTrackingOrder(
-                          activeProcess:cubit.allOrders[currentIndex]
-                              .processingAt!=null?2:
+                          activeProcess: cubit.allOrders[currentIndex]
+                              .deliveredAt != null ? 4 :
                           cubit.allOrders[currentIndex]
-                              .shippedAt!=null?3:cubit.allOrders[currentIndex].createdAt!=null?
-                          1:0,
+                              .shippedAt != null ? 3 : cubit.allOrders[currentIndex]
+                              .processingAt != null ? 2 : cubit.allOrders[currentIndex]
+                              .createdAt != null ? 1:0,
                           createdAt: cubit.allOrders[currentIndex].createdAt!,
                           orderId: cubit.allOrders[currentIndex].id!,
                           stepperData: stepperData,
@@ -279,9 +309,9 @@ class OrderDetailsScreen extends StatelessWidget {
                       ),
                       state is LoadingCancelOrderState
                           ? Center(
-                              child: CircularProgressIndicator(
-                              color: color.primaryColor,
-                            ))
+                              child: CircularProgressIndicator.adaptive(
+                                  valueColor: AlwaysStoppedAnimation<Color>(color.primaryColor)
+                              ))
                           : BuildDefaultButton(
                               text: locale.cancelOrder,
                               width: 120.w,

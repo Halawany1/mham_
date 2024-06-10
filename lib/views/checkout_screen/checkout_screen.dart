@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mham/controller/cart_cubit/cart_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/components/snak_bar_component.dart';
 import 'package:mham/core/components/total_card_price_component.dart';
+import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/color_constant.dart';
 import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/helper/helper.dart';
+import 'package:mham/core/network/local.dart';
 import 'package:mham/layout/layout_screen.dart';
 import 'package:mham/models/cart_model.dart';
 import 'package:mham/views/checkout_screen/widget/credit_card_info.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/views/checkout_screen/widget/info_card.dart';
 import 'package:mham/views/driver/home_screen/widget/quantity_container.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 
 var addressController = TextEditingController();
 var locationController = TextEditingController();
@@ -27,19 +30,23 @@ var cvvController = TextEditingController();
 var formKey = GlobalKey<FormState>();
 
 class CheckoutScreen extends StatelessWidget {
-  const CheckoutScreen({super.key, this.products, this.oneProductName,
-    this.price,
-    this.productsId,
-    this.oneProduct=false,
-    required this.totalPrice
-  });
+  const CheckoutScreen(
+      {super.key,
+      this.products,
+      this.oneProductName,
+      this.price,
+      this.productsId,
+      this.image,
+      this.oneProduct = false,
+      required this.totalPrice});
 
   final List<CartProducts>? products;
-  final String ?oneProductName;
-  final double ?price;
+  final String? oneProductName;
+  final double? price;
   final double totalPrice;
   final int? productsId;
   final bool oneProduct;
+  final String? image;
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +61,7 @@ class CheckoutScreen extends StatelessWidget {
       cvvController.clear();
     }
 
-    var font = Theme
-        .of(context)
-        .textTheme;
+    var font = Theme.of(context).textTheme;
     var color = Theme.of(context);
     final locale = AppLocalizations.of(context);
     return WillPopScope(
@@ -66,15 +71,16 @@ class CheckoutScreen extends StatelessWidget {
         return true;
       },
       child: BlocConsumer<HomeCubit, HomeState>(
-        listener: (context, state) {
-          if(state is SuccessCreateOrderState){
+        listener: (context, state) async {
+          if (state is SuccessCreateOrderState) {
             clearAllData();
-            Helper.pushReplacement(context: context, widget:
-            LayoutScreen());
+            await launchUrl(Uri.parse(state.data));
+            CartCubit.get(context)
+                .getCart(token: CacheHelper.getData(key: AppConstant.token));
           }
-          if(state is ErrorCreateOrderState){
-            showMessageResponse(message: state.error,
-                context: context, success: false);
+          if (state is ErrorCreateOrderState) {
+            showMessageResponse(
+                message: state.error, context: context, success: false);
           }
         },
         builder: (context, state) {
@@ -142,47 +148,78 @@ class CheckoutScreen extends StatelessWidget {
                                     style: font.bodyMedium,
                                   ),
                                   Text(
-                                    '(${ products != null
-                                        ? products!.length
-                                        : 1} ${locale.items})',
+                                    '(${products != null ? products!.length : 1} ${locale.items})',
                                     style: font.bodyMedium!.copyWith(
-                                        color: color.primaryColor.withOpacity(
-                                            0.5),
+                                        color:
+                                            color.primaryColor.withOpacity(0.5),
                                         fontSize: 12.sp),
                                   ),
                                 ],
                               ),
                               ListView.builder(
-                                itemCount: products != null ?
-                                products!.length : 1,
+                                itemCount:
+                                    products != null ? products!.length : 1,
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
                                   return Row(
                                     children: [
-                                      Image.asset(
-                                        'assets/images/product.png',
-                                        width: 80.h,
-                                        height: 80.h,
-                                      ),
+                                      if (image != null && oneProduct)
+                                        Image.network(
+                                          AppConstant.baseImage + image!,
+                                          width: 80.h,
+                                          height: 80.h,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      if (image == null && oneProduct)
+                                        Image.asset(
+                                          'assets/images/logo.png',
+                                          width: 80.h,
+                                          height: 80.h,
+                                        ),
+                                      if (products != null &&
+                                          products![index]
+                                                  .product!
+                                                  .productsImg !=
+                                              null &&
+                                          !oneProduct)
+                                        Image.network(
+                                          AppConstant.baseImage +
+                                              products![index]
+                                                  .product!
+                                                  .productsImg!,
+                                          width: 80.h,
+                                          height: 80.h,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      if (products != null &&
+                                          products![index]
+                                                  .product!
+                                                  .productsImg ==
+                                              null &&
+                                          !oneProduct)
+                                        Image.asset(
+                                          'assets/images/logo.png',
+                                          width: 80.h,
+                                          height: 80.h,
+                                        ),
                                       SizedBox(
                                         width: 5.w,
                                       ),
                                       Column(
-                                        mainAxisAlignment: MainAxisAlignment
-                                            .start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(
                                             width: 150.w,
                                             child: Text(
                                               overflow: TextOverflow.ellipsis,
                                               products != null
-                                                  ?
-                                              products![index]
-                                                  .product!
-                                                  .productsName!
+                                                  ? products![index]
+                                                      .product!
+                                                      .productsName!
                                                   : oneProductName!,
                                               style: font.bodyMedium!.copyWith(
                                                 fontSize: 15.sp,
@@ -192,26 +229,34 @@ class CheckoutScreen extends StatelessWidget {
                                           Row(
                                             children: [
                                               Text(
-                                                products != null ?
-                                                products![index].product!.price!.
-                                                toString()+' '+ locale.kd :
-                                                price.toString() +
-                                                    ' ' + locale.kd,
-                                                style: font.bodyMedium!.copyWith(
-                                                    fontSize: 16.sp,
-                                                    fontWeight: FontWeight.w600,
-                                                    color:
-                                                    ColorConstant.backgroundAuth),
+                                                products != null
+                                                    ? products![index]
+                                                            .product!
+                                                            .price!
+                                                            .toString() +
+                                                        ' ' +
+                                                        locale.kd
+                                                    : price.toString() +
+                                                        ' ' +
+                                                        locale.kd,
+                                                style: font.bodyMedium!
+                                                    .copyWith(
+                                                        fontSize: 16.sp,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: ColorConstant
+                                                            .backgroundAuth),
                                               ),
-                                              SizedBox(width: 20.w,),
+                                              SizedBox(
+                                                width: 20.w,
+                                              ),
                                               BuildQuantityContainer(
                                                   quantity: products != null
-                                                      ?
-                                                  products![index]
-                                                      .quantity!:1)
+                                                      ? products![index]
+                                                          .quantity!
+                                                      : 1)
                                             ],
                                           ),
-
                                         ],
                                       )
                                     ],
@@ -237,39 +282,41 @@ class CheckoutScreen extends StatelessWidget {
                         //   height: 15.h,
                         // ),
                         BuildTotalCardPrice(
-                            lenghtItems: products != null ?
-                            products!.length : 1,
+                            shippingFee: 5,
+                            lenghtItems:
+                                products != null ? products!.length : 1,
                             totalPrice: totalPrice,
-                            totalPriceWithShippingFee: totalPrice + 10),
+                            totalPriceWithShippingFee: totalPrice + 5),
                         SizedBox(
                           height: 20.h,
                         ),
-                       state is LoadingCreateOrderState?
-                        Center(child: CircularProgressIndicator(color: color.primaryColor,))
-                        :BuildDefaultButton(
-                            text: locale.placeOrder,
-                            borderRadius: 10.r,
-                            onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                if(!oneProduct){
-                                  cubit.createOrder(
-                                    address: addressController.text,
-                                    anotherMobile: mobileController.text,
-                                    location: locationController.text,
-                                  );
-                                }else{
-                                  cubit.createOrderForOneProduct(
-                                      address: addressController.text,
-                                      anotherMobile: mobileController.text,
-                                      location: locationController.text,
-                                      id: productsId!);
-                                }
-                              }
-
-
-                            },
-                            backgorundColor: color.backgroundColor,
-                            colorText: ColorConstant.brown),
+                        state is LoadingCreateOrderState
+                            ? Center(
+                                child: CircularProgressIndicator.adaptive(
+                                    valueColor: AlwaysStoppedAnimation<Color>(color.primaryColor)
+                                ))
+                            : BuildDefaultButton(
+                                text: locale.placeOrder,
+                                borderRadius: 10.r,
+                                onPressed: () {
+                                  if (formKey.currentState!.validate()) {
+                                    if (!oneProduct) {
+                                      cubit.createOrder(
+                                        address: addressController.text,
+                                        anotherMobile: mobileController.text,
+                                        location: locationController.text,
+                                      );
+                                    } else {
+                                      cubit.createOrderForOneProduct(
+                                          address: addressController.text,
+                                          anotherMobile: mobileController.text,
+                                          location: locationController.text,
+                                          id: productsId!);
+                                    }
+                                  }
+                                },
+                                backgorundColor: color.backgroundColor,
+                                colorText: ColorConstant.brown),
                         SizedBox(
                           height: 20.h,
                         ),

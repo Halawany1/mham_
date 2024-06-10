@@ -18,6 +18,7 @@ import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/views/edit_profile_screen/edit_profile_screen.dart';
 import 'package:mham/views/favourite_screen/favourite_screen.dart';
+import 'package:mham/views/get_start_screen/get_start_screen.dart';
 import 'package:mham/views/notification_screen/notification_screen.dart';
 import 'package:mham/views/profile_screen/widget/card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -63,7 +64,9 @@ class ProfileScreen extends StatelessWidget {
         var cubit = context.read<ProfileCubit>();
         return Scaffold(
 
-          body: cubit.profileModel != null || state is LoadingDeleteAccount
+          body:CacheHelper.getData(key: AppConstant.token)==null?
+          GetStartScreen():
+          cubit.profileModel != null || state is LoadingDeleteAccount
               ? SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: SafeArea(

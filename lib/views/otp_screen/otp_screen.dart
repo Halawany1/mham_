@@ -151,7 +151,9 @@ class OtpScreen extends StatelessWidget {
                           ],),
                       SizedBox(height: 40.h,),
                     state is LoadingGetOtpState?
-                      Center(child: CircularProgressIndicator(color: color.primaryColor,))
+                      Center(child: CircularProgressIndicator.adaptive(
+                          valueColor: AlwaysStoppedAnimation<Color>(color.primaryColor)
+                      ))
                       :BuildDefaultButton(
                           text: cubit.currentIndexOtpVerification == 0 ?
                           locale.getOtp : locale.verify,

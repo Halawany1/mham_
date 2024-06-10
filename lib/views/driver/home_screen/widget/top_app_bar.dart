@@ -6,7 +6,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
 import 'package:mham/controller/order_driver_cubit/order_driver_cubit.dart';
+import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/helper/helper.dart';
+import 'package:mham/core/network/local.dart';
 import 'package:mham/views/notification_screen/notification_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -43,7 +45,7 @@ return AppBar(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('${locale.hi}',style: font.bodyLarge!.copyWith(
+        Text('${locale.hi}, ${CacheHelper.getData(key: AppConstant.driverName)}',style: font.bodyLarge!.copyWith(
             fontSize: 15.sp
         ),),
         Text(locale.niceToSeeYouAgain,style: font.bodySmall,),

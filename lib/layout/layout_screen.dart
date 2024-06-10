@@ -38,13 +38,7 @@ class LayoutScreen extends StatelessWidget {
                   margin: EdgeInsets.all(12.h),
                   currentIndex: cubit.index,
                   onTap: (i) {
-                    if (CacheHelper.getData(key: AppConstant.token) != null) {
                       cubit.changeIndex(i);
-                    } else {
-                      if (i != 0) {
-                        Helper.push(context: context, widget: GetStartScreen());
-                      }
-                    }
                   },
                   items: [
                     SalomonBottomBarItem(

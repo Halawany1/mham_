@@ -7,8 +7,8 @@ import 'package:mham/core/components/driver/go_link_row_component.dart';
 import 'package:mham/core/helper/helper.dart';
 
 
-class BuildOrderDetailsTimeLine extends StatelessWidget {
-  const BuildOrderDetailsTimeLine({
+class BuildOrderDetailsReturnTimeLine extends StatelessWidget {
+  const BuildOrderDetailsReturnTimeLine({
     super.key,
     required this.lenght,
     required this.createdAt,
@@ -59,7 +59,7 @@ class BuildOrderDetailsTimeLine extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Divider(),
-                if(cubit.timeLineOrderModel!=null)
+                if(cubit.returnOrderModel!=null||cubit.returnOrderModel!=null)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -76,12 +76,29 @@ class BuildOrderDetailsTimeLine extends StatelessWidget {
                         height: 3.h,
                       ),
                       Text(
-                        cubit.timeLineOrderModel!.activeOrder!.customer!.userName!
-                        ,
+                        cubit.returnOrderModel!.activeOrder!.customer!.userName!,
                         style: font.bodyMedium!.copyWith(
                           fontSize: 13.sp,
 
                         ),
+                      ),
+                      Container(
+                        width: 220.w,
+                        height: 1.h,
+                        color: color.primaryColor.withOpacity(0.2),
+                      ),
+                      SizedBox(
+                        height: 3.h,
+                      ),
+                      BuildGoToLinkRow(
+                        assign: true,
+                        link: cubit
+                            .returnOrderModel!
+                            .activeOrder!
+                            .location!,
+                      ),
+                      SizedBox(
+                        height: 3.h,
                       ),
                       SizedBox(
                         height: 5.h,
@@ -104,7 +121,7 @@ class BuildOrderDetailsTimeLine extends StatelessWidget {
                         height: 3.h,
                       ),
                       Text(
-                        cubit.timeLineOrderModel!.activeOrder!.customer!.mobile!,
+                        cubit.returnOrderModel!.activeOrder!.customer!.mobile!,
                         style: font.bodyMedium!.copyWith(
                           fontSize: 13.sp,
                         ),
@@ -130,29 +147,29 @@ class BuildOrderDetailsTimeLine extends StatelessWidget {
                         height: 3.h,
                       ),
                       Text(
-                        cubit.timeLineOrderModel!.activeOrder!.customer!.address??"",
+                        cubit.returnOrderModel!.activeOrder!.address??'',
                         style: font.bodyMedium!.copyWith(
                           fontSize: 13.sp,
                         ),
                       ),
 
 
-                        if ( cubit.timeLineOrderModel!.activeOrder!.status=='Delivered'
-                            || cubit.timeLineOrderModel!.activeOrder!.status=='Shipped' )
-                          Container(
-                            width: 220.w,
-                            height: 1.h,
-                            color: color.primaryColor.withOpacity(0.2),
-                          ),
-                      if ( cubit.timeLineOrderModel!.activeOrder!.status=='Delivered'
-                          || cubit.timeLineOrderModel!.activeOrder!.status=='Shipped' )
+                      if ( cubit.returnOrderModel!.activeOrder!.status=='Delivered'
+                          || cubit.returnOrderModel!.activeOrder!.status=='Shipped' )
+                        Container(
+                          width: 220.w,
+                          height: 1.h,
+                          color: color.primaryColor.withOpacity(0.2),
+                        ),
+                      if ( cubit.returnOrderModel!.activeOrder!.status=='Delivered'
+                          || cubit.returnOrderModel!.activeOrder!.status=='Shipped' )
                         SizedBox(
                           height: 8.h,
                         ),
-                      if ( cubit.timeLineOrderModel!.activeOrder!.status=='Delivered'
-                          || cubit.timeLineOrderModel!.activeOrder!.status=='Shipped' )
+                      if ( cubit.returnOrderModel!.activeOrder!.status=='Delivered'
+                          || cubit.returnOrderModel!.activeOrder!.status=='Shipped' )
                         BuildGoToLinkRow(link:
-                        cubit.timeLineOrderModel!.activeOrder!.location! ,),
+                        'cubit.returnOrderModel!.activeOrder!.location!' ,),
                       SizedBox(
                         height: 5.h,
                       ),
@@ -161,27 +178,27 @@ class BuildOrderDetailsTimeLine extends StatelessWidget {
                         height: 1.h,
                         color: color.primaryColor.withOpacity(0.2),
                       ),
-                    if(cubit.returnOrderModel!=null)
-                    Column(children: [
-                      SizedBox(
-                        height: 3.h,
-                      ),
-                      Text(
-                        locale.orderIsReturn,
-                        style: font.bodyMedium!.copyWith(
-                            fontSize: 13.sp,
-                            color: color.backgroundColor
-                        ),
-                      ),
-                      SizedBox(
-                        height: 3.h,
-                      ),
-                      Container(
-                        width: 220.w,
-                        height: 1.h,
-                        color: color.primaryColor.withOpacity(0.2),
-                      ),
-                    ],)
+                      if(cubit.returnOrderModel!=null)
+                        Column(children: [
+                          SizedBox(
+                            height: 3.h,
+                          ),
+                          Text(
+                            locale.orderIsReturn,
+                            style: font.bodyMedium!.copyWith(
+                                fontSize: 13.sp,
+                                color: color.backgroundColor
+                            ),
+                          ),
+                          SizedBox(
+                            height: 3.h,
+                          ),
+                          Container(
+                            width: 220.w,
+                            height: 1.h,
+                            color: color.primaryColor.withOpacity(0.2),
+                          ),
+                        ],)
                     ],),
 
                 SizedBox(

@@ -175,7 +175,11 @@ class ErrorGetReturnsProductsState extends HomeState {}
 
 class LoadingCreateOrderState extends HomeState {}
 
-class SuccessCreateOrderState extends HomeState {}
+class SuccessCreateOrderState extends HomeState {
+  String data;
+
+  SuccessCreateOrderState(this.data);
+}
 
 class ErrorCreateOrderState extends HomeState {
   final String error;

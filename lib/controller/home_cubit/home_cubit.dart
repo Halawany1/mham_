@@ -44,7 +44,7 @@ class HomeCubit extends Cubit<HomeState> {
     int? busniessId,
     String? search,
   }) async {
-    print(carId);
+
     if (await Helper.hasConnection()) {
       if (page == 1) {
         homeProducts.clear();
@@ -83,11 +83,11 @@ class HomeCubit extends Cubit<HomeState> {
         if (homeProducts.isEmpty) {
           productModel!.products!.forEach((element) {
             homeProducts.add(element);
+            allProducts.add(element);
           });
         }
 
         productModel!.products!.forEach((element) {
-          allProducts.add(element);
           if (element.inFavourite!) {
             favoriteProducts.add(element);
           }
@@ -95,6 +95,7 @@ class HomeCubit extends Cubit<HomeState> {
 
         emit(SuccessGetAllProduct());
       }).catchError((error) {
+
         emit(ErrorGetAllProduct(error.toString()));
       });
     } else {
@@ -654,18 +655,21 @@ class HomeCubit extends Cubit<HomeState> {
 }){
     emit(LoadingCreateOrderState());
     DioHelper.postData(
-        url: '/${ApiConstant.updateOrder}',
+        url: ApiConstant.updateOrder,
       data: {
+          "redirectUrl": "google.com",
         "anotherMobile": anotherMobile,
         "address": address,
         "location": location
       },
       token: CacheHelper.getData(key: AppConstant.token),
     ).then((value) {
-      emit(SuccessCreateOrderState());
+      emit(SuccessCreateOrderState(value.data["transactionUrl"]));
       getAllOrders();
     }).catchError((error){
+      print(error);
     if(error is DioError){
+      print(error.response!.data);
       emit(ErrorCreateOrderState(error.response!.data['message'][0]));
     }else{
       emit(ErrorCreateOrderState(error.toString()));
@@ -687,7 +691,7 @@ class HomeCubit extends Cubit<HomeState> {
       },
       token: CacheHelper.getData(key: AppConstant.token),
     ).then((value) {
-      emit(SuccessCreateOrderState());
+      emit(SuccessCreateOrderState(value.data["transactionUrl"]));
       getAllOrders();
     }).catchError((error){
     if(error is DioError){

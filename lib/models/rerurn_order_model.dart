@@ -26,6 +26,8 @@ class ActiveOrder {
   String? processingAt;
   String? shippedAt;
   String? deliveredAt;
+  String? location;
+  String? address;
   String? cancelledAt;
   Customer? customer;
   UserOrder? userOrder;
@@ -36,8 +38,10 @@ class ActiveOrder {
   ActiveOrder.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userOrderId = json['userOrderId'];
+    address = json['address'];
     customerId = json['customerId'];
     driverId = json['driverId'];
+    location = json['location'];
     driverAssigned = json['driverAssigned'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
@@ -49,7 +53,7 @@ class ActiveOrder {
     deliveredAt = json['deliveredAt'];
     cancelledAt = json['cancelledAt'];
     customer = json['customer'] != null
-        ?  Customer.fromJson(json['customer'])
+        ? new Customer.fromJson(json['customer'])
         : null;
     userOrder = json['userOrder'] != null
         ?  UserOrder.fromJson(json['userOrder'])
@@ -86,14 +90,14 @@ class Customer {
     id = json['id'];
     userName = json['user_name'];
     mobile = json['mobile'];
-    password = json['password'];
-    countryId = json['country_id'];
-    role = json['role'];
-    avatar = json['avatar'];
-    email = json['email'];
-    address = json['address'];
-    createdAt = json['createdAt'];
-    deletedAt = json['deletedAt'];
+    // password = json['password'];
+    // countryId = json['country_id'];
+    // role = json['role'];
+    // avatar = json['avatar'];
+    // email = json['email'];
+    // address = json['address'];
+    // createdAt = json['createdAt'];
+    // deletedAt = json['deletedAt'];
     // verifyMobileOtp = json['verifyMobileOtp'];
     // verifyMobileOtpExp = json['verifyMobileOtpExp'];
     // resetPasswordOtp = json['resetPasswordOtp'];
@@ -374,6 +378,7 @@ class Trader {
     deletedAt = json['deletedAt'];
     status = json['status'];
     fcmToken = json['fcmToken'];
+    user = json['user'] != null ? new Customer.fromJson(json['user']) : null;
   }
 
 

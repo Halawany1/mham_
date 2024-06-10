@@ -4,9 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/core/components/laoding_animation_component.dart';
 import 'package:mham/core/components/snak_bar_component.dart';
+import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/image_constant.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/core/helper/helper.dart';
+import 'package:mham/core/network/local.dart';
+import 'package:mham/views/get_start_screen/get_start_screen.dart';
 import 'package:mham/views/order_details_screen/order_details_screen.dart';
 import 'package:mham/views/order_details_screen/widget/card_product_details.dart';
 import 'package:mham/views/order_screen/widget/empty_order.dart';
@@ -54,7 +57,8 @@ class OrderScreen extends StatelessWidget {
         var cubit = HomeCubit.get(context);
         return Scaffold(
           appBar: cubit.orderModel != null&&
-              cubit.allOrders.length > 0?
+              cubit.allOrders.length > 0&&
+              CacheHelper.getData(key: AppConstant.token)!=null?
               AppBar(
                 surfaceTintColor: Colors.transparent,
             title:  Text(
@@ -63,7 +67,9 @@ class OrderScreen extends StatelessWidget {
               font.bodyLarge!.copyWith(fontSize: 22.sp),
             ),
           ):null,
-            body: cubit.orderModel != null &&
+            body: CacheHelper.getData(key: AppConstant.token)==null?
+          GetStartScreen():
+            cubit.orderModel != null &&
                 state is! LoadingGetAllOrdersState
                 ? RefreshIndicator(
               color: color.backgroundColor,

@@ -29,77 +29,62 @@ void clearAllData() {
   confirmPasswordController.clear();
 
 }
-    return WillPopScope(
-      onWillPop: () async{
-        Helper.pop(context);
-        return true;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: ColorConstant.backgroundAuth,
-        leading: InkWell(
-            onTap: () {
-              Helper.pop(context);
-            },
-            child: Icon(Icons.arrow_back)),
-        ),
-        backgroundColor: ColorConstant.backgroundAuth,
-        body: SafeArea(
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.all(25.h),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    locale.signIn,
-                    style: font.bodyLarge,
-                  ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  Text(
-                    textAlign: TextAlign.center,
-                    locale.welcomeBackGetStart,
-                    style: font.bodyMedium,
-                  ),
-                  SizedBox(
-                    height: 40.h,
-                  ),
-                  BuildDefaultButton(text: locale.signIn,
-                      onPressed: () {
-                        clearAllData();
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) =>
-                              GetStartWithDriverOrCustomerScreen(signUp: false,),));
-                      },
-                      backgorundColor: ColorConstant.brown,
-                      colorText: ColorConstant.white),
-                  SizedBox(height: 20.h,),
-                  BuildDefaultButton(text:locale.signUp,
-                      onPressed: () {
-                        clearAllData();
-                        AuthenticationCubit.get(context).getCountries();
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => GetStartWithDriverOrCustomerScreen(signUp: true),));
-                      },
-                      withBorder: true,
-                      backgorundColor: ColorConstant.backgroundAuth,
-                      colorText: ColorConstant.brown),
-                  SizedBox(
-                    height: 90.h,
-                  ),
-                  Text(
-                    locale.orContinueWith,
-                    style: font.bodyMedium!.copyWith(fontSize: 12.sp),
-                  ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  const BuildThridPartyServices()
+    return Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(25.h),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  locale.signIn,
+                  style: font.bodyLarge,
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                Text(
+                  textAlign: TextAlign.center,
+                  locale.welcomeBackGetStart,
+                  style: font.bodyMedium,
+                ),
+                SizedBox(
+                  height: 40.h,
+                ),
+                BuildDefaultButton(text: locale.signIn,
+                    onPressed: () {
+                      clearAllData();
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) =>
+                            GetStartWithDriverOrCustomerScreen(signUp: false,),));
+                    },
+                    backgorundColor: ColorConstant.brown,
+                    colorText: ColorConstant.white),
+                SizedBox(height: 20.h,),
+                BuildDefaultButton(text:locale.signUp,
+                    onPressed: () {
+                      clearAllData();
+                      AuthenticationCubit.get(context).getCountries();
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => GetStartWithDriverOrCustomerScreen(signUp: true),));
+                    },
+                    withBorder: true,
+                    backgorundColor: ColorConstant.backgroundAuth,
+                    colorText: ColorConstant.brown),
+                SizedBox(
+                  height: 90.h,
+                ),
+                // Text(
+                //   locale.orContinueWith,
+                //   style: font.bodyMedium!.copyWith(fontSize: 12.sp),
+                // ),
+                // SizedBox(
+                //   height: 10.h,
+                // ),
+                // const BuildThridPartyServices()
 
-                ],
-              ),
+              ],
             ),
           ),
         ),

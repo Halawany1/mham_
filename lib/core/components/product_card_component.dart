@@ -90,7 +90,7 @@ class BuildProductCard extends StatelessWidget {
                     fit: BoxFit.fill,
                     width: 155.w,
                     height: 84.h,
-                    'assets/images/product.png')),
+                    'assets/images/logo.png')),
 
             Positioned(
                 top: 10.h,
@@ -262,6 +262,7 @@ class BuildProductCard extends StatelessWidget {
                         widget: CheckoutScreen(
                           productsId:id ,
                       oneProduct: true,
+                      image: image,
                       totalPrice:isOffer?
                       double.parse(offerPrice.toString()):
                       double.parse(price.toString()),

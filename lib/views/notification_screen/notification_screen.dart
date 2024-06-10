@@ -86,9 +86,9 @@ class NotificationScreen extends StatelessWidget {
                               ),
                             if (state is LoadingGetNotificationState)
                               Center(
-                                  child: CircularProgressIndicator(
-                                color: color.primaryColor,
-                              )),
+                                  child:CircularProgressIndicator.adaptive(
+                                      valueColor: AlwaysStoppedAnimation<Color>(color.primaryColor)
+                                  )),
                             if (state is LoadingGetNotificationState)
                               SizedBox(
                                 height: 25.h,
