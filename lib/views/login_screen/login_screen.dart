@@ -51,7 +51,10 @@ class LoginScreen extends StatelessWidget {
             clearAllData();
             LayoutCubit.get(context).changeIndex(0);
             CacheHelper.saveData(
-                key: AppConstant.token, value: cubit.userModel!.token);
+                key: AppConstant.token, value: cubit.userModel!.accessToken);
+            CacheHelper.saveData(
+                key: AppConstant.refreshToken,
+                value: cubit.userModel!.refreshToken);
             Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (context) =>
               const LayoutScreen())
@@ -67,7 +70,7 @@ class LoginScreen extends StatelessWidget {
             clearAllData();
             CacheHelper.saveData(
                 key: AppConstant.token,
-                value: cubit.driverModel!.refreshToken);
+                value: cubit.driverModel!.accessToken);
             CacheHelper.saveData(key: AppConstant.driver,
                 value: true);
             Navigator.pushAndRemoveUntil(context,

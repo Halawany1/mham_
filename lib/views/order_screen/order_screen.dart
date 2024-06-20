@@ -29,6 +29,7 @@ class OrderScreen extends StatelessWidget {
         .textTheme;
     final locale = AppLocalizations.of(context);
     var color = Theme.of(context);
+
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
         if (state is SuccessCancelOrderState) {
@@ -58,7 +59,7 @@ class OrderScreen extends StatelessWidget {
         return Scaffold(
           appBar: cubit.orderModel != null&&
               cubit.allOrders.length > 0&&
-              CacheHelper.getData(key: AppConstant.token)!=null?
+              CacheHelper.getData(key: AppConstant.token,token: true)!=null?
               AppBar(
                 surfaceTintColor: Colors.transparent,
             title:  Text(
@@ -67,7 +68,7 @@ class OrderScreen extends StatelessWidget {
               font.bodyLarge!.copyWith(fontSize: 22.sp),
             ),
           ):null,
-            body: CacheHelper.getData(key: AppConstant.token)==null?
+            body: CacheHelper.getData(key: AppConstant.token,token: true)==null?
           GetStartScreen():
             cubit.orderModel != null &&
                 state is! LoadingGetAllOrdersState

@@ -69,7 +69,7 @@ class HomeCubit extends Cubit<HomeState> {
           if (search != null) 'search': search,
           'pageSize': pageSize,
         },
-        token: CacheHelper.getData(key: AppConstant.token),
+        token: CacheHelper.getData(key: AppConstant.token,token: true),
       ).then((value) {
         favoriteProducts.clear();
         if (search != null || search == '') {
@@ -269,7 +269,7 @@ class HomeCubit extends Cubit<HomeState> {
       DioHelper.postData(
         url: ApiConstant.addScrap,
         data: {'description': description},
-        token: CacheHelper.getData(key: AppConstant.token),
+        token: CacheHelper.getData(key: AppConstant.token,token: true),
       ).then((value) {
         requestScrapModel = RequestScrapModel.fromJson(value.data);
         emit(SuccessAddScrapState(requestScrapModel!));
@@ -297,7 +297,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(LoadingAddAndRemoveFavoriteState());
       DioHelper.postData(
         url: ApiConstant.addAndRemoveFavorite + id.toString(),
-        token: CacheHelper.getData(key: AppConstant.token),
+        token: CacheHelper.getData(key: AppConstant.token,token: true),
       ).then((value) {
         emit(SuccessAddAndRemoveFavoriteState());
         getAllProduct(
@@ -326,7 +326,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(LoadingGetAllOrdersState());
       DioHelper.getData(
         url: ApiConstant.orders,
-        token: CacheHelper.getData(key: AppConstant.token),
+        token: CacheHelper.getData(key: AppConstant.token,token: true),
       ).then((value) {
         allOrders.clear();
         recentPurchases.clear();
@@ -385,7 +385,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(LoadingCancelProductState());
       DioHelper.patchData(
         url: ApiConstant.cancelProduct(productId),
-        token: CacheHelper.getData(key: AppConstant.token),
+        token: CacheHelper.getData(key: AppConstant.token,token: true),
       ).then((value) {
         emit(SuccessCancelProductState());
       }).catchError((error) {
@@ -405,7 +405,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(LoadingCancelOrderState());
       DioHelper.patchData(
         url: ApiConstant.cancelOrder(id),
-        token: CacheHelper.getData(key: AppConstant.token),
+        token: CacheHelper.getData(key: AppConstant.token,token: true),
       ).then((value) {
         emit(SuccessCancelOrderState());
         getAllOrders();
@@ -440,7 +440,7 @@ class HomeCubit extends Cubit<HomeState> {
             if (comment != null) "comment": comment //optinal
           }
         },
-        token: CacheHelper.getData(key: AppConstant.token),
+        token: CacheHelper.getData(key: AppConstant.token,token: true),
       ).then((value) {
         emit(SuccessAddRateState());
         getProductDetails(id: id);
@@ -465,7 +465,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(LoadingGetProductDetailsState());
       DioHelper.getData(
         url: ApiConstant.productDetails + id.toString(),
-        token: CacheHelper.getData(key: AppConstant.token),
+        token: CacheHelper.getData(key: AppConstant.token,token: true),
       ).then((value) {
         modelsCar.clear();
         oneProductModel = OneProductModel.fromJson(value.data);
@@ -497,7 +497,7 @@ class HomeCubit extends Cubit<HomeState> {
       DioHelper.postData(
         url: ApiConstant.returnOrder(orderId),
         data: {"returnData": returns},
-        token: CacheHelper.getData(key: AppConstant.token),
+        token: CacheHelper.getData(key: AppConstant.token,token: true),
       ).then((value) {
         emit(SuccessReturnOrderState());
       }).catchError((error) {
@@ -532,7 +532,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(LoadingGetNotificationState());
       DioHelper.getData(
               query: {"page": page, "pageSize": pageSize},
-              token: CacheHelper.getData(key: AppConstant.token),
+              token: CacheHelper.getData(key: AppConstant.token,token: true),
               url: ApiConstant.notifications)
           .then((value) {
         if (page == 1) {
@@ -556,7 +556,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(LoadingUpdateNotificationState());
       DioHelper.patchData(
               data: {"isReaded": true},
-              token: CacheHelper.getData(key: AppConstant.token),
+              token: CacheHelper.getData(key: AppConstant.token,token: true),
               url: ApiConstant.notifications)
           .then((value) {
         emit(SuccessUpdateNotificationState());
@@ -622,7 +622,7 @@ class HomeCubit extends Cubit<HomeState> {
     if(await Helper.hasConnection()) {
       DioHelper.getData(
           url: ApiConstant.myScrap,
-          token: CacheHelper.getData(key: AppConstant.token))
+          token: CacheHelper.getData(key: AppConstant.token,token: true))
           .then((value) {
         myScrapModel = MyScrapModel.fromJson(value.data);
         emit(SuccessGetMyScrapState());
@@ -639,7 +639,7 @@ class HomeCubit extends Cubit<HomeState> {
   ReturnOrderModel? returnOrderModel;
   void getReturnsProducts() {
     DioHelper.getData(url: ApiConstant.returnsMe,
-      token: CacheHelper.getData(key: AppConstant.token),
+      token: CacheHelper.getData(key: AppConstant.token,token: true),
     ).then((value) {
       returnOrderModel=ReturnOrderModel.fromJson(value.data);
       emit(SuccessGetReturnsProductsState());
@@ -652,17 +652,19 @@ class HomeCubit extends Cubit<HomeState> {
     required String anotherMobile,
     required String address,
     required String location,
+    required bool wallet,
 }){
     emit(LoadingCreateOrderState());
     DioHelper.postData(
         url: ApiConstant.updateOrder,
       data: {
           "redirectUrl": "google.com",
+        "withWallet":wallet,
         "anotherMobile": anotherMobile,
         "address": address,
         "location": location
       },
-      token: CacheHelper.getData(key: AppConstant.token),
+      token: CacheHelper.getData(key: AppConstant.token,token: true),
     ).then((value) {
       emit(SuccessCreateOrderState(value.data["transactionUrl"]));
       getAllOrders();
@@ -679,6 +681,7 @@ class HomeCubit extends Cubit<HomeState> {
   void createOrderForOneProduct({required int id,
     required String anotherMobile,
     required String address,
+    required bool wallet,
     required String location,}){
     emit(LoadingCreateOrderState());
     DioHelper.postData(
@@ -686,10 +689,12 @@ class HomeCubit extends Cubit<HomeState> {
       data: {
         "quantity": 1,
         "anotherMobile": anotherMobile,
+        "withWallet":wallet,
+        "redirectUrl": "google.com",
         "address": address,
         "location": location
       },
-      token: CacheHelper.getData(key: AppConstant.token),
+      token: CacheHelper.getData(key: AppConstant.token,token: true),
     ).then((value) {
       emit(SuccessCreateOrderState(value.data["transactionUrl"]));
       getAllOrders();
@@ -700,5 +705,11 @@ class HomeCubit extends Cubit<HomeState> {
       emit(ErrorCreateOrderState(error.toString()));
     }
     });
+  }
+
+  bool wallet = false;
+  void changeWallet(bool value) {
+    wallet =value;
+    emit(ChangeWalletState());
   }
 }

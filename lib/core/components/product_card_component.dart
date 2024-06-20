@@ -18,6 +18,8 @@ import 'package:mham/core/network/local.dart';
 import 'package:mham/views/checkout_screen/checkout_screen.dart';
 import 'package:mham/views/get_start_screen/get_start_screen.dart';
 
+import 'sheet_for_login_and_sign_up.dart';
+
 class BuildProductCard extends StatelessWidget {
   const BuildProductCard({
     super.key,
@@ -97,8 +99,11 @@ class BuildProductCard extends StatelessWidget {
                 right: 8.w,
                 child: InkWell(
                   onTap: () {
-                    if(CacheHelper.getData(key: AppConstant.token)==null){
-                      Helper.push(context: context,widget: GetStartScreen());
+                    if(CacheHelper.getData(key: AppConstant.token,token: true)==null){
+                      showModalBottomSheet(context: context,
+                        builder: (context) {
+                          return BuildSheetLoginAndSignUp();
+                        },);
                     }else{
                       HomeCubit.get(context).addAndRemoveFavorite(
                           busniessId:
@@ -227,13 +232,14 @@ class BuildProductCard extends StatelessWidget {
                 width: 100.w,
                 onPressed: () {
                   if(!inCart){
-                    if(CacheHelper.getData(key: AppConstant.token)==null){
-                      Helper.push(context: context,
-                          widget: GetStartScreen(
-                          ));
+                    if(CacheHelper.getData(key: AppConstant.token,token: true)==null){
+                      showModalBottomSheet(context: context,
+                        builder: (context) {
+                          return BuildSheetLoginAndSignUp();
+                        },);
                     }else{
                       CartCubit.get(context).addToCart(
-                          token: CacheHelper.getData(key: AppConstant.token),
+                          token: CacheHelper.getData(key: AppConstant.token,token: true),
                           id: id,
                           quantity: 1);
                     }
@@ -254,8 +260,11 @@ class BuildProductCard extends StatelessWidget {
                 text: locale.buyNow,
                 width: 100.w,
                 onPressed: () {
-                  if(CacheHelper.getData(key: AppConstant.token)==null){
-                    Helper.push(context: context,widget: GetStartScreen());
+                  if(CacheHelper.getData(key: AppConstant.token,token: true)==null){
+                    showModalBottomSheet(context: context,
+                      builder: (context) {
+                        return BuildSheetLoginAndSignUp();
+                      },);
 
                   }else{
                     Helper.push(context: context,

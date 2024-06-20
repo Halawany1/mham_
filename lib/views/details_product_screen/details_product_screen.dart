@@ -78,7 +78,8 @@ class DetailsScreen extends StatelessWidget {
               var cubit = context.read<HomeCubit>();
               return Scaffold(
                 bottomSheet: cubit.oneProductModel != null &&
-                        state is! LoadingGetProductDetailsState
+                        state is! LoadingGetProductDetailsState&&
+                  CacheHelper.getData(key: AppConstant.token,token: true) != null
                     ? !hideAddedToCart &&cubit.oneProductModel!.
                 product!.qntInStock!=0
                     ? BuildBottomSheet()
@@ -300,7 +301,7 @@ class DetailsScreen extends StatelessWidget {
                                   ),
                                 ),
                                 if (CacheHelper.getData(
-                                        key: AppConstant.token) !=
+                                        key: AppConstant.token,token: true) !=
                                     null)
                                   BuildAddRate(),
                                 SizedBox(

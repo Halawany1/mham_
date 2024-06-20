@@ -1,6 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mham/controller/home_cubit/home_cubit.dart';
 import 'package:mham/core/constent/image_constant.dart';
 import 'package:mham/core/error/validation.dart';
 import 'package:mham/views/checkout_screen/checkout_screen.dart';
@@ -15,6 +19,8 @@ class BuildCreditCardInformation extends StatelessWidget {
     var color = Theme.of(context);
     var font = Theme.of(context).textTheme;
     final locale = AppLocalizations.of(context);
+    var cubit = HomeCubit.get(context);
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(12.h),
@@ -32,71 +38,63 @@ class BuildCreditCardInformation extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(ImageConstant.creditCard),
+              GestureDetector(
+                onTap: () {
+                  cubit.changeWallet(false);
+                },
+                child: Column(
+                  children: [
+                    Icon(FontAwesomeIcons.creditCard,size: 35.r,
+                        color: cubit.wallet?
+                        color.backgroundColor.withOpacity(0.7):color.backgroundColor),
+                    SizedBox(height: 10.h,),
+                    Text(
+                      locale.credit,
+                      style: font.bodyMedium!
+                          .copyWith(fontWeight: FontWeight.w700,
+                          fontSize: 15.sp,
+                          color: cubit.wallet?
+                          color.primaryColor.withOpacity(0.5):color.primaryColor),
+
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 50.w,),
+              GestureDetector(
+                onTap: () {
+                  cubit.changeWallet(true);
+
+                },
+                child: Column(
+                  children: [
+                    Icon(FontAwesomeIcons.wallet,size: 35.r,
+                        color:cubit.wallet?
+                        color.backgroundColor:color.backgroundColor.withOpacity(0.7)),
+                    SizedBox(height: 10.h,),
+                    Text(
+                      'Mham Wallet',
+                      style: font.bodyMedium!
+                          .copyWith(fontWeight: FontWeight.w700,
+                          fontSize: 15.sp,
+                          color:cubit.wallet?
+                          color.primaryColor:color.primaryColor.withOpacity(0.5)),
+
+                    ),
+                  ],
+                ),
+              ),
+
             ],
           ),
           SizedBox(
             height: 5.h,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                locale.credit,
-                style: font.bodyMedium!
-                    .copyWith(fontWeight: FontWeight.w700),
-              ),
-            ],
-          ),
+
           SizedBox(
             height: 15.h,
           ),
-          Text(
-            locale.addYourCard,
-            style: font.bodyLarge!.copyWith(fontSize: 19.sp),
-          ),
-          SizedBox(
-            height: 10.h,
-          ),
-          BuildFormUnderLine(
-            inputType: TextInputType.number,
-            widthForm: 136.w,
-            hint: '**** **** **** ****',
-            title: locale.cardNumber,
-            controller: cardNumberController,
-            validator: (value) {
-              return Validation.validateField(
-                  value, locale.cardNumber, context);
-            },
-          ),
-          SizedBox(
-            height: 15.h,
-          ),
-          BuildFormUnderLine(
-            inputType: TextInputType.text,
-            widthForm: 136.w,
-            hint: locale.monthAndYear,
-            title: locale.expiryDate,
-            controller: expiryDateController,
-            validator: (value) {
-              return Validation.validateField(
-                  value, locale.expiryDate, context);
-            },
-          ),
-          SizedBox(
-            height: 15.h,
-          ),
-          BuildFormUnderLine(
-            inputType: TextInputType.number,
-            hint:
-            locale.enterThreeDigitCode,
-            title: locale.cvv,
-            controller: cvvController,
-            validator: (value) {
-              return Validation.validateField(
-                  value, locale.cvv, context);
-            },
-          ),
+
           SizedBox(
             height: 15.h,
           ),

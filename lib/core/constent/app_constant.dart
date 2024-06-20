@@ -1,6 +1,7 @@
 class   AppConstant {
   static String onBoarding="onBoarding";
   static String token="token";
+  static String refreshToken="refreshToken";
   static String lang="lang";
   static String theme="theme";
   static String businessId="businessId";
@@ -11,5 +12,5 @@ class   AppConstant {
   static String driverName="driverName";
   static String timeLineProcess="timeLineProcess";
   static String carId="carId";
-  static String baseImage="http://38.242.155.239:8000";
+  static String baseImage="https://ma7am.com";
 }

@@ -150,7 +150,7 @@ class BuildCartCardProduct extends StatelessWidget {
                               1) {
                             cubit.updateCart(
                                 token:
-                                    CacheHelper.getData(key: AppConstant.token),
+                                    CacheHelper.getData(key: AppConstant.token,token: true),
                                 id: cubit.cartModel!.cart!.cartProducts![index]
                                     .id!,
                                 quantity: cubit.cartModel!.cart!
@@ -183,7 +183,7 @@ class BuildCartCardProduct extends StatelessWidget {
                         onTap: () {
                           cubit.updateCart(
                               token:
-                                  CacheHelper.getData(key: AppConstant.token),
+                                  CacheHelper.getData(key: AppConstant.token,token: true),
                               id: cubit.cartModel!.cart!.cartProducts![index]
                                   .id!,
                               quantity: cubit.cartModel!.cart!
@@ -208,7 +208,7 @@ class BuildCartCardProduct extends StatelessWidget {
                       edit: false,
                       onPressed: () {
                         cubit.deleteCart(
-                            token: CacheHelper.getData(key: AppConstant.token),
+                            token: CacheHelper.getData(key: AppConstant.token,token: true),
                             id: cubit
                                 .cartModel!.cart!.cartProducts![index].id!);
                       },

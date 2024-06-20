@@ -49,3 +49,15 @@ class ErrorDeleteAccount extends ProfileState {
 
   ErrorDeleteAccount(this.message);
 }
+
+class LoadingLogOutState extends ProfileState {}
+
+
+class SuccessLogOutState extends ProfileState {}
+
+
+class ErrorLogOutState extends ProfileState {
+  final String message;
+
+  ErrorLogOutState(this.message);
+}

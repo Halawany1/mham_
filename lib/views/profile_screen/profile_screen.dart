@@ -64,7 +64,7 @@ class ProfileScreen extends StatelessWidget {
         var cubit = context.read<ProfileCubit>();
         return Scaffold(
 
-          body:CacheHelper.getData(key: AppConstant.token)==null?
+          body:CacheHelper.getData(key: AppConstant.token,token: true)==null?
           GetStartScreen():
           cubit.profileModel != null || state is LoadingDeleteAccount
               ? SingleChildScrollView(
@@ -225,6 +225,9 @@ class ProfileScreen extends StatelessWidget {
                                   LayoutCubit.get(context).changeTheme(true);
                                   LayoutCubit.get(context).changeIndex(0);
                                   Navigator.pop(context);
+                                  cubit.logout(fcmToken: CacheHelper.getData(key: AppConstant.fcmToken),
+                                      refreshToken:
+                                      CacheHelper.getData(key: AppConstant.refreshToken));
                                 }, title: locale.logout,
                                 content: locale.areYouSureToLogout),
                             context: context

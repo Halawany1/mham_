@@ -30,7 +30,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(LoadingProfileState());
       DioHelper.getData(
               url: driver ? ApiConstant.profileDriver : ApiConstant.profile,
-              token: CacheHelper.getData(key: AppConstant.token))
+              token: CacheHelper.getData(key: AppConstant.token,token: true))
           .then((value) {
             print(value.data);
         if (driver) {
@@ -60,7 +60,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(LoadingUpdateProfileState());
       DioHelper.putData(
           url: ApiConstant.updateProfile,
-          token: CacheHelper.getData(key: AppConstant.token),
+          token: CacheHelper.getData(key: AppConstant.token,token: true),
           data: {
             'user_name': userName,
             'mobile': phone,
@@ -97,7 +97,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         dio.options.headers = {
           'Content-Type': 'multipart/form-data',
           'lang': lang,
-          'authorization': CacheHelper.getData(key: AppConstant.token),
+          'authorization': CacheHelper.getData(key: AppConstant.token,token: true),
         };
         FormData formData = FormData.fromMap({
           "name": userName,
@@ -149,13 +149,32 @@ class ProfileCubit extends Cubit<ProfileState> {
   void deleteAccount(int id){
     emit(LoadingDeleteAccount());
     DioHelper.deleteData(url: ApiConstant.deleteUser(id),
-    token: CacheHelper.getData(key: AppConstant.token)).then((value) {
+    token: CacheHelper.getData(key: AppConstant.token,token: true)).then((value) {
       emit(SuccessDeleteAccount());
     }).catchError((error){
       if(error is DioError){
         emit(ErrorDeleteAccount(error.response!.data['message'][0]));
       }else{
         emit(ErrorDeleteAccount(error.toString()));
+      }
+    });
+  }
+  void logout({required String fcmToken,required String refreshToken}){
+    emit(LoadingLogOutState());
+    DioHelper.postData(url: ApiConstant.logout,
+    data: {
+      'fcmToken':fcmToken,
+      'refreshToken':refreshToken
+    },
+    token: CacheHelper.getData(key: AppConstant.token,token: true)).
+    then((value) {
+      emit(SuccessLogOutState());
+    }).catchError((error){
+      if(error is DioError){
+        print(error.response!.data);
+        emit(ErrorLogOutState(error.response!.data['message'][0]));
+      }else{
+        emit(ErrorLogOutState(error.toString()));
       }
     });
   }

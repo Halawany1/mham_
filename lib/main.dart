@@ -47,7 +47,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheHelper.init();
   await DioHelper.init();
- // await CacheHelper.deleteAllData();
+ //await CacheHelper.deleteAllData();
   // CacheHelper.saveData(
   //     key: AppConstant.token,
   //     value:
@@ -108,7 +108,9 @@ void main() async {
       widget = const LayoutScreen();
     }
   }
-  print(CacheHelper.getData(key: AppConstant.token));
+  print(CacheHelper.getData(key: AppConstant.token,token: true));
+  print(CacheHelper.getData(key: AppConstant.refreshToken));
+  print(CacheHelper.getData(key: AppConstant.fcmToken));
   runApp(
     MyApp(
       widget: widget,
@@ -129,7 +131,7 @@ class MyApp extends StatelessWidget {
           create: (context) => LayoutCubit(),
         ),
         BlocProvider(
-          create: (context) => TransiactionCubit()..getTransiaction(),
+          create: (context) => TransiactionCubit()..getTransiaction()..getMyWallet(),
         ),
         BlocProvider(create: (context) {
           if (CacheHelper.getData(key: AppConstant.driver) != null) {

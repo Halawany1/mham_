@@ -58,14 +58,13 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       ApiConstant.loginDriver
           : ApiConstant.login,
           data: {
-            if(driver)"mobile": phone,
-            if(!driver)"phonenumber": phone,
+            "mobile": phone,
             if(driver)"role":"driver",
+            if(!driver)"role":"user",
             "password": password,
             "fcmToken": CacheHelper.getData(key: AppConstant.fcmToken),
           }
       ).then((value) {
-        print(value.data);
         if(driver) {
           driverModel = DriverModel.fromJson(value.data);
           CacheHelper.saveData(key: AppConstant.driverName,
@@ -75,6 +74,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
         }
         emit(SuccessLoginUserState());
       }).catchError((error) {
+        print(error.toString());
         if (error is DioError) {
           print(error.response!.data);
           emit(ErrorLoginUserState(error.response!.data['message'][0]));

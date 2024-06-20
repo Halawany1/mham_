@@ -37,11 +37,6 @@ class BuildCardTransiaction extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Fit Rear Brake Shoe',
-              style: font.bodyMedium!.copyWith(
-                fontSize: 17.sp,
-
-              ),),
             Text('${cubit.transiactionModel!
                 .transactions![index].userOrder!.totalPrice} '+locale.kd,
               style: font.bodyMedium!.copyWith(

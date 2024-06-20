@@ -1,13 +1,40 @@
+import 'package:mham/core/constent/api_constant.dart';
+import 'package:mham/core/constent/app_constant.dart';
+import 'package:mham/core/network/remote.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import "package:jwt_decoder/jwt_decoder.dart";
 class CacheHelper {
   static SharedPreferences? sharedPreferences;
   static init() async {
     sharedPreferences = await SharedPreferences.getInstance();
   }
 
-  static dynamic getData({required String key}) {
-    return sharedPreferences!.get(key);
+  static dynamic getData({required String key, bool token=false}) {
+    print( token);
+    var storedToken = sharedPreferences!.getString(AppConstant.token);
+    if(storedToken!=null&&
+        storedToken==key) {
+      bool expired = JwtDecoder.isExpired(key);
+      print(expired);
+      if(expired) {
+        DioHelper.postData(url: ApiConstant.refresh,
+            data: {
+              'refreshToken': CacheHelper.getData(key: AppConstant.refreshToken)
+            }
+        ).then((value) {
+          print(value.data);
+          saveData(key: AppConstant.token, value: value.data['accessToken']);
+          saveData(key: AppConstant.refreshToken, value: value.data['refreshToken']);
+        });
+        return sharedPreferences!.get(CacheHelper.getData(key: AppConstant.refreshToken));
+      }else{
+        return sharedPreferences!.get(key);
+      }
+    }else{
+      return sharedPreferences!.get(key);
+    }
+
+
   }
 
   static Future<bool?> saveData({

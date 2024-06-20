@@ -71,7 +71,7 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
           if (inCountry != null) "inCountry": inCountry,
           if (sort != null) "sort": sort,
         },
-        token: CacheHelper.getData(key: AppConstant.token),
+        token: CacheHelper.getData(key: AppConstant.token,token: true),
       ).then((value) {
         driverOrders.clear();
         driverOrderModel = DriverOrderModel.fromJson(value.data);
@@ -113,7 +113,7 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
       emit(LoadingGetOrderByIdState());
       DioHelper.getData(
         url: ApiConstant.orderDriver + '/$id',
-        token: CacheHelper.getData(key: AppConstant.token),
+        token: CacheHelper.getData(key: AppConstant.token,token: true),
       ).then((value) {
         checkStatus.clear();
         driverOrderByIdModel = DriverOrderByIdModel.fromJson(value.data);
@@ -164,7 +164,7 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
     DioHelper.patchData(
             url: ApiConstant.updateOrder + '/$id',
             data: {"driverId": driverId},
-            token: CacheHelper.getData(key: AppConstant.token))
+            token: CacheHelper.getData(key: AppConstant.token,token: true))
         .then((value) {
       emit(SuccessTakeTheOrderState());
       getAllOrders();
@@ -193,7 +193,7 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
         dio.options.headers = {
           'Content-Type': 'multipart/form-data',
           'lang': lang,
-          "authorization": CacheHelper.getData(key: AppConstant.token),
+          "authorization": CacheHelper.getData(key: AppConstant.token,token: true),
         };
         FormData formData = FormData.fromMap({
           "reason": reason,
@@ -231,7 +231,7 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
         dio.options.headers = {
           'Content-Type': 'multipart/form-data',
           'lang': lang,
-          "authorization": CacheHelper.getData(key: AppConstant.token),
+          "authorization": CacheHelper.getData(key: AppConstant.token,token: true),
         };
         FormData formData = FormData.fromMap({
           "reason": reason,
@@ -265,7 +265,7 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
       DioHelper.getData(
         query: {"status": "Delivered"},
         url: ApiConstant.historyOrder(driverId),
-        token: CacheHelper.getData(key: AppConstant.token),
+        token: CacheHelper.getData(key: AppConstant.token,token: true),
       ).then((value) {
         historyOrders.clear();
         driverOrderModel = DriverOrderModel.fromJson(value.data);
@@ -317,7 +317,7 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
       assignOrder.clear();
       DioHelper.getData(
         url: ApiConstant.assignedOrder(driverId),
-        token: CacheHelper.getData(key: AppConstant.token),
+        token: CacheHelper.getData(key: AppConstant.token,token: true),
       ).then((value) {
         print(driverId);
         assignOrder.clear();
@@ -383,7 +383,7 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
       assignOrder.clear();
       DioHelper.getData(
         url: ApiConstant.returnAssignedOrder(driverId),
-        token: CacheHelper.getData(key: AppConstant.token),
+        token: CacheHelper.getData(key: AppConstant.token,token: true),
       ).then((value) {
         if(value.statusCode==200){
           print(value.data);
@@ -450,7 +450,7 @@ class OrderDriverCubit extends Cubit<OrderDriverState> {
     DioHelper.patchData(
             url: ApiConstant.updateOrderItemStatus + '/$id',
             data: {"status": status},
-            token: CacheHelper.getData(key: AppConstant.token))
+            token: CacheHelper.getData(key: AppConstant.token,token: true))
         .then((value) {
       emit(SuccessUpdateOrderItemState());
       CacheHelper.removeData(key: AppConstant.timeLineProcess);

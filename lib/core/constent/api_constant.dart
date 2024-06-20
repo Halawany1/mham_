@@ -1,12 +1,15 @@
 class ApiConstant{
   static const String baseUrl=
-      'http://38.242.155.239:8000/api';
+      'https://ma7am.com/api';
   static const String register='/user/register';
   static const String registerDriver='/auth/driver/register';
-  static const String login='/user/login';
+  static const String login='/auth/login';
   static  String deleteUser(int id)=>'/user/$id';
   static const String loginDriver='/auth/login';
   static const String transactions='/transactions';
+  static const String logout='/auth/logout';
+  static const String refresh='/auth/refresh';
+  static const String wallet='/wallets/me';
   static const String profile='/user/profile';
   static const String profileDriver='/drivers/me';
   static const String notifications='/notifications';

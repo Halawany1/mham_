@@ -6,11 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mham/controller/internet_cubit/internet_cubit.dart';
 import 'package:mham/controller/layout_cubit/layout_cubit.dart';
-import 'package:mham/core/constent/app_constant.dart';
-import 'package:mham/core/helper/helper.dart';
-import 'package:mham/core/network/local.dart';
 import 'package:mham/layout/widget/no_internet.dart';
-import 'package:mham/views/get_start_screen/get_start_screen.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class LayoutScreen extends StatelessWidget {

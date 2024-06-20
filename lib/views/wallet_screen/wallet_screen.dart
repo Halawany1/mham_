@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -25,9 +26,9 @@ class WalletScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = TransiactionCubit.get(context);
         return Scaffold(
-          body: CacheHelper.getData(key: AppConstant.token) == null ?
+          body: CacheHelper.getData(key: AppConstant.token,token: true) == null ?
           GetStartScreen() :
-          cubit.transiactionModel==null?
+          cubit.transiactionModel==null ||cubit.walletModel==null?
           Center(
               child: BuildImageLoader(assetName: ImageConstant.logo))
               :
@@ -42,8 +43,65 @@ class WalletScreen extends StatelessWidget {
                         fontSize: 22.sp
                     )),
                     SizedBox(height: 30.h,),
-                    Image.asset('assets/images/wallet.png',
+                    Stack(
+                      children: [
+                        Image.asset('assets/images/wallet.png',
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                        Positioned(
+                          top: 8.h,
+                          left: 20.w,
+                          child: Text('Available Balance',
+                          style: font.bodyMedium!.copyWith(
+                            color: color.cardColor.withOpacity(0.6)
+                          ),),
+                        ),
+                        Positioned(
+                          top: 30.h,
+                          left: 20.w,
+                          child: Text(cubit.walletModel!.wallet!.balance!.toString()+' '+locale.kd,
+                            style: font.bodyMedium!.copyWith(
+                                color: color.cardColor
+                            ),),
+                        ),
+                        Positioned(
+                          top: 60.h,
+                          left: 20.w,
+                          child: Text(cubit.walletModel!.wallet!.user!
+                              .userName!,
+                            style: font.bodyMedium!.copyWith(
+                                color: color.cardColor
+                            ),),
+                        ),
+                        Positioned(
+                          top: 95.h,
+                          left: 20.w,
+                          child: Text('For any questions',
+                            style: font.bodyMedium!.copyWith(
+                                color: color.cardColor,
+                              fontSize: 8.sp
+                            ),),
+                        ),
+                        Positioned(
+                          top: 106.h,
+                          left: 20.w,
+                          child: Text('+0096550538386',
+                            style: font.bodyMedium!.copyWith(
+                                color: color.cardColor,
+                                fontSize: 8.sp
+                            ),),
+                        ),
+
+                        Positioned(
+                          top: 90.h,
+                          right: 20.w,
+                          child:Image.asset(ImageConstant.logo,width: 30.w,
+                          height: 30.w,)
+                        )
+                      ],
                     ),
+
                     SizedBox(height: 30.h,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

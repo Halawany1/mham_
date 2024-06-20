@@ -1,11 +1,13 @@
 class UserModel {
   User? user;
-  String? token;
+  String? accessToken;
+  String? refreshToken;
 
 
   UserModel.fromJson(Map<String, dynamic> json) {
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
-    token = json['token'];
+    accessToken = json['accessToken'];
+    refreshToken = json['refreshToken'];
   }
 
 }

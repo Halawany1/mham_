@@ -226,5 +226,8 @@
   "deleteAccount": "Delete Account",
   "orderCreatedSuccess":"Order Created Successfully",
   "outOfStock":"out of stock",
-  "orderIsReturn": "This order is a return order it means that you must go to the client first and then go to the traders"
+  "orderIsReturn": "This order is a return order it means that you must go to the client first and then go to the traders",
+
+  "welcome":"Welcome",
+  "pleaseSignInForFullVersion":"Please sign to your account to \naccess the full version."
 }

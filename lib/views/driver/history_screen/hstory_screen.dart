@@ -83,7 +83,8 @@ class HistoryDriverScreen extends StatelessWidget {
                     color: color.backgroundColor,
                     backgroundColor: color.primaryColor,
                     onRefresh: () async{
-                      OrderDriverCubit.get(context).getDriverOrdersById(driverId:CacheHelper.getData(key:
+                      OrderDriverCubit.get(context)
+                          .getDriverOrdersById(driverId:CacheHelper.getData(key:
                       AppConstant.driverId));
                     },
                     child: ListView.separated(

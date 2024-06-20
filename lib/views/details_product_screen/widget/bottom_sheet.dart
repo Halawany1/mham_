@@ -35,7 +35,8 @@ class BuildBottomSheet extends StatelessWidget {
             }else{
               CartCubit.get(context).addToCart(
                   token: CacheHelper.getData(
-                      key: AppConstant.token),
+
+                      key: AppConstant.token,token: true),
                   id: cubit.oneProductModel!.product!
                       .productsId!,
                   quantity: cubit.quantity);

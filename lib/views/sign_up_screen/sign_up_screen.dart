@@ -64,7 +64,10 @@ void clearAllData() {
             LayoutCubit.get(context).changeIndex(0);
             CacheHelper.saveData(
                 key: AppConstant.token,
-                value: cubit.userModel!.token);
+                value: cubit.userModel!.accessToken);
+            CacheHelper.saveData(
+                key: AppConstant.refreshToken,
+                value: cubit.userModel!.refreshToken);
             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LayoutScreen())
               ,(route) => false,);
             HomeCubit.get(context).getNotification();

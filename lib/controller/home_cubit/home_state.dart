@@ -174,6 +174,7 @@ class SuccessGetReturnsProductsState extends HomeState {}
 class ErrorGetReturnsProductsState extends HomeState {}
 
 class LoadingCreateOrderState extends HomeState {}
+class ChangeWalletState extends HomeState {}
 
 class SuccessCreateOrderState extends HomeState {
   String data;

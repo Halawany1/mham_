@@ -11,6 +11,7 @@ import 'package:mham/core/components/laoding_animation_component.dart';
 import 'package:mham/core/components/product_card_component.dart';
 import 'package:mham/core/components/row_product_and_see_all_component.dart';
 import 'package:mham/core/components/search_form_filed_component.dart';
+import 'package:mham/core/components/sheet_for_login_and_sign_up.dart';
 import 'package:mham/core/components/snak_bar_component.dart';
 import 'package:mham/core/constent/app_constant.dart';
 import 'package:mham/core/constent/color_constant.dart';
@@ -19,7 +20,6 @@ import 'package:mham/core/helper/helper.dart';
 import 'package:mham/core/network/local.dart';
 import 'package:mham/views/cart_screen/cart_screen.dart';
 import 'package:mham/views/details_product_screen/details_product_screen.dart';
-import 'package:mham/views/get_start_screen/get_start_screen.dart';
 import 'package:mham/views/home_screen/widget/all_categories.dart';
 import 'package:mham/views/home_screen/widget/car_filter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -177,9 +177,12 @@ class HomeScreen extends StatelessWidget {
                         top: 10.h),
                     child: InkWell(
                       onTap: () {
-                        if (CacheHelper.getData(key: AppConstant.token) ==
+                        if (CacheHelper.getData(key: AppConstant.token,token: true) ==
                             null) {
-                          Helper.push(context: context,widget:  GetStartScreen());
+                         showModalBottomSheet(context: context,
+                             builder: (context) {
+                               return BuildSheetLoginAndSignUp();
+                             },);
                         } else {
                           cubit.updateNotification();
                           Helper.push(context: context,widget:  NotificationScreen());
@@ -197,7 +200,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                           if(cubit.notificationModel!=null&&
-                              CacheHelper.getData(key: AppConstant.token) !=
+                              CacheHelper.getData(key: AppConstant.token,token: true) !=
                                   null&&cubit.notificationModel!.unreadedCount!=0)
                           Positioned(
                             left: 8.w,
@@ -223,14 +226,17 @@ class HomeScreen extends StatelessWidget {
                         top: 10.h),
                     child: InkWell(
                       onTap: () {
-                        if (CacheHelper.getData(key: AppConstant.token) !=
+                        if (CacheHelper.getData(key: AppConstant.token,token: true) !=
                             null) {
                           CartCubit.get(context).getCart(
                               token:
-                                  CacheHelper.getData(key: AppConstant.token));
+                                  CacheHelper.getData(key: AppConstant.token,token: true));
                           Helper.push(context: context,widget: CartScreen(),withAnimate: true);
                         } else {
-                          Helper.push(context: context,widget:  GetStartScreen());
+                          showModalBottomSheet(context: context,
+                            builder: (context) {
+                              return BuildSheetLoginAndSignUp();
+                            },);
                         }
                       },
                       child: Icon(

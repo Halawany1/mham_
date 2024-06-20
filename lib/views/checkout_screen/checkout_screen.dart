@@ -74,9 +74,18 @@ class CheckoutScreen extends StatelessWidget {
         listener: (context, state) async {
           if (state is SuccessCreateOrderState) {
             clearAllData();
-            await launchUrl(Uri.parse(state.data));
+            if(HomeCubit.get(context).wallet){
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LayoutScreen(),
+                ),
+              );
+            }else{
+              await launchUrl(Uri.parse(state.data));
+            }
             CartCubit.get(context)
-                .getCart(token: CacheHelper.getData(key: AppConstant.token));
+                .getCart(token: CacheHelper.getData(key: AppConstant.token,token: true));
           }
           if (state is ErrorCreateOrderState) {
             showMessageResponse(
@@ -269,18 +278,18 @@ class CheckoutScreen extends StatelessWidget {
                         SizedBox(
                           height: 20.h,
                         ),
-                        // Text(
-                        //   locale.payment,
-                        //   style: font.bodyLarge!.copyWith(fontSize: 22.sp),
-                        // ),
-                        // SizedBox(
-                        //   height: 10.h,
-                        // ),
+                        Text(
+                          locale.payment,
+                          style: font.bodyLarge!.copyWith(fontSize: 22.sp),
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
 
-                        // BuildCreditCardInformation(),
-                        // SizedBox(
-                        //   height: 15.h,
-                        // ),
+                        BuildCreditCardInformation(),
+                        SizedBox(
+                          height: 15.h,
+                        ),
                         BuildTotalCardPrice(
                             shippingFee: 5,
                             lenghtItems:
@@ -302,12 +311,14 @@ class CheckoutScreen extends StatelessWidget {
                                   if (formKey.currentState!.validate()) {
                                     if (!oneProduct) {
                                       cubit.createOrder(
+                                        wallet: cubit.wallet,
                                         address: addressController.text,
                                         anotherMobile: mobileController.text,
                                         location: locationController.text,
                                       );
                                     } else {
                                       cubit.createOrderForOneProduct(
+                                          wallet: cubit.wallet,
                                           address: addressController.text,
                                           anotherMobile: mobileController.text,
                                           location: locationController.text,
