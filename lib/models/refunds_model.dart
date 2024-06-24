@@ -1,28 +1,30 @@
-class TransiactionModel {
+class RefundsModel {
   int? totalItems;
   int? totalPages;
   int? page;
   int? pageSize;
   int? pageCount;
-  List<Transactions>? transactions;
+  List<Refunds>? refunds;
 
-  TransiactionModel.fromJson(Map<String, dynamic> json) {
+
+  RefundsModel.fromJson(Map<String, dynamic> json) {
     totalItems = json['totalItems'];
     totalPages = json['totalPages'];
     page = json['page'];
     pageSize = json['pageSize'];
     pageCount = json['pageCount'];
-    if (json['transactions'] != null) {
-      transactions = <Transactions>[];
-      json['transactions'].forEach((v) {
-        transactions!.add(new Transactions.fromJson(v));
+    if (json['refunds'] != null) {
+      refunds = <Refunds>[];
+      json['refunds'].forEach((v) {
+        refunds!.add(new Refunds.fromJson(v));
       });
     }
   }
 
+
 }
 
-class Transactions {
+class Refunds {
   int? id;
   String? createdAt;
   String? updatedAt;
@@ -35,7 +37,7 @@ class Transactions {
 
 
 
-  Transactions.fromJson(Map<String, dynamic> json) {
+  Refunds.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
@@ -68,6 +70,7 @@ class User {
   String? verifyMobileOtpExp;
   String? resetPasswordOtp;
   String? resetPasswordOtpExp;
+  String? tapCustomerId;
 
 
 
@@ -87,6 +90,7 @@ class User {
     verifyMobileOtpExp = json['verifyMobileOtpExp'];
     resetPasswordOtp = json['resetPasswordOtp'];
     resetPasswordOtpExp = json['resetPasswordOtpExp'];
+    tapCustomerId = json['tapCustomerId'];
   }
 
 
@@ -115,7 +119,6 @@ class UserOrder {
   String? chargeId;
 
 
-
   UserOrder.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     customerId = json['customerId'];
@@ -138,6 +141,5 @@ class UserOrder {
     cancelStatus = json['cancelStatus'];
     chargeId = json['chargeId'];
   }
-
 
 }

@@ -12,5 +12,5 @@ class   AppConstant {
   static String driverName="driverName";
   static String timeLineProcess="timeLineProcess";
   static String carId="carId";
-  static String baseImage="https://ma7am.com";
+  static String baseImage="https://mhamcarparts.ma7am.com";
 }

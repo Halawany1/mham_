@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mham/controller/Authentication_cubit/authentication_cubit.dart';
 import 'package:mham/controller/cart_cubit/cart_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
@@ -42,9 +43,27 @@ Future<void> backgroundMessageHandler(RemoteMessage message) async {
       , value[CacheHelper.getData(key: AppConstant.lang)??'en']);
   // ShowToast(message: 'on BackgroundMessage', state: ToastState.SUCCESS);
 }
+Future<void> requestLocationPermission() async {
+  LocationPermission permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      // Permissions are denied, next time you could try requesting permissions again
+      // print('Location permissions are denied');
+      return;
+    }
+  }
 
+  if (permission == LocationPermission.deniedForever) {
+    // Permissions are denied forever, handle appropriately
+    // print('Location permissions are permanently denied, we cannot request permissions.');
+    return;
+  }
+  // When we reach here, permissions are granted and we can continue accessing the position of the device
+}
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await requestLocationPermission();
   await CacheHelper.init();
   await DioHelper.init();
  //await CacheHelper.deleteAllData();
@@ -101,6 +120,8 @@ void main() async {
 
   if (CacheHelper.getData(key: AppConstant.onBoarding) == null) {
     widget = const OnBoardingScreen();
+
+
   } else {
     if (CacheHelper.getData(key: AppConstant.driver) != null) {
       widget = const DriverLayoutScreen();
@@ -109,8 +130,8 @@ void main() async {
     }
   }
   print(CacheHelper.getData(key: AppConstant.token,token: true));
-  print(CacheHelper.getData(key: AppConstant.refreshToken));
-  print(CacheHelper.getData(key: AppConstant.fcmToken));
+  // print(CacheHelper.getData(key: AppConstant.refreshToken));
+  // print(CacheHelper.getData(key: AppConstant.fcmToken));
   runApp(
     MyApp(
       widget: widget,
@@ -131,7 +152,8 @@ class MyApp extends StatelessWidget {
           create: (context) => LayoutCubit(),
         ),
         BlocProvider(
-          create: (context) => TransiactionCubit()..getTransiaction()..getMyWallet(),
+          create: (context) => TransiactionCubit()..getTransiaction()..
+          getMyWallet()..getRefunds(),
         ),
         BlocProvider(create: (context) {
           if (CacheHelper.getData(key: AppConstant.driver) != null) {

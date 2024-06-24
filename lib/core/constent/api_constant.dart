@@ -1,6 +1,5 @@
 class ApiConstant{
-  static const String baseUrl=
-      'https://ma7am.com/api';
+  static const String baseUrl= 'https://mhamcarparts.ma7am.com/api';
   static const String register='/user/register';
   static const String registerDriver='/auth/driver/register';
   static const String login='/auth/login';
@@ -10,6 +9,7 @@ class ApiConstant{
   static const String logout='/auth/logout';
   static const String refresh='/auth/refresh';
   static const String wallet='/wallets/me';
+  static const String refunds='/refunds';
   static const String profile='/user/profile';
   static const String profileDriver='/drivers/me';
   static const String notifications='/notifications';

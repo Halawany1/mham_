@@ -17,6 +17,7 @@ class ErrorGetTransiactionState extends TransiactionState {
 class LoadingGetWalletState extends TransiactionState {}
 
 class SuccessGetWalletState  extends TransiactionState {}
+class ChangeRefundState  extends TransiactionState {}
 
 class ErrorGetWalletState extends TransiactionState {
   final String error;

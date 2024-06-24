@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mham/controller/cart_cubit/cart_cubit.dart';
 import 'package:mham/controller/home_cubit/home_cubit.dart';
+import 'package:mham/controller/transiaction_cubit/transiaction_cubit.dart';
 import 'package:mham/core/components/material_button_component.dart';
 import 'package:mham/core/components/snak_bar_component.dart';
 import 'package:mham/core/components/total_card_price_component.dart';
@@ -316,6 +317,10 @@ class CheckoutScreen extends StatelessWidget {
                                         anotherMobile: mobileController.text,
                                         location: locationController.text,
                                       );
+                                      TransiactionCubit.get(context).getMyWallet();
+                                      TransiactionCubit.get(context).getRefunds();
+                                      TransiactionCubit.get(context).getTransiaction();
+
                                     } else {
                                       cubit.createOrderForOneProduct(
                                           wallet: cubit.wallet,

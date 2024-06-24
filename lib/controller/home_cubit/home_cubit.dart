@@ -654,6 +654,7 @@ class HomeCubit extends Cubit<HomeState> {
     required String location,
     required bool wallet,
 }){
+    print(wallet);
     emit(LoadingCreateOrderState());
     DioHelper.postData(
         url: ApiConstant.updateOrder,
@@ -668,6 +669,7 @@ class HomeCubit extends Cubit<HomeState> {
     ).then((value) {
       emit(SuccessCreateOrderState(value.data["transactionUrl"]));
       getAllOrders();
+
     }).catchError((error){
       print(error);
     if(error is DioError){
